@@ -8,17 +8,17 @@ from unittest import mock
 
 import markdown
 
-from mkdocs.config.defaults import MkDocsConfig
-from mkdocs.structure.files import File, Files
-from mkdocs.structure.pages import Page, _ExtractTitleTreeprocessor, _RelativePathTreeprocessor
-from mkdocs.tests.base import dedent, tempdir
+from properdocs.config.defaults import ProperDocsConfig
+from properdocs.structure.files import File, Files
+from properdocs.structure.pages import Page, _ExtractTitleTreeprocessor, _RelativePathTreeprocessor
+from properdocs.tests.base import dedent, tempdir
 
 DOCS_DIR = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), '..', 'integration', 'subpages', 'docs'
 )
 
 
-def load_config(**cfg) -> MkDocsConfig:
+def load_config(**cfg) -> ProperDocsConfig:
     cfg.setdefault('site_name', 'Example')
     cfg.setdefault(
         'docs_dir',
@@ -26,7 +26,7 @@ def load_config(**cfg) -> MkDocsConfig:
             os.path.abspath(os.path.dirname(__file__)), '..', 'integration', 'minimal', 'docs'
         ),
     )
-    conf = MkDocsConfig()
+    conf = ProperDocsConfig()
     conf.load_dict(cfg)
     errors_warnings = conf.validate()
     assert errors_warnings == ([], []), errors_warnings
@@ -550,14 +550,14 @@ class PageTests(unittest.TestCase):
     ):
         for case in [
             dict(
-                config={'repo_url': 'http://github.com/mkdocs/mkdocs'},
-                edit_url='http://github.com/mkdocs/mkdocs/edit/master/docs/testing.md',
-                edit_url2='http://github.com/mkdocs/mkdocs/edit/master/docs/sub1/non-index.md',
+                config={'repo_url': 'http://github.com/properdocs/properdocs'},
+                edit_url='http://github.com/properdocs/properdocs/edit/master/docs/testing.md',
+                edit_url2='http://github.com/properdocs/properdocs/edit/master/docs/sub1/non-index.md',
             ),
             dict(
-                config={'repo_url': 'https://github.com/mkdocs/mkdocs/'},
-                edit_url='https://github.com/mkdocs/mkdocs/edit/master/docs/testing.md',
-                edit_url2='https://github.com/mkdocs/mkdocs/edit/master/docs/sub1/non-index.md',
+                config={'repo_url': 'https://github.com/properdocs/properdocs/'},
+                edit_url='https://github.com/properdocs/properdocs/edit/master/docs/testing.md',
+                edit_url2='https://github.com/properdocs/properdocs/edit/master/docs/sub1/non-index.md',
             ),
             dict(
                 config={'repo_url': 'http://example.com'},
@@ -684,12 +684,12 @@ class PageTests(unittest.TestCase):
             dict(
                 config={'edit_uri': 'edit/master'},
                 edit_url='edit/master/testing.md',
-                warning="WARNING:mkdocs.structure.pages:edit_uri: "
+                warning="WARNING:properdocs.structure.pages:edit_uri: "
                 "'edit/master/testing.md' is not a valid URL, it should include the http:// (scheme)",
             ),
         ]:
             with self.subTest(case['config']):
-                with self.assertLogs('mkdocs') as cm:
+                with self.assertLogs('properdocs') as cm:
                     cfg = load_config(**case['config'])
                     fl = File('testing.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)
                     pg = Page('Foo', fl, cfg)
@@ -701,16 +701,16 @@ class PageTests(unittest.TestCase):
         for case in [
             dict(
                 edit_uri='hooks.py',
-                expected_edit_url='https://github.com/mkdocs/mkdocs/edit/master/docs/hooks.py',
+                expected_edit_url='https://github.com/properdocs/properdocs/edit/master/docs/hooks.py',
             ),
             dict(
                 edit_uri='../scripts/hooks.py',
-                expected_edit_url='https://github.com/mkdocs/mkdocs/edit/master/scripts/hooks.py',
+                expected_edit_url='https://github.com/properdocs/properdocs/edit/master/scripts/hooks.py',
             ),
             dict(edit_uri=None, expected_edit_url=None),
         ]:
             with self.subTest(case['edit_uri']):
-                cfg = load_config(repo_url='https://github.com/mkdocs/mkdocs')
+                cfg = load_config(repo_url='https://github.com/properdocs/properdocs')
                 fl = File('testing.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)
                 fl.edit_uri = case['edit_uri']
                 pg = Page('Foo', fl, cfg)
@@ -726,13 +726,13 @@ class PageTests(unittest.TestCase):
         self.assertEqual(pg.toc, [])
         pg.render(cfg, Files([fl]))
         self.assertTrue(
-            pg.content.startswith('<h1 id="welcome-to-mkdocs">Welcome to ProperDocs</h1>\n')
+            pg.content.startswith('<h1 id="welcome-to-properdocs">Welcome to ProperDocs</h1>\n')
         )
         self.assertEqual(
             str(pg.toc).strip(),
             dedent(
                 """
-                Welcome to ProperDocs - #welcome-to-mkdocs
+                Welcome to ProperDocs - #welcome-to-properdocs
                     Commands - #commands
                     Project layout - #project-layout
                 """
@@ -743,11 +743,11 @@ class PageTests(unittest.TestCase):
         cfg = load_config()
         fl = File('missing.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)
         pg = Page('Foo', fl, cfg)
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             with self.assertRaises(OSError):
                 pg.read_source(cfg)
         self.assertEqual(
-            '\n'.join(cm.output), 'ERROR:mkdocs.structure.pages:File not found: missing.md'
+            '\n'.join(cm.output), 'ERROR:properdocs.structure.pages:File not found: missing.md'
         )
 
 
@@ -777,15 +777,15 @@ class RelativePathExtensionTests(unittest.TestCase):
         fs = [File(f, cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls) for f in files]
         pg = Page('Foo', fs[0], cfg)
 
-        with mock.patch('mkdocs.structure.files.open', mock.mock_open(read_data=content)):
+        with mock.patch('properdocs.structure.files.open', mock.mock_open(read_data=content)):
             pg.read_source(cfg)
         if logs:
-            with self.assertLogs('mkdocs.structure.pages') as cm:
+            with self.assertLogs('properdocs.structure.pages') as cm:
                 pg.render(cfg, Files(fs))
             msgs = [f'{r.levelname}:{r.message}' for r in cm.records]
             self.assertEqual('\n'.join(msgs), textwrap.dedent(logs).strip('\n'))
         elif sys.version_info >= (3, 10):
-            with self.assertNoLogs('mkdocs.structure.pages'):
+            with self.assertNoLogs('properdocs.structure.pages'):
                 pg.render(cfg, Files(fs))
         else:
             pg.render(cfg, Files(fs))

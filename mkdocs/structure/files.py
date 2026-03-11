@@ -16,13 +16,13 @@ import pathspec
 import pathspec.gitignore
 import pathspec.util
 
-from mkdocs import utils
+from properdocs import utils
 
 if TYPE_CHECKING:
     import jinja2.environment
 
-    from mkdocs.config.defaults import MkDocsConfig
-    from mkdocs.structure.pages import Page
+    from properdocs.config.defaults import ProperDocsConfig
+    from properdocs.structure.pages import Page
 
 
 log = logging.getLogger(__name__)
@@ -32,7 +32,7 @@ class InclusionLevel(enum.Enum):
     EXCLUDED = -3
     """The file is excluded and will not be processed."""
     DRAFT = -2
-    """The file is excluded from the final site, but will still be populated during `mkdocs serve`."""
+    """The file is excluded from the final site, but will still be populated during `properdocs serve`."""
     NOT_IN_NAV = -1
     """The file is part of the site, but doesn't produce nav warnings."""
     UNDEFINED = 0
@@ -60,7 +60,7 @@ class InclusionLevel(enum.Enum):
 
 
 class Files:
-    """A collection of [File][mkdocs.structure.files.File] objects."""
+    """A collection of [File][properdocs.structure.files.File] objects."""
 
     def __init__(self, files: Iterable[File]) -> None:
         self._src_uris = {f.src_uri: f for f in files}
@@ -86,7 +86,7 @@ class Files:
     def src_uris(self) -> Mapping[str, File]:
         """
         A mapping containing every file, with the keys being their
-        [`src_uri`][mkdocs.structure.files.File.src_uri].
+        [`src_uri`][properdocs.structure.files.File.src_uri].
         """
         return self._src_uris
 
@@ -143,7 +143,7 @@ class Files:
         """Return iterable of all CSS file objects."""
         return [file for file in self if file.is_css()]
 
-    def add_files_from_theme(self, env: jinja2.Environment, config: MkDocsConfig) -> None:
+    def add_files_from_theme(self, env: jinja2.Environment, config: ProperDocsConfig) -> None:
         """Retrieve static files from Jinja environment and add to collection."""
 
         def filter(name):
@@ -270,7 +270,7 @@ class File:
     @classmethod
     def generated(
         cls,
-        config: MkDocsConfig,
+        config: ProperDocsConfig,
         src_uri: str,
         *,
         content: str | bytes,
@@ -286,7 +286,7 @@ class File:
     @classmethod
     def generated(
         cls,
-        config: MkDocsConfig,
+        config: ProperDocsConfig,
         src_uri: str,
         *,
         abs_src_path: str,
@@ -301,7 +301,7 @@ class File:
     @classmethod
     def generated(
         cls,
-        config: MkDocsConfig,
+        config: ProperDocsConfig,
         src_uri: str,
         *,
         content: str | bytes | None = None,
@@ -524,7 +524,7 @@ class File:
 _default_exclude = pathspec.gitignore.GitIgnoreSpec.from_lines(['.*', '/templates/'])
 
 
-def set_exclusions(files: Iterable[File], config: MkDocsConfig) -> None:
+def set_exclusions(files: Iterable[File], config: ProperDocsConfig) -> None:
     """Re-calculate which files are excluded, based on the patterns in the config."""
     exclude: pathspec.gitignore.GitIgnoreSpec | None = config.get('exclude_docs')
     exclude = _default_exclude + exclude if exclude else _default_exclude
@@ -543,7 +543,7 @@ def set_exclusions(files: Iterable[File], config: MkDocsConfig) -> None:
                 file.inclusion = InclusionLevel.INCLUDED
 
 
-def get_files(config: MkDocsConfig) -> Files:
+def get_files(config: ProperDocsConfig) -> Files:
     """Walk the `docs_dir` and return a Files collection."""
     files: list[File] = []
     conflicting_files: list[tuple[File, File]] = []

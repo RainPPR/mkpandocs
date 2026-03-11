@@ -13,17 +13,17 @@ from unittest import mock
 
 import markdown.preprocessors
 
-from mkdocs.commands import build
-from mkdocs.config import base
-from mkdocs.exceptions import PluginError
-from mkdocs.structure.files import File, Files
-from mkdocs.structure.nav import get_navigation
-from mkdocs.structure.pages import Page
-from mkdocs.tests.base import PathAssertionMixin, load_config, tempdir
-from mkdocs.utils import meta
+from properdocs.commands import build
+from properdocs.config import base
+from properdocs.exceptions import PluginError
+from properdocs.structure.files import File, Files
+from properdocs.structure.nav import get_navigation
+from properdocs.structure.pages import Page
+from properdocs.tests.base import PathAssertionMixin, load_config, tempdir
+from properdocs.utils import meta
 
 if TYPE_CHECKING:
-    from mkdocs.config.defaults import MkDocsConfig
+    from properdocs.config.defaults import ProperDocsConfig
 
 
 def build_page(title, path, config, md_src=''):
@@ -198,12 +198,12 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
         fs = [File('index.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)]
         files = Files(fs)
         nav = get_navigation(files, cfg)
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             context = build.get_context(nav, files, cfg, nav.pages[0])
         self.assertEqual(context['extra_css'], ['assets/style.css'])
         self.assertEqual(
             '\n'.join(cm.output),
-            "WARNING:mkdocs.utils:Path 'assets\\style.css' uses OS-specific separator '\\'. "
+            "WARNING:properdocs.utils:Path 'assets\\style.css' uses OS-specific separator '\\'. "
             "That will be unsupported in a future release. Please change it to '/'.",
         )
 
@@ -220,8 +220,8 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
 
     # Test build._build_theme_template
 
-    @mock.patch('mkdocs.utils.write_file')
-    @mock.patch('mkdocs.commands.build._build_template', return_value='some content')
+    @mock.patch('properdocs.utils.write_file')
+    @mock.patch('properdocs.commands.build._build_template', return_value='some content')
     def test_build_theme_template(self, mock_build_template, mock_write_file):
         cfg = load_config()
         env = cfg.theme.get_env()
@@ -229,8 +229,8 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
         mock_write_file.assert_called_once()
         mock_build_template.assert_called_once()
 
-    @mock.patch('mkdocs.utils.write_file')
-    @mock.patch('mkdocs.commands.build._build_template', return_value='some content')
+    @mock.patch('properdocs.utils.write_file')
+    @mock.patch('properdocs.commands.build._build_template', return_value='some content')
     @mock.patch('gzip.GzipFile')
     @tempdir()
     def test_build_sitemap_template(
@@ -243,30 +243,30 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
         mock_build_template.assert_called_once()
         mock_gzip_gzipfile.assert_called_once()
 
-    @mock.patch('mkdocs.utils.write_file')
-    @mock.patch('mkdocs.commands.build._build_template', return_value='')
+    @mock.patch('properdocs.utils.write_file')
+    @mock.patch('properdocs.commands.build._build_template', return_value='')
     def test_skip_missing_theme_template(self, mock_build_template, mock_write_file):
         cfg = load_config()
         env = cfg.theme.get_env()
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             build._build_theme_template('missing.html', env, Files([]), cfg, mock.Mock())
         self.assertEqual(
             '\n'.join(cm.output),
-            "WARNING:mkdocs.commands.build:Template skipped: 'missing.html' not found in theme directories.",
+            "WARNING:properdocs.commands.build:Template skipped: 'missing.html' not found in theme directories.",
         )
         mock_write_file.assert_not_called()
         mock_build_template.assert_not_called()
 
-    @mock.patch('mkdocs.utils.write_file')
-    @mock.patch('mkdocs.commands.build._build_template', return_value='')
+    @mock.patch('properdocs.utils.write_file')
+    @mock.patch('properdocs.commands.build._build_template', return_value='')
     def test_skip_theme_template_empty_output(self, mock_build_template, mock_write_file):
         cfg = load_config()
         env = cfg.theme.get_env()
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             build._build_theme_template('main.html', env, Files([]), cfg, mock.Mock())
         self.assertEqual(
             '\n'.join(cm.output),
-            "INFO:mkdocs.commands.build:Template skipped: 'main.html' generated empty output.",
+            "INFO:properdocs.commands.build:Template skipped: 'main.html' generated empty output.",
         )
         mock_write_file.assert_not_called()
         mock_build_template.assert_called_once()
@@ -274,47 +274,47 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
     # Test build._build_extra_template
 
     @tempdir()
-    @mock.patch('mkdocs.structure.files.open', mock.mock_open(read_data='template content'))
+    @mock.patch('properdocs.structure.files.open', mock.mock_open(read_data='template content'))
     def test_build_extra_template(self, site_dir):
         cfg = load_config(site_dir=site_dir)
         fs = [File('foo.html', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)]
         files = Files(fs)
         build._build_extra_template('foo.html', files, cfg, mock.Mock())
 
-    @mock.patch('mkdocs.structure.files.open', mock.mock_open(read_data='template content'))
+    @mock.patch('properdocs.structure.files.open', mock.mock_open(read_data='template content'))
     def test_skip_missing_extra_template(self):
         cfg = load_config()
         fs = [File('foo.html', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)]
         files = Files(fs)
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             build._build_extra_template('missing.html', files, cfg, mock.Mock())
         self.assertEqual(
             '\n'.join(cm.output),
-            "WARNING:mkdocs.commands.build:Template skipped: 'missing.html' not found in docs_dir.",
+            "WARNING:properdocs.commands.build:Template skipped: 'missing.html' not found in docs_dir.",
         )
 
-    @mock.patch('mkdocs.structure.files.open', mock.Mock(side_effect=OSError('Error message.')))
+    @mock.patch('properdocs.structure.files.open', mock.Mock(side_effect=OSError('Error message.')))
     def test_skip_ioerror_extra_template(self):
         cfg = load_config()
         fs = [File('foo.html', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)]
         files = Files(fs)
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             build._build_extra_template('foo.html', files, cfg, mock.Mock())
         self.assertEqual(
             '\n'.join(cm.output),
-            "WARNING:mkdocs.commands.build:Error reading template 'foo.html': Error message.",
+            "WARNING:properdocs.commands.build:Error reading template 'foo.html': Error message.",
         )
 
-    @mock.patch('mkdocs.structure.files.open', mock.mock_open(read_data=''))
+    @mock.patch('properdocs.structure.files.open', mock.mock_open(read_data=''))
     def test_skip_extra_template_empty_output(self):
         cfg = load_config()
         fs = [File('foo.html', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)]
         files = Files(fs)
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             build._build_extra_template('foo.html', files, cfg, mock.Mock())
         self.assertEqual(
             '\n'.join(cm.output),
-            "INFO:mkdocs.commands.build:Template skipped: 'foo.html' generated empty output.",
+            "INFO:properdocs.commands.build:Template skipped: 'foo.html' generated empty output.",
         )
 
     # Test build._populate_page
@@ -335,7 +335,7 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
         build._populate_page(page, cfg, Files([file]), dirty=True)
         self.assertTrue(page.markdown.startswith('# Welcome to ProperDocs'))
         self.assertTrue(
-            page.content.startswith('<h1 id="welcome-to-mkdocs">Welcome to ProperDocs</h1>')
+            page.content.startswith('<h1 id="welcome-to-properdocs">Welcome to ProperDocs</h1>')
         )
 
     @tempdir(files={'index.md': 'page content'})
@@ -350,19 +350,19 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
         self.assertEqual(page.content, None)
 
     @tempdir(files={'index.md': 'new page content'})
-    @mock.patch('mkdocs.structure.files.open', side_effect=OSError('Error message.'))
+    @mock.patch('properdocs.structure.files.open', side_effect=OSError('Error message.'))
     def test_populate_page_read_error(self, docs_dir, mock_open):
         cfg = load_config(docs_dir=docs_dir)
         file = File('missing.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)
         page = Page('Foo', file, cfg)
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             with self.assertRaises(OSError):
                 build._populate_page(page, cfg, Files([file]))
         self.assertEqual(
             cm.output,
             [
-                'ERROR:mkdocs.structure.pages:File not found: missing.md',
-                "ERROR:mkdocs.commands.build:Error reading page 'missing.md': Error message.",
+                'ERROR:properdocs.structure.pages:File not found: missing.md',
+                "ERROR:properdocs.commands.build:Error reading page 'missing.md': Error message.",
             ],
         )
         mock_open.assert_called_once()
@@ -377,12 +377,12 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
 
         file = File('index.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)
         page = Page('Foo', file, cfg)
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             with self.assertRaises(PluginError):
                 build._populate_page(page, cfg, Files([file]))
         self.assertEqual(
             '\n'.join(cm.output),
-            "ERROR:mkdocs.commands.build:Error reading page 'index.md':",
+            "ERROR:properdocs.commands.build:Error reading page 'index.md':",
         )
 
     # Test build._build_page
@@ -408,20 +408,20 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
         fs = [File('index.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)]
         files = Files(fs)
         nav = get_navigation(files, cfg)
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             build._build_page(
                 files.documentation_pages()[0].page, cfg, files, nav, cfg.theme.get_env()
             )
         self.assertEqual(
             '\n'.join(cm.output),
-            "INFO:mkdocs.commands.build:Page skipped: 'index.md'. Generated empty output.",
+            "INFO:properdocs.commands.build:Page skipped: 'index.md'. Generated empty output.",
         )
         self.assertPathNotExists(site_dir, 'index.html')
         render_mock.assert_called_once()
 
     @tempdir(files={'index.md': 'page content'})
     @tempdir(files={'index.html': '<p>page content</p>'})
-    @mock.patch('mkdocs.utils.write_file')
+    @mock.patch('properdocs.utils.write_file')
     def test_build_page_dirty_modified(self, site_dir, docs_dir, mock_write_file):
         cfg = load_config(docs_dir=docs_dir, site_dir=site_dir, nav=['index.md'])
         fs = [File('index.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)]
@@ -438,7 +438,7 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
         mock_write_file.assert_not_called()
 
     @tempdir(files={'testing.html': '<p>page content</p>'})
-    @mock.patch('mkdocs.utils.write_file')
+    @mock.patch('properdocs.utils.write_file')
     def test_build_page_dirty_not_modified(self, site_dir, mock_write_file):
         cfg = load_config(site_dir=site_dir, nav=['testing.md'])
         fs = [File('testing.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)]
@@ -470,7 +470,7 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
         self.assertPathIsFile(site_dir, 'index.html')
 
     @tempdir()
-    @mock.patch('mkdocs.utils.write_file', side_effect=OSError('Error message.'))
+    @mock.patch('properdocs.utils.write_file', side_effect=OSError('Error message.'))
     def test_build_page_error(self, site_dir, mock_write_file):
         cfg = load_config(site_dir=site_dir, nav=['index.md'])
         fs = [File('index.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)]
@@ -481,12 +481,12 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
         page.title = 'Title'
         page.markdown = 'page content'
         page.content = '<p>page content</p>'
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             with self.assertRaises(OSError):
                 build._build_page(page, cfg, files, nav, self._get_env_with_null_translations(cfg))
         self.assertEqual(
             '\n'.join(cm.output),
-            "ERROR:mkdocs.commands.build:Error building page 'index.md': Error message.",
+            "ERROR:properdocs.commands.build:Error building page 'index.md': Error message.",
         )
         mock_write_file.assert_called_once()
 
@@ -505,12 +505,12 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
         page.title = 'Title'
         page.markdown = 'page content'
         page.content = '<p>page content</p>'
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             with self.assertRaises(PluginError):
                 build._build_page(page, cfg, files, nav, cfg.theme.get_env())
         self.assertEqual(
             '\n'.join(cm.output),
-            "ERROR:mkdocs.commands.build:Error building page 'index.md':",
+            "ERROR:properdocs.commands.build:Error building page 'index.md':",
         )
 
     # Test build.build
@@ -560,7 +560,7 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
 
     @contextlib.contextmanager
     def _assert_build_logs(self, expected):
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             yield
         msgs = [f'{r.levelname}:{r.message}' for r in cm.records]
         if msgs and msgs[0].startswith('INFO:Cleaning site directory'):
@@ -609,7 +609,7 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
         serve_url = 'http://localhost:123/documentation/'
         with self.subTest(serve_url=serve_url):
             expected_logs = '''
-                INFO:The following pages are being built only for the preview but will be excluded from `mkdocs build` per `draft_docs` config:
+                INFO:The following pages are being built only for the preview but will be excluded from `properdocs build` per `draft_docs` config:
                   - http://localhost:123/documentation/other_unpublished.html
                   - http://localhost:123/documentation/test/other_unpublished.html
             '''
@@ -663,7 +663,7 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
             expected_logs = '''
                 INFO:Doc file 'test/bar.md' contains a link 'nonexistent.md', but the target 'test/nonexistent.md' is not found among documentation files.
                 INFO:Doc file 'test/foo.md' contains a link to 'test/bar.md' which is excluded from the built site.
-                INFO:The following pages are being built only for the preview but will be excluded from `mkdocs build` per `draft_docs` config:
+                INFO:The following pages are being built only for the preview but will be excluded from `properdocs build` per `draft_docs` config:
                   - http://localhost:123/documentation/test/bar.html
                   - http://localhost:123/documentation/test/baz.html
             '''
@@ -813,13 +813,13 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
     @tempdir()
     @tempdir()
     def test_plugins_adding_files_and_interacting(self, tmp_dir, site_dir, docs_dir):
-        def on_files_1(files: Files, config: MkDocsConfig) -> Files:
+        def on_files_1(files: Files, config: ProperDocsConfig) -> Files:
             # Plugin 1 generates a file.
             Path(tmp_dir, 'SUMMARY.md').write_text('foo.md\nbar.md\n')
             files.append(File('SUMMARY.md', tmp_dir, config.site_dir, config.use_directory_urls))
             return files
 
-        def on_files_2(files: Files, config: MkDocsConfig) -> None:
+        def on_files_2(files: Files, config: ProperDocsConfig) -> None:
             # Plugin 2 reads that file and uses it to configure the nav.
             f = files.get_file_from_path('SUMMARY.md')
             assert f is not None
@@ -846,7 +846,7 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
                         '''
                     if exclude == 'drafts' and serve_url:
                         expected_logs = '''
-                            INFO:The following pages are being built only for the preview but will be excluded from `mkdocs build` per `draft_docs` config:
+                            INFO:The following pages are being built only for the preview but will be excluded from `properdocs build` per `draft_docs` config:
                               - http://localhost:123/SUMMARY.html
                         '''
                     with self._assert_build_logs(expected_logs):
@@ -909,7 +909,7 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
                     site_name: test
                     use_directory_urls: false
                     markdown_extensions:
-                      - mkdocs.tests.build_tests:
+                      - properdocs.tests.build_tests:
                           base_path: {base_path}
                 '''
                 config = base.load_config(
@@ -952,7 +952,7 @@ class _TestExtension(markdown.extensions.Extension):
         self.base_path = str(base_path)
 
     def extendMarkdown(self, md: markdown.Markdown) -> None:
-        md.preprocessors.register(_TestPreprocessor(self.base_path), "mkdocs_test", priority=32)
+        md.preprocessors.register(_TestPreprocessor(self.base_path), "properdocs_test", priority=32)
 
 
 makeExtension = _TestExtension

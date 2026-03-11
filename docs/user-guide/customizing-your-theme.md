@@ -35,7 +35,7 @@ extra_css:
 ```
 
 After making these changes, they should be visible when you run
-`mkdocs serve` - if you already had this running, you should see that the CSS
+`properdocs serve` - if you already had this running, you should see that the CSS
 changes were automatically picked up and the documentation will be updated.
 
 NOTE:
@@ -219,7 +219,7 @@ any additional CSS files included in the `custom_dir`.
 [custom_dir]: ./configuration.md#custom_dir
 [name]: ./configuration.md#name
 [mkdocs]: ./choosing-your-theme.md#mkdocs
-[browse source]: https://github.com/mkdocs/mkdocs/tree/master/mkdocs/themes/mkdocs
+[browse source]: https://github.com/properdocs/properdocs/tree/master/properdocs/themes/mkdocs
 [Template Variables]: ../dev-guide/themes.md#template-variables
 [Jinja documentation]: https://jinja.palletsprojects.com/en/latest/templates/#template-inheritance
 [super block]: https://jinja.palletsprojects.com/en/latest/templates/#super-blocks

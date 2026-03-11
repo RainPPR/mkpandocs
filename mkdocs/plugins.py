@@ -14,16 +14,22 @@ else:
 if TYPE_CHECKING:
     import jinja2.environment
 
-from mkdocs import utils
-from mkdocs.config.base import Config, ConfigErrors, ConfigWarnings, LegacyConfig, PlainConfigSchema
+from properdocs import utils
+from properdocs.config.base import (
+    Config,
+    ConfigErrors,
+    ConfigWarnings,
+    LegacyConfig,
+    PlainConfigSchema,
+)
 
 if TYPE_CHECKING:
-    from mkdocs.config.defaults import MkDocsConfig
-    from mkdocs.livereload import LiveReloadServer
-    from mkdocs.structure.files import Files
-    from mkdocs.structure.nav import Navigation
-    from mkdocs.structure.pages import Page
-    from mkdocs.utils.templates import TemplateContext
+    from properdocs.config.defaults import ProperDocsConfig
+    from properdocs.livereload import LiveReloadServer
+    from properdocs.structure.files import Files
+    from properdocs.structure.nav import Navigation
+    from properdocs.structure.pages import Page
+    from properdocs.utils.templates import TemplateContext
 
 if TYPE_CHECKING:
     from typing_extensions import Concatenate, ParamSpec
@@ -34,17 +40,17 @@ P = ParamSpec('P')
 T = TypeVar('T')
 
 
-log = logging.getLogger('mkdocs.plugins')
+log = logging.getLogger('properdocs.plugins')
 
 
 def get_plugins() -> dict[str, EntryPoint]:
     """Return a dict of all installed Plugins as {name: EntryPoint}."""
-    plugins = entry_points(group='mkdocs.plugins')
+    plugins = entry_points(group='properdocs.plugins')
 
     # Allow third-party plugins to override core plugins
     pluginmap = {}
     for plugin in plugins:
-        if plugin.name in pluginmap and plugin.value.startswith("mkdocs.contrib."):
+        if plugin.name in pluginmap and plugin.value.startswith("properdocs.contrib."):
             continue
 
         pluginmap[plugin.name] = plugin
@@ -77,7 +83,7 @@ class BasePlugin(Generic[SomeConfig]):
     def __init_subclass__(cls):
         if not issubclass(cls.config_class, Config):
             raise TypeError(
-                f"config_class {cls.config_class} must be a subclass of `mkdocs.config.base.Config`"
+                f"config_class {cls.config_class} must be a subclass of `properdocs.config.base.Config`"
             )
         if cls.config_class is not LegacyConfig:
             cls.config_scheme = cls.config_class._schema  # For compatibility.
@@ -99,32 +105,32 @@ class BasePlugin(Generic[SomeConfig]):
 
     def on_startup(self, *, command: Literal['build', 'gh-deploy', 'serve'], dirty: bool) -> None:
         """
-        The `startup` event runs once at the very beginning of an `mkdocs` invocation.
+        The `startup` event runs once at the very beginning of an `properdocs` invocation.
 
         New in MkDocs 1.4.
 
         The presence of an `on_startup` method (even if empty) migrates the plugin to the new
-        system where the plugin object is kept across builds within one `mkdocs serve`.
+        system where the plugin object is kept across builds within one `properdocs serve`.
 
         Note that for initializing variables, the `__init__` method is still preferred.
         For initializing per-build variables (and whenever in doubt), use the `on_config` event.
 
         Args:
-            command: the command that ProperDocs was invoked with, e.g. "serve" for `mkdocs serve`.
+            command: the command that ProperDocs was invoked with, e.g. "serve" for `properdocs serve`.
             dirty: whether `--dirty` flag was passed.
         """
 
     def on_shutdown(self) -> None:
         """
-        The `shutdown` event runs once at the very end of an `mkdocs` invocation, before exiting.
+        The `shutdown` event runs once at the very end of an `properdocs` invocation, before exiting.
 
-        This event is relevant only for support of `mkdocs serve`, otherwise within a
+        This event is relevant only for support of `properdocs serve`, otherwise within a
         single build it's undistinguishable from `on_post_build`.
 
         New in MkDocs 1.4.
 
         The presence of an `on_shutdown` method (even if empty) migrates the plugin to the new
-        system where the plugin object is kept across builds within one `mkdocs serve`.
+        system where the plugin object is kept across builds within one `properdocs serve`.
 
         Note the `on_post_build` method is still preferred for cleanups, when possible, as it has
         a much higher chance of actually triggering. `on_shutdown` is "best effort" because it
@@ -132,7 +138,7 @@ class BasePlugin(Generic[SomeConfig]):
         """
 
     def on_serve(
-        self, server: LiveReloadServer, /, *, config: MkDocsConfig, builder: Callable
+        self, server: LiveReloadServer, /, *, config: ProperDocsConfig, builder: Callable
     ) -> LiveReloadServer | None:
         """
         The `serve` event is only called when the `serve` command is used during
@@ -153,7 +159,7 @@ class BasePlugin(Generic[SomeConfig]):
 
     # Global events
 
-    def on_config(self, config: MkDocsConfig) -> MkDocsConfig | None:
+    def on_config(self, config: ProperDocsConfig) -> ProperDocsConfig | None:
         """
         The `config` event is the first event called on build and is run immediately
         after the user configuration is loaded and validated. Any alterations to the
@@ -167,7 +173,7 @@ class BasePlugin(Generic[SomeConfig]):
         """
         return config
 
-    def on_pre_build(self, *, config: MkDocsConfig) -> None:
+    def on_pre_build(self, *, config: ProperDocsConfig) -> None:
         """
         The `pre_build` event does not alter any variables. Use this event to call
         pre-build scripts.
@@ -176,7 +182,7 @@ class BasePlugin(Generic[SomeConfig]):
             config: global configuration object
         """
 
-    def on_files(self, files: Files, /, *, config: MkDocsConfig) -> Files | None:
+    def on_files(self, files: Files, /, *, config: ProperDocsConfig) -> Files | None:
         """
         The `files` event is called after the files collection is populated from the
         `docs_dir`. Use this event to add, remove, or alter files in the
@@ -194,7 +200,7 @@ class BasePlugin(Generic[SomeConfig]):
         return files
 
     def on_nav(
-        self, nav: Navigation, /, *, config: MkDocsConfig, files: Files
+        self, nav: Navigation, /, *, config: ProperDocsConfig, files: Files
     ) -> Navigation | None:
         """
         The `nav` event is called after the site navigation is created and can
@@ -211,7 +217,7 @@ class BasePlugin(Generic[SomeConfig]):
         return nav
 
     def on_env(
-        self, env: jinja2.Environment, /, *, config: MkDocsConfig, files: Files
+        self, env: jinja2.Environment, /, *, config: ProperDocsConfig, files: Files
     ) -> jinja2.Environment | None:
         """
         The `env` event is called after the Jinja template environment is created
@@ -228,7 +234,7 @@ class BasePlugin(Generic[SomeConfig]):
         """
         return env
 
-    def on_post_build(self, *, config: MkDocsConfig) -> None:
+    def on_post_build(self, *, config: ProperDocsConfig) -> None:
         """
         The `post_build` event does not alter any variables. Use this event to call
         post-build scripts.
@@ -252,7 +258,7 @@ class BasePlugin(Generic[SomeConfig]):
     # Template events
 
     def on_pre_template(
-        self, template: jinja2.Template, /, *, template_name: str, config: MkDocsConfig
+        self, template: jinja2.Template, /, *, template_name: str, config: ProperDocsConfig
     ) -> jinja2.Template | None:
         """
         The `pre_template` event is called immediately after the subject template is
@@ -269,7 +275,7 @@ class BasePlugin(Generic[SomeConfig]):
         return template
 
     def on_template_context(
-        self, context: TemplateContext, /, *, template_name: str, config: MkDocsConfig
+        self, context: TemplateContext, /, *, template_name: str, config: ProperDocsConfig
     ) -> TemplateContext | None:
         """
         The `template_context` event is called immediately after the context is created
@@ -287,7 +293,7 @@ class BasePlugin(Generic[SomeConfig]):
         return context
 
     def on_post_template(
-        self, output_content: str, /, *, template_name: str, config: MkDocsConfig
+        self, output_content: str, /, *, template_name: str, config: ProperDocsConfig
     ) -> str | None:
         """
         The `post_template` event is called after the template is rendered, but before
@@ -307,22 +313,22 @@ class BasePlugin(Generic[SomeConfig]):
 
     # Page events
 
-    def on_pre_page(self, page: Page, /, *, config: MkDocsConfig, files: Files) -> Page | None:
+    def on_pre_page(self, page: Page, /, *, config: ProperDocsConfig, files: Files) -> Page | None:
         """
         The `pre_page` event is called before any actions are taken on the subject
         page and can be used to alter the `Page` instance.
 
         Args:
-            page: `mkdocs.structure.pages.Page` instance
+            page: `properdocs.structure.pages.Page` instance
             config: global configuration object
             files: global files collection
 
         Returns:
-            `mkdocs.structure.pages.Page` instance
+            `properdocs.structure.pages.Page` instance
         """
         return page
 
-    def on_page_read_source(self, /, *, page: Page, config: MkDocsConfig) -> str | None:
+    def on_page_read_source(self, /, *, page: Page, config: ProperDocsConfig) -> str | None:
         """
         > DEPRECATED: Instead of this event, prefer one of these alternatives:
         >
@@ -333,7 +339,7 @@ class BasePlugin(Generic[SomeConfig]):
         the contents of a page's source from the filesystem.
 
         Args:
-            page: `mkdocs.structure.pages.Page` instance
+            page: `properdocs.structure.pages.Page` instance
             config: global configuration object
 
         Returns:
@@ -343,7 +349,7 @@ class BasePlugin(Generic[SomeConfig]):
         return None
 
     def on_page_markdown(
-        self, markdown: str, /, *, page: Page, config: MkDocsConfig, files: Files
+        self, markdown: str, /, *, page: Page, config: ProperDocsConfig, files: Files
     ) -> str | None:
         """
         The `page_markdown` event is called after the page's markdown is loaded
@@ -352,7 +358,7 @@ class BasePlugin(Generic[SomeConfig]):
 
         Args:
             markdown: Markdown source text of page as string
-            page: `mkdocs.structure.pages.Page` instance
+            page: `properdocs.structure.pages.Page` instance
             config: global configuration object
             files: global files collection
 
@@ -362,7 +368,7 @@ class BasePlugin(Generic[SomeConfig]):
         return markdown
 
     def on_page_content(
-        self, html: str, /, *, page: Page, config: MkDocsConfig, files: Files
+        self, html: str, /, *, page: Page, config: ProperDocsConfig, files: Files
     ) -> str | None:
         """
         The `page_content` event is called after the Markdown text is rendered to
@@ -371,7 +377,7 @@ class BasePlugin(Generic[SomeConfig]):
 
         Args:
             html: HTML rendered from Markdown source as string
-            page: `mkdocs.structure.pages.Page` instance
+            page: `properdocs.structure.pages.Page` instance
             config: global configuration object
             files: global files collection
 
@@ -381,7 +387,7 @@ class BasePlugin(Generic[SomeConfig]):
         return html
 
     def on_page_context(
-        self, context: TemplateContext, /, *, page: Page, config: MkDocsConfig, nav: Navigation
+        self, context: TemplateContext, /, *, page: Page, config: ProperDocsConfig, nav: Navigation
     ) -> TemplateContext | None:
         """
         The `page_context` event is called after the context for a page is created
@@ -389,7 +395,7 @@ class BasePlugin(Generic[SomeConfig]):
 
         Args:
             context: dict of template context variables
-            page: `mkdocs.structure.pages.Page` instance
+            page: `properdocs.structure.pages.Page` instance
             config: global configuration object
             nav: global navigation object
 
@@ -398,7 +404,7 @@ class BasePlugin(Generic[SomeConfig]):
         """
         return context
 
-    def on_post_page(self, output: str, /, *, page: Page, config: MkDocsConfig) -> str | None:
+    def on_post_page(self, output: str, /, *, page: Page, config: ProperDocsConfig) -> str | None:
         """
         The `post_page` event is called after the template is rendered, but
         before it is written to disc and can be used to alter the output of the
@@ -407,7 +413,7 @@ class BasePlugin(Generic[SomeConfig]):
 
         Args:
             output: output of rendered template as string
-            page: `mkdocs.structure.pages.Page` instance
+            page: `properdocs.structure.pages.Page` instance
             config: global configuration object
 
         Returns:
@@ -444,7 +450,7 @@ def event_priority(priority: float) -> Callable[[T], T]:
 
     ```python
     try:
-        from mkdocs.plugins import event_priority
+        from properdocs.plugins import event_priority
     except ImportError:
         event_priority = lambda priority: lambda f: f  # No-op fallback
     ```
@@ -579,70 +585,72 @@ class PluginCollection(dict, MutableMapping[str, BasePlugin]):
         return self.run_event('shutdown')
 
     def on_serve(
-        self, server: LiveReloadServer, *, config: MkDocsConfig, builder: Callable
+        self, server: LiveReloadServer, *, config: ProperDocsConfig, builder: Callable
     ) -> LiveReloadServer:
         return self.run_event('serve', server, config=config, builder=builder)
 
-    def on_config(self, config: MkDocsConfig) -> MkDocsConfig:
+    def on_config(self, config: ProperDocsConfig) -> ProperDocsConfig:
         return self.run_event('config', config)
 
-    def on_pre_build(self, *, config: MkDocsConfig) -> None:
+    def on_pre_build(self, *, config: ProperDocsConfig) -> None:
         return self.run_event('pre_build', config=config)
 
-    def on_files(self, files: Files, *, config: MkDocsConfig) -> Files:
+    def on_files(self, files: Files, *, config: ProperDocsConfig) -> Files:
         return self.run_event('files', files, config=config)
 
-    def on_nav(self, nav: Navigation, *, config: MkDocsConfig, files: Files) -> Navigation:
+    def on_nav(self, nav: Navigation, *, config: ProperDocsConfig, files: Files) -> Navigation:
         return self.run_event('nav', nav, config=config, files=files)
 
-    def on_env(self, env: jinja2.Environment, *, config: MkDocsConfig, files: Files):
+    def on_env(self, env: jinja2.Environment, *, config: ProperDocsConfig, files: Files):
         return self.run_event('env', env, config=config, files=files)
 
-    def on_post_build(self, *, config: MkDocsConfig) -> None:
+    def on_post_build(self, *, config: ProperDocsConfig) -> None:
         return self.run_event('post_build', config=config)
 
     def on_build_error(self, *, error: Exception) -> None:
         return self.run_event('build_error', error=error)
 
     def on_pre_template(
-        self, template: jinja2.Template, *, template_name: str, config: MkDocsConfig
+        self, template: jinja2.Template, *, template_name: str, config: ProperDocsConfig
     ) -> jinja2.Template:
         return self.run_event('pre_template', template, template_name=template_name, config=config)
 
     def on_template_context(
-        self, context: TemplateContext, *, template_name: str, config: MkDocsConfig
+        self, context: TemplateContext, *, template_name: str, config: ProperDocsConfig
     ) -> TemplateContext:
         return self.run_event(
             'template_context', context, template_name=template_name, config=config
         )
 
     def on_post_template(
-        self, output_content: str, *, template_name: str, config: MkDocsConfig
+        self, output_content: str, *, template_name: str, config: ProperDocsConfig
     ) -> str:
         return self.run_event(
             'post_template', output_content, template_name=template_name, config=config
         )
 
-    def on_pre_page(self, page: Page, *, config: MkDocsConfig, files: Files) -> Page:
+    def on_pre_page(self, page: Page, *, config: ProperDocsConfig, files: Files) -> Page:
         return self.run_event('pre_page', page, config=config, files=files)
 
-    def on_page_read_source(self, *, page: Page, config: MkDocsConfig) -> str | None:
+    def on_page_read_source(self, *, page: Page, config: ProperDocsConfig) -> str | None:
         return self.run_event('page_read_source', page=page, config=config)
 
     def on_page_markdown(
-        self, markdown: str, *, page: Page, config: MkDocsConfig, files: Files
+        self, markdown: str, *, page: Page, config: ProperDocsConfig, files: Files
     ) -> str:
         return self.run_event('page_markdown', markdown, page=page, config=config, files=files)
 
-    def on_page_content(self, html: str, *, page: Page, config: MkDocsConfig, files: Files) -> str:
+    def on_page_content(
+        self, html: str, *, page: Page, config: ProperDocsConfig, files: Files
+    ) -> str:
         return self.run_event('page_content', html, page=page, config=config, files=files)
 
     def on_page_context(
-        self, context: TemplateContext, *, page: Page, config: MkDocsConfig, nav: Navigation
+        self, context: TemplateContext, *, page: Page, config: ProperDocsConfig, nav: Navigation
     ) -> TemplateContext:
         return self.run_event('page_context', context, page=page, config=config, nav=nav)
 
-    def on_post_page(self, output: str, *, page: Page, config: MkDocsConfig) -> str:
+    def on_post_page(self, output: str, *, page: Page, config: ProperDocsConfig) -> str:
         return self.run_event('post_page', output, page=page, config=config)
 
 
@@ -687,11 +695,11 @@ def get_plugin_logger(name: str) -> PrefixedLogger:
 
     Example:
         ```python
-        from mkdocs.plugins import get_plugin_logger
+        from properdocs.plugins import get_plugin_logger
 
         log = get_plugin_logger(__name__)
         log.info("My plugin message")
         ```
     """
-    logger = logging.getLogger(f"mkdocs.plugins.{name}")
+    logger = logging.getLogger(f"properdocs.plugins.{name}")
     return PrefixedLogger(name.split(".", 1)[0], logger)

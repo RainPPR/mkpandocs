@@ -4,15 +4,15 @@ import logging
 from typing import TYPE_CHECKING, Iterator, TypeVar
 from urllib.parse import urlsplit
 
-from mkdocs.exceptions import BuildError
-from mkdocs.structure import StructureItem
-from mkdocs.structure.files import file_sort_key
-from mkdocs.structure.pages import Page, _AbsoluteLinksValidationValue
-from mkdocs.utils import nest_paths
+from properdocs.exceptions import BuildError
+from properdocs.structure import StructureItem
+from properdocs.structure.files import file_sort_key
+from properdocs.structure.pages import Page, _AbsoluteLinksValidationValue
+from properdocs.utils import nest_paths
 
 if TYPE_CHECKING:
-    from mkdocs.config.defaults import MkDocsConfig
-    from mkdocs.structure.files import Files
+    from properdocs.config.defaults import ProperDocsConfig
+    from properdocs.structure.files import Files
 
 
 log = logging.getLogger(__name__)
@@ -30,10 +30,10 @@ class Navigation:
                 break
 
     homepage: Page | None
-    """The [page][mkdocs.structure.pages.Page] object for the homepage of the site."""
+    """The [page][properdocs.structure.pages.Page] object for the homepage of the site."""
 
     pages: list[Page]
-    """A flat list of all [page][mkdocs.structure.pages.Page] objects contained in the navigation."""
+    """A flat list of all [page][properdocs.structure.pages.Page] objects contained in the navigation."""
 
     def __str__(self) -> str:
         return '\n'.join(item._indent_print() for item in self)
@@ -127,7 +127,7 @@ class Link(StructureItem):
     """Indicates that the navigation object is a "link" object. Always `True` for link objects."""
 
 
-def get_navigation(files: Files, config: MkDocsConfig) -> Navigation:
+def get_navigation(files: Files, config: ProperDocsConfig) -> Navigation:
     """Build site navigation from config and files."""
     documentation_pages = files.documentation_pages()
     nav_config = config['nav']
@@ -185,7 +185,7 @@ def get_navigation(files: Files, config: MkDocsConfig) -> Navigation:
     return Navigation(items, pages)
 
 
-def _data_to_navigation(data, files: Files, config: MkDocsConfig):
+def _data_to_navigation(data, files: Files, config: ProperDocsConfig):
     if isinstance(data, dict):
         return [
             _data_to_navigation((key, value), files, config)

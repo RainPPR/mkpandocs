@@ -4,9 +4,9 @@
 import unittest
 from unittest import mock
 
-from mkdocs.config.base import ValidationError
-from mkdocs.localization import install_translations, parse_locale
-from mkdocs.tests.base import tempdir
+from properdocs.config.base import ValidationError
+from properdocs.localization import install_translations, parse_locale
+from properdocs.tests.base import tempdir
 
 
 class LocalizationTests(unittest.TestCase):
@@ -35,11 +35,11 @@ class LocalizationTests(unittest.TestCase):
 
     @tempdir()
     def test_no_translations_found(self, dir_without_translations):
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             install_translations(self.env, parse_locale('fr_CA'), [dir_without_translations])
         self.assertEqual(
             '\n'.join(cm.output),
-            "WARNING:mkdocs.localization:No translations could be found for the locale 'fr_CA'. "
+            "WARNING:properdocs.localization:No translations could be found for the locale 'fr_CA'. "
             "Defaulting to English.",
         )
         self.env.install_null_translations.assert_called_once()
@@ -48,7 +48,7 @@ class LocalizationTests(unittest.TestCase):
     def test_translations_found(self, tdir):
         translations = mock.Mock()
 
-        with mock.patch('mkdocs.localization.Translations.load', return_value=translations):
+        with mock.patch('properdocs.localization.Translations.load', return_value=translations):
             install_translations(self.env, parse_locale('en'), [tdir])
 
         self.env.install_gettext_translations.assert_called_once_with(translations)
@@ -68,7 +68,7 @@ class LocalizationTests(unittest.TestCase):
             else:
                 self.fail()
 
-        with mock.patch('mkdocs.localization.Translations.load', side_effect=side_effet):
+        with mock.patch('properdocs.localization.Translations.load', side_effect=side_effet):
             install_translations(self.env, parse_locale('en'), [custom_dir, theme_dir])
 
         theme_dir_translations.merge.assert_called_once_with(custom_dir_translations)

@@ -1,6 +1,6 @@
 import unittest
 
-from mkdocs.utils.babel_stub import Locale, UnknownLocaleError
+from properdocs.utils.babel_stub import Locale, UnknownLocaleError
 
 
 class BabelStubTests(unittest.TestCase):

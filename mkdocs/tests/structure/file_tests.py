@@ -3,8 +3,8 @@ import sys
 import unittest
 from unittest import mock
 
-from mkdocs.structure.files import File, Files, _sort_files, file_sort_key, get_files
-from mkdocs.tests.base import PathAssertionMixin, load_config, tempdir
+from properdocs.structure.files import File, Files, _sort_files, file_sort_key, get_files
+from properdocs.tests.base import PathAssertionMixin, load_config, tempdir
 
 
 class TestFiles(PathAssertionMixin, unittest.TestCase):
@@ -623,11 +623,11 @@ class TestFiles(PathAssertionMixin, unittest.TestCase):
     )
     def test_get_files_exclude_readme_with_index(self, tdir):
         config = load_config(docs_dir=tdir)
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             files = get_files(config)
         self.assertRegex(
             '\n'.join(cm.output),
-            r"^WARNING:mkdocs.structure.files:"
+            r"^WARNING:properdocs.structure.files:"
             r"Excluding 'README.md' from the site because it conflicts with 'index.md'.$",
         )
         self.assertIsInstance(files, Files)

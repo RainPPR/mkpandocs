@@ -1,3 +1,3 @@
-from mkdocs.config.base import Config, load_config
+from properdocs.config.base import Config, load_config
 
 __all__ = ['load_config', 'Config']

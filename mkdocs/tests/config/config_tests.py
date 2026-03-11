@@ -3,14 +3,14 @@
 import os
 import unittest
 
-import mkdocs
-from mkdocs import config
-from mkdocs.config import config_options as c
-from mkdocs.config import defaults
-from mkdocs.config.base import ValidationError
-from mkdocs.exceptions import ConfigurationError
-from mkdocs.localization import parse_locale
-from mkdocs.tests.base import dedent, tempdir
+import properdocs
+from properdocs import config
+from properdocs.config import config_options as c
+from properdocs.config import defaults
+from properdocs.config.base import ValidationError
+from properdocs.exceptions import ConfigurationError
+from properdocs.localization import parse_locale
+from properdocs.tests.base import dedent, tempdir
 
 
 class ConfigTests(unittest.TestCase):
@@ -19,7 +19,7 @@ class ConfigTests(unittest.TestCase):
             config.load_config(config_file='bad_filename.yaml')
 
     def test_missing_site_name(self):
-        conf = defaults.MkDocsConfig()
+        conf = defaults.ProperDocsConfig()
         conf.load_dict({})
         errors, warnings = conf.validate()
         self.assertEqual(
@@ -95,13 +95,13 @@ class ConfigTests(unittest.TestCase):
             },
         ]
 
-        mkdocs_dir = os.path.abspath(os.path.dirname(mkdocs.__file__))
-        mkdocs_templates_dir = os.path.join(mkdocs_dir, 'templates')
-        theme_dir = os.path.abspath(os.path.join(mkdocs_dir, 'themes'))
+        properdocs_dir = os.path.abspath(os.path.dirname(properdocs.__file__))
+        properdocs_templates_dir = os.path.join(properdocs_dir, 'templates')
+        theme_dir = os.path.abspath(os.path.join(properdocs_dir, 'themes'))
 
         results = (
             {
-                'dirs': [os.path.join(theme_dir, 'mkdocs'), mkdocs_templates_dir],
+                'dirs': [os.path.join(theme_dir, 'mkdocs'), properdocs_templates_dir],
                 'static_templates': ['404.html', 'sitemap.xml'],
                 'vars': {
                     'name': 'mkdocs',
@@ -121,7 +121,7 @@ class ConfigTests(unittest.TestCase):
                 },
             },
             {
-                'dirs': [os.path.join(theme_dir, 'readthedocs'), mkdocs_templates_dir],
+                'dirs': [os.path.join(theme_dir, 'readthedocs'), properdocs_templates_dir],
                 'static_templates': ['404.html', 'sitemap.xml'],
                 'vars': {
                     'name': 'readthedocs',
@@ -142,7 +142,7 @@ class ConfigTests(unittest.TestCase):
                 },
             },
             {
-                'dirs': [os.path.join(theme_dir, 'readthedocs'), mkdocs_templates_dir],
+                'dirs': [os.path.join(theme_dir, 'readthedocs'), properdocs_templates_dir],
                 'static_templates': ['404.html', 'sitemap.xml'],
                 'vars': {
                     'name': 'readthedocs',
@@ -163,12 +163,12 @@ class ConfigTests(unittest.TestCase):
                 },
             },
             {
-                'dirs': [mytheme, mkdocs_templates_dir],
+                'dirs': [mytheme, properdocs_templates_dir],
                 'static_templates': ['sitemap.xml'],
                 'vars': {'name': None, 'locale': parse_locale('en')},
             },
             {
-                'dirs': [custom, os.path.join(theme_dir, 'readthedocs'), mkdocs_templates_dir],
+                'dirs': [custom, os.path.join(theme_dir, 'readthedocs'), properdocs_templates_dir],
                 'static_templates': ['404.html', 'sitemap.xml'],
                 'vars': {
                     'name': 'readthedocs',
@@ -189,7 +189,7 @@ class ConfigTests(unittest.TestCase):
                 },
             },
             {
-                'dirs': [os.path.join(theme_dir, 'mkdocs'), mkdocs_templates_dir],
+                'dirs': [os.path.join(theme_dir, 'mkdocs'), properdocs_templates_dir],
                 'static_templates': ['404.html', 'sitemap.xml', 'foo.html'],
                 'vars': {
                     'name': 'mkdocs',
@@ -224,7 +224,7 @@ class ConfigTests(unittest.TestCase):
                 self.assertEqual(dict(conf['theme']), result['vars'])
 
     def test_empty_nav(self):
-        conf = defaults.MkDocsConfig(
+        conf = defaults.ProperDocsConfig(
             config_file_path=os.path.join(os.path.abspath('.'), 'mkdocs.yml')
         )
         conf.load_dict({'site_name': 'Example'})
@@ -232,7 +232,7 @@ class ConfigTests(unittest.TestCase):
         self.assertEqual(conf['nav'], None)
 
     def test_error_on_pages(self):
-        conf = defaults.MkDocsConfig()
+        conf = defaults.ProperDocsConfig()
         conf.load_dict(
             {
                 'site_name': 'Example',

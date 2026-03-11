@@ -19,7 +19,7 @@ pip 20.0.2 from /usr/local/lib/python3.8/site-packages/pip (python 3.8)
 ```
 
 If you already have those packages installed, you may skip down to [Installing
-ProperDocs](#installing-mkdocs).
+ProperDocs](#installing-properdocs).
 
 ### Installing Python
 
@@ -52,18 +52,18 @@ python get-pip.py
 
 ## Installing ProperDocs
 
-Install the `mkdocs` package using pip:
+Install the `properdocs` package using pip:
 
 ```bash
-pip install mkdocs
+pip install properdocs
 ```
 
-You should now have the `mkdocs` command installed on your system. Run `mkdocs
+You should now have the `properdocs` command installed on your system. Run `properdocs
 --version` to check that everything worked okay.
 
 ```console
-$ mkdocs --version
-mkdocs, version 1.2.0 from /usr/local/lib/python3.8/site-packages/mkdocs (Python 3.8)
+$ properdocs --version
+properdocs, version 1.2.0 from /usr/local/lib/python3.8/site-packages/properdocs (Python 3.8)
 ```
 
 > NOTE:
@@ -72,7 +72,7 @@ mkdocs, version 1.2.0 from /usr/local/lib/python3.8/site-packages/mkdocs (Python
 >
 > ```bash
 > pip install click-man
-> click-man --target path/to/man/pages mkdocs
+> click-man --target path/to/man/pages properdocs
 > ```
 >
 > See the [click-man documentation] for an explanation of why manpages are
@@ -86,8 +86,8 @@ mkdocs, version 1.2.0 from /usr/local/lib/python3.8/site-packages/mkdocs (Python
 > like this:
 >
 > ```bash
-> python -m pip install mkdocs
-> python -m mkdocs
+> python -m pip install properdocs
+> python -m properdocs
 > ```
 >
 > For a more permanent solution, you may need to edit your `PATH` environment

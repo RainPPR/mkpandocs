@@ -11,7 +11,7 @@ nav:
       - Version 2: index.md
       - Version 3: index.md
 
-site_url: http://www.mkdocs.org/
+site_url: http://properdocs.org/
 docs_dir: documentation
 site_dir: output
 
@@ -24,7 +24,7 @@ copyright: "Dougal Matthews"
 dev_addr: ::1:8000
 use_directory_urls: false
 
-repo_url: https://github.com/mkdocs/mkdocs/tree/master/mkdocs/tests/integration
+repo_url: https://github.com/properdocs/properdocs/tree/master/properdocs/tests/integration
 repo_name: "GitHub"
 
 extra_css: ["tweak.css"]

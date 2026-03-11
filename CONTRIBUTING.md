@@ -11,7 +11,7 @@ ways, a few examples are:
 - Bug reports and patch reviews
 
 For information about available communication channels please refer to the
-[README](https://github.com/mkdocs/mkdocs#readme) file in our
+[README](https://github.com/properdocs/properdocs#readme) file in our
 GitHub repository.
 
 ## Reporting an Issue
@@ -41,7 +41,7 @@ have encountered is fixed in the git master. It is **strongly** recommended
 that you do this within a [virtualenv].
 
 ```bash
-pip install git+https://github.com/mkdocs/mkdocs.git
+pip install git+https://github.com/properdocs/properdocs.git
 ```
 
 ## Installing for Development
@@ -125,7 +125,7 @@ If you add a new plugin to mkdocs.yml, you don't need to add it to any "requirem
 >
 > ```bash
 > .venv/bin/pip install -r requirements/requirements-docs.txt  # Exact versions of dependencies.
-> .venv/bin/pip install -r $(mkdocs get-deps)  # Latest versions of all dependencies.
+> .venv/bin/pip install -r $(properdocs get-deps)  # Latest versions of all dependencies.
 > ```
 
 ## Translating themes
@@ -148,7 +148,7 @@ Do *not* add to *release-notes.md*, this will be written later.
 
 ### Submitting changes to the builtin themes
 
-When installed with `i18n` support (`pip install 'mkdocs[i18n]'`), ProperDocs allows
+When installed with `i18n` support (`pip install 'properdocs[i18n]'`), ProperDocs allows
 themes to support being translated into various languages (referred to as
 locales) if they respect [Jinja's i18n extension] by wrapping text placeholders
 with `{% trans %}` and `{% endtrans %}` tags.
@@ -159,8 +159,8 @@ updated by running the `extract_messages` command. To update the
 `pot` file for both built-in themes, run these commands:
 
 ```bash
-pybabel extract --project=ProperDocs --copyright-holder=ProperDocs --msgid-bugs-address='https://github.com/mkdocs/mkdocs/issues' --no-wrap --version="$(hatch version)" --mapping-file mkdocs/themes/babel.cfg --output-file mkdocs/themes/mkdocs/messages.pot mkdocs/themes/mkdocs
-pybabel extract --project=ProperDocs --copyright-holder=ProperDocs --msgid-bugs-address='https://github.com/mkdocs/mkdocs/issues' --no-wrap --version="$(hatch version)" --mapping-file mkdocs/themes/babel.cfg --output-file mkdocs/themes/readthedocs/messages.pot mkdocs/themes/readthedocs
+pybabel extract --project=ProperDocs --copyright-holder=ProperDocs --msgid-bugs-address='https://github.com/properdocs/properdocs/issues' --no-wrap --version="$(hatch version)" --mapping-file properdocs/themes/babel.cfg --output-file properdocs/themes/mkdocs/messages.pot properdocs/themes/mkdocs
+pybabel extract --project=ProperDocs --copyright-holder=ProperDocs --msgid-bugs-address='https://github.com/properdocs/properdocs/issues' --no-wrap --version="$(hatch version)" --mapping-file properdocs/themes/babel.cfg --output-file properdocs/themes/readthedocs/messages.pot properdocs/themes/readthedocs
 ```
 
 The updated `pot` file should be included in a PR with the updated template.
@@ -184,7 +184,7 @@ rooms, and mailing lists is expected to follow the [PyPA Code of Conduct].
 [installing `pipx`]: https://pypa.github.io/pipx/installation/
 [GitHub Actions]: https://docs.github.com/actions
 [PyPA Code of Conduct]: https://www.pypa.io/en/latest/code-of-conduct/
-[Translating Themes]: https://www.mkdocs.org/dev-guide/translations/
+[Translating Themes]: https://properdocs.org/dev-guide/translations/
 [Jinja's i18n extension]: https://jinja.palletsprojects.com/en/latest/extensions/#i18n-extension
 [Ruff]: https://docs.astral.sh/ruff/
 [Black]: https://black.readthedocs.io/

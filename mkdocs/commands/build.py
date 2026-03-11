@@ -10,17 +10,17 @@ from urllib.parse import urljoin, urlsplit
 import jinja2
 from jinja2.exceptions import TemplateNotFound
 
-import mkdocs
-from mkdocs import utils
-from mkdocs.exceptions import Abort, BuildError
-from mkdocs.structure.files import File, Files, InclusionLevel, get_files, set_exclusions
-from mkdocs.structure.nav import Navigation, get_navigation
-from mkdocs.structure.pages import Page
-from mkdocs.utils import DuplicateFilter  # noqa: F401 - legacy re-export
-from mkdocs.utils import templates
+import properdocs
+from properdocs import utils
+from properdocs.exceptions import Abort, BuildError
+from properdocs.structure.files import File, Files, InclusionLevel, get_files, set_exclusions
+from properdocs.structure.nav import Navigation, get_navigation
+from properdocs.structure.pages import Page
+from properdocs.utils import DuplicateFilter  # noqa: F401 - legacy re-export
+from properdocs.utils import templates
 
 if TYPE_CHECKING:
-    from mkdocs.config.defaults import MkDocsConfig
+    from properdocs.config.defaults import ProperDocsConfig
 
 
 log = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ log = logging.getLogger(__name__)
 def get_context(
     nav: Navigation,
     files: Sequence[File] | Files,
-    config: MkDocsConfig,
+    config: ProperDocsConfig,
     page: Page | None = None,
     base_url: str = '',
 ) -> templates.TemplateContext:
@@ -51,7 +51,7 @@ def get_context(
         base_url=base_url,
         extra_css=extra_css,
         extra_javascript=extra_javascript,
-        mkdocs_version=mkdocs.__version__,
+        mkdocs_version=properdocs.__version__,
         build_date_utc=utils.get_build_datetime(),
         config=config,
         page=page,
@@ -59,7 +59,7 @@ def get_context(
 
 
 def _build_template(
-    name: str, template: jinja2.Template, files: Files, config: MkDocsConfig, nav: Navigation
+    name: str, template: jinja2.Template, files: Files, config: ProperDocsConfig, nav: Navigation
 ) -> str:
     """Return rendered output for given template as a string."""
     # Run `pre_template` plugin events.
@@ -89,7 +89,11 @@ def _build_template(
 
 
 def _build_theme_template(
-    template_name: str, env: jinja2.Environment, files: Files, config: MkDocsConfig, nav: Navigation
+    template_name: str,
+    env: jinja2.Environment,
+    files: Files,
+    config: ProperDocsConfig,
+    nav: Navigation,
 ) -> None:
     """Build a template using the theme environment."""
     log.debug(f"Building theme template: {template_name}")
@@ -121,7 +125,9 @@ def _build_theme_template(
         log.info(f"Template skipped: '{template_name}' generated empty output.")
 
 
-def _build_extra_template(template_name: str, files: Files, config: MkDocsConfig, nav: Navigation):
+def _build_extra_template(
+    template_name: str, files: Files, config: ProperDocsConfig, nav: Navigation
+):
     """Build user templates which are not part of the theme."""
     log.debug(f"Building extra template: {template_name}")
 
@@ -144,7 +150,7 @@ def _build_extra_template(template_name: str, files: Files, config: MkDocsConfig
         log.info(f"Template skipped: '{template_name}' generated empty output.")
 
 
-def _populate_page(page: Page, config: MkDocsConfig, files: Files, dirty: bool = False) -> None:
+def _populate_page(page: Page, config: ProperDocsConfig, files: Files, dirty: bool = False) -> None:
     """Read page content from docs_dir and render Markdown."""
     config._current_page = page
     try:
@@ -184,7 +190,7 @@ def _populate_page(page: Page, config: MkDocsConfig, files: Files, dirty: bool =
 
 def _build_page(
     page: Page,
-    config: MkDocsConfig,
+    config: ProperDocsConfig,
     doc_files: Sequence[File],
     nav: Navigation,
     env: jinja2.Environment,
@@ -214,7 +220,7 @@ def _build_page(
 
         if excluded:
             page.content = (
-                '<div class="mkdocs-draft-marker" title="This page will not be included into the built site.">'
+                '<div class="properdocs-draft-marker" title="This page will not be included into the built site.">'
                 'DRAFT'
                 '</div>' + (page.content or '')
             )
@@ -246,15 +252,15 @@ def _build_page(
         config._current_page = None
 
 
-def build(config: MkDocsConfig, *, serve_url: str | None = None, dirty: bool = False) -> None:
+def build(config: ProperDocsConfig, *, serve_url: str | None = None, dirty: bool = False) -> None:
     """Perform a full site build."""
-    logger = logging.getLogger('mkdocs')
+    logger = logging.getLogger('properdocs')
 
     # Add CountHandler for strict mode
     warning_counter = utils.CountHandler()
     warning_counter.setLevel(logging.WARNING)
     if config.strict:
-        logging.getLogger('mkdocs').addHandler(warning_counter)
+        logging.getLogger('properdocs').addHandler(warning_counter)
 
     inclusion = InclusionLevel.is_in_serve if serve_url else InclusionLevel.is_included
 
@@ -311,7 +317,7 @@ def build(config: MkDocsConfig, *, serve_url: str | None = None, dirty: bool = F
         if excluded:
             log.info(
                 "The following pages are being built only for the preview "
-                "but will be excluded from `mkdocs build` per `draft_docs` config:\n  - "
+                "but will be excluded from `properdocs build` per `draft_docs` config:\n  - "
                 + "\n  - ".join(excluded)
             )
 

@@ -3,8 +3,8 @@ from textwrap import dedent
 
 import yaml
 
-from mkdocs.tests.base import load_config
-from mkdocs.utils import templates
+from properdocs.tests.base import load_config
+from properdocs.utils import templates
 
 
 class UtilsTemplatesTests(unittest.TestCase):

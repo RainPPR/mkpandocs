@@ -12,14 +12,14 @@ try:
 except ImportError:
     from jinja2 import contextfilter  # type: ignore
 
-from mkdocs.utils import normalize_url
+from properdocs.utils import normalize_url
 
 if TYPE_CHECKING:
-    from mkdocs.config.config_options import ExtraScriptValue
-    from mkdocs.config.defaults import MkDocsConfig
-    from mkdocs.structure.files import File
-    from mkdocs.structure.nav import Navigation
-    from mkdocs.structure.pages import Page
+    from properdocs.config.config_options import ExtraScriptValue
+    from properdocs.config.defaults import ProperDocsConfig
+    from properdocs.structure.files import File
+    from properdocs.structure.nav import Navigation
+    from properdocs.structure.pages import Page
 
 
 class TemplateContext(TypedDict):
@@ -30,7 +30,7 @@ class TemplateContext(TypedDict):
     extra_javascript: Sequence[str]  # Do not use, prefer `config.extra_javascript`.
     mkdocs_version: str
     build_date_utc: datetime.datetime
-    config: MkDocsConfig
+    config: ProperDocsConfig
     page: Page | None
 
 

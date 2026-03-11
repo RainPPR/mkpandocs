@@ -4,7 +4,7 @@ import abc
 from typing import TYPE_CHECKING, Iterable
 
 if TYPE_CHECKING:
-    from mkdocs.structure.nav import Section
+    from properdocs.structure.nav import Section
 
 
 class StructureItem(metaclass=abc.ABCMeta):

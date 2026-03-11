@@ -8,20 +8,20 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from typing_extensions import assert_type
 
-    from mkdocs.structure.nav import Navigation
+    from properdocs.structure.nav import Navigation
 else:
 
     def assert_type(val, typ):
         return None
 
 
-from mkdocs import plugins
-from mkdocs.commands import build
-from mkdocs.config import base
-from mkdocs.config import config_options as c
-from mkdocs.config.base import ValidationError
-from mkdocs.exceptions import Abort, BuildError, PluginError
-from mkdocs.tests.base import load_config, tempdir
+from properdocs import plugins
+from properdocs.commands import build
+from properdocs.config import base
+from properdocs.config import config_options as c
+from properdocs.config.base import ValidationError
+from properdocs.exceptions import Abort, BuildError, PluginError
+from properdocs.tests.base import load_config, tempdir
 
 
 class _DummyPluginConfig(base.Config):
@@ -159,11 +159,11 @@ class TestPluginCollection(unittest.TestCase):
 
         collection = plugins.PluginCollection()
         collection['dummy'] = dummy = DummyPlugin()
-        with self.assertLogs('mkdocs', level='WARNING') as cm:
+        with self.assertLogs('properdocs', level='WARNING') as cm:
             collection['prio'] = prio = PrioPlugin()
         self.assertEqual(
             '\n'.join(cm.output),
-            "WARNING:mkdocs.plugins:Multiple 'on_page_read_source' handlers can't work (both plugins 'dummy' and 'prio' registered one).",
+            "WARNING:properdocs.plugins:Multiple 'on_page_read_source' handlers can't work (both plugins 'dummy' and 'prio' registered one).",
         )
 
         self.assertEqual(
@@ -194,11 +194,11 @@ class TestPluginCollection(unittest.TestCase):
         plugin1 = DummyPlugin()
         collection['foo'] = plugin1
         plugin2 = DummyPlugin()
-        with self.assertLogs('mkdocs', level='WARNING') as cm:
+        with self.assertLogs('properdocs', level='WARNING') as cm:
             collection['bar'] = plugin2
         self.assertEqual(
             '\n'.join(cm.output),
-            "WARNING:mkdocs.plugins:Multiple 'on_page_read_source' handlers can't work (both plugins 'foo' and 'bar' registered one).",
+            "WARNING:properdocs.plugins:Multiple 'on_page_read_source' handlers can't work (both plugins 'foo' and 'bar' registered one).",
         )
         self.assertEqual(list(collection.items()), [('foo', plugin1), ('bar', plugin2)])
 
@@ -219,11 +219,11 @@ class TestPluginCollection(unittest.TestCase):
         collection['foo'] = plugin1
         plugin2 = DummyPlugin()
         plugin2.load_config({'foo': 'second'})
-        with self.assertLogs('mkdocs', level='WARNING') as cm:
+        with self.assertLogs('properdocs', level='WARNING') as cm:
             collection['bar'] = plugin2
         self.assertEqual(
             '\n'.join(cm.output),
-            "WARNING:mkdocs.plugins:Multiple 'on_page_read_source' handlers can't work (both plugins 'foo' and 'bar' registered one).",
+            "WARNING:properdocs.plugins:Multiple 'on_page_read_source' handlers can't work (both plugins 'foo' and 'bar' registered one).",
         )
         self.assertEqual(
             collection.on_page_content('page content', page=None, config={}, files=[]),
@@ -295,22 +295,22 @@ class TestPluginCollection(unittest.TestCase):
 
         cfg = load_config(site_dir=site_dir)
         cfg.plugins['errorplugin'] = PluginRaisingError(error_on='pre_page')
-        with self.assertLogs('mkdocs', level='ERROR'):
+        with self.assertLogs('properdocs', level='ERROR'):
             self.assertRaises(Abort, build.build, cfg)
 
         cfg = load_config(site_dir=site_dir)
         cfg.plugins['errorplugin'] = PluginRaisingError(error_on='page_markdown')
-        with self.assertLogs('mkdocs', level='ERROR'):
+        with self.assertLogs('properdocs', level='ERROR'):
             self.assertRaises(Abort, build.build, cfg)
 
         cfg = load_config(site_dir=site_dir)
         cfg.plugins['errorplugin'] = PluginRaisingError(error_on='page_content')
-        with self.assertLogs('mkdocs', level='ERROR'):
+        with self.assertLogs('properdocs', level='ERROR'):
             self.assertRaises(Abort, build.build, cfg)
 
         cfg = load_config(site_dir=site_dir)
         cfg.plugins['errorplugin'] = PluginRaisingError(error_on='post_page')
-        with self.assertLogs('mkdocs', level='ERROR'):
+        with self.assertLogs('properdocs', level='ERROR'):
             self.assertRaises(ValueError, build.build, cfg)
 
         cfg = load_config(site_dir=site_dir)

@@ -9,8 +9,8 @@ from html.parser import HTMLParser
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from mkdocs.structure.pages import Page
-    from mkdocs.structure.toc import AnchorLink, TableOfContents
+    from properdocs.structure.pages import Page
+    from properdocs.structure.toc import AnchorLink, TableOfContents
 
 try:
     from lunr import lunr  # type: ignore

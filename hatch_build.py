@@ -9,6 +9,6 @@ class CustomBuildHook(BuildHookInterface):
 
         for theme in 'mkdocs', 'readthedocs':
             cmd = compile_catalog()
-            cmd.directory = os.path.join('mkdocs', 'themes', theme, 'locales')
+            cmd.directory = os.path.join('properdocs', 'themes', theme, 'locales')
             cmd.finalize_options()
             cmd.run()

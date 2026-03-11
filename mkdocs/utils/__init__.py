@@ -25,11 +25,11 @@ if sys.version_info >= (3, 10):
 else:
     from importlib_metadata import EntryPoint, entry_points
 
-from mkdocs import exceptions
-from mkdocs.utils.yaml import get_yaml_loader, yaml_load  # noqa: F401 - legacy re-export
+from properdocs import exceptions
+from properdocs.utils.yaml import get_yaml_loader, yaml_load  # noqa: F401 - legacy re-export
 
 if TYPE_CHECKING:
-    from mkdocs.structure.pages import Page
+    from properdocs.structure.pages import Page
 
 T = TypeVar('T')
 
@@ -263,13 +263,13 @@ def get_theme_dir(name: str) -> str:
 def get_themes() -> dict[str, EntryPoint]:
     """Return a dict of all installed themes as {name: EntryPoint}."""
     themes: dict[str, EntryPoint] = {}
-    eps: dict[EntryPoint, None] = dict.fromkeys(entry_points(group='mkdocs.themes'))
-    builtins = {ep.name for ep in eps if ep.dist is not None and ep.dist.name == 'mkdocs'}
+    eps: dict[EntryPoint, None] = dict.fromkeys(entry_points(group='properdocs.themes'))
+    builtins = {ep.name for ep in eps if ep.dist is not None and ep.dist.name == 'properdocs'}
 
     for theme in eps:
         assert theme.dist is not None
 
-        if theme.name in builtins and theme.dist.name != 'mkdocs':
+        if theme.name in builtins and theme.dist.name != 'properdocs':
             raise exceptions.ConfigurationError(
                 f"The theme '{theme.name}' is a builtin theme but the package '{theme.dist.name}' "
                 "attempts to provide a theme with the same name."
@@ -402,7 +402,7 @@ def __getattr__(name: str):
     if name == 'warning_filter':
         warnings.warn(
             "warning_filter doesn't do anything since MkDocs 1.2 and will be removed soon. "
-            "All messages on the `mkdocs` logger get counted automatically.",
+            "All messages on the `properdocs` logger get counted automatically.",
             DeprecationWarning,
         )
         return logging.Filter()

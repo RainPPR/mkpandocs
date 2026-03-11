@@ -33,15 +33,15 @@ import markdown
 import pathspec
 import pathspec.gitignore
 
-from mkdocs import plugins, theme, utils
-from mkdocs.config.base import (
+from properdocs import plugins, theme, utils
+from properdocs.config.base import (
     BaseConfigOption,
     Config,
     LegacyConfig,
     PlainConfigSchemaItem,
     ValidationError,
 )
-from mkdocs.exceptions import ConfigurationError
+from properdocs.exceptions import ConfigurationError
 
 T = TypeVar('T')
 SomeConfig = TypeVar('SomeConfig', bound=Config)
@@ -790,7 +790,7 @@ class SiteDir(Dir):
             raise ValidationError(
                 f"The 'docs_dir' should not be within the 'site_dir' as this "
                 f"can mean the source files are overwritten by the output or "
-                f"it will be deleted if --clean is passed to mkdocs build. "
+                f"it will be deleted if --clean is passed to properdocs build. "
                 f"(site_dir: '{site_dir}', docs_dir: '{docs_dir}')"
             )
         elif (site_dir + os.sep).startswith(docs_dir.rstrip(os.sep) + os.sep):

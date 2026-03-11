@@ -7,12 +7,12 @@ from os.path import isdir, isfile, join
 from typing import TYPE_CHECKING
 from urllib.parse import urlsplit
 
-from mkdocs.commands.build import build
-from mkdocs.config import load_config
-from mkdocs.livereload import LiveReloadServer, _serve_url
+from properdocs.commands.build import build
+from properdocs.config import load_config
+from properdocs.livereload import LiveReloadServer, _serve_url
 
 if TYPE_CHECKING:
-    from mkdocs.config.defaults import MkDocsConfig
+    from properdocs.config.defaults import ProperDocsConfig
 
 log = logging.getLogger(__name__)
 
@@ -35,7 +35,7 @@ def serve(
     whenever a file is edited.
     """
     # Create a temporary build directory, and set some options to serve it
-    site_dir = tempfile.mkdtemp(prefix='mkdocs_')
+    site_dir = tempfile.mkdtemp(prefix='properdocs_')
 
     def get_config():
         config = load_config(
@@ -56,7 +56,7 @@ def serve(
     mount_path = urlsplit(config.site_url or '/').path
     config.site_url = serve_url = _serve_url(host, port, mount_path)
 
-    def builder(config: MkDocsConfig | None = None):
+    def builder(config: ProperDocsConfig | None = None):
         log.info("Building documentation...")
         if config is None:
             config = get_config()

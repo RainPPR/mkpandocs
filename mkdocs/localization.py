@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Sequence
 
 from jinja2.ext import Extension, InternationalizationExtension
 
-from mkdocs.config.base import ValidationError
+from properdocs.config.base import ValidationError
 
 if TYPE_CHECKING:
     import jinja2
@@ -17,7 +17,7 @@ try:
 
     has_babel = True
 except ImportError:  # pragma: no cover
-    from mkdocs.utils.babel_stub import Locale, UnknownLocaleError  # type: ignore
+    from properdocs.utils.babel_stub import Locale, UnknownLocaleError  # type: ignore
 
     has_babel = False
 

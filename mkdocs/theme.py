@@ -13,9 +13,9 @@ try:
 except ImportError:  # pragma: no cover
     from yaml import SafeLoader  # type: ignore
 
-from mkdocs import localization, utils
-from mkdocs.config.base import ValidationError
-from mkdocs.utils import templates
+from properdocs import localization, utils
+from properdocs.config.base import ValidationError
+from properdocs.utils import templates
 
 log = logging.getLogger(__name__)
 
@@ -48,8 +48,8 @@ class Theme(MutableMapping[str, Any]):
 
         # ProperDocs provided static templates are always included
         package_dir = os.path.abspath(os.path.dirname(__file__))
-        mkdocs_templates = os.path.join(package_dir, 'templates')
-        self.static_templates = set(os.listdir(mkdocs_templates))
+        properdocs_templates = os.path.join(package_dir, 'templates')
+        self.static_templates = set(os.listdir(properdocs_templates))
 
         # Build self.dirs from various sources in order of precedence
         self.dirs = []
@@ -61,7 +61,7 @@ class Theme(MutableMapping[str, Any]):
             self._load_theme_config(name)
 
         # Include templates provided directly by ProperDocs (outside any theme)
-        self.dirs.append(mkdocs_templates)
+        self.dirs.append(properdocs_templates)
 
         # Handle remaining user configs. Override theme configs (if set)
         self.static_templates.update(static_templates)

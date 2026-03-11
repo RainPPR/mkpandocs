@@ -15,8 +15,8 @@ basic, yet complete, theme with all the boilerplate required. **You can find
 this base theme on [GitHub][basic theme]**. It contains detailed comments in
 the code to describe the different features and their usage.
 
-[community wiki]: https://github.com/mkdocs/mkdocs/wiki/ProperDocs-Themes
-[catalog]: https://github.com/mkdocs/catalog#-theming
+[community wiki]: https://github.com/properdocs/properdocs/wiki/ProperDocs-Themes
+[catalog]: https://github.com/properdocs/catalog#-theming
 [basic theme]: https://github.com/mkdocs/mkdocs-basic-theme
 
 ## Creating a custom theme
@@ -254,7 +254,7 @@ defined by the [nav] configuration setting.
 
 [nav]: ../user-guide/configuration.md#nav
 
-::: mkdocs.structure.nav.Navigation
+::: properdocs.structure.nav.Navigation
     options:
         show_root_heading: false
         show_root_toc_entry: true
@@ -264,12 +264,12 @@ defined by the [nav] configuration setting.
 In addition to the iterable of [navigation objects](#navigation-objects), the
 `nav` object contains the following attributes:
 
-::: mkdocs.structure.nav.Navigation.homepage
+::: properdocs.structure.nav.Navigation.homepage
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.nav.Navigation.pages
+::: properdocs.structure.nav.Navigation.pages
     options:
         show_root_full_path: false
         heading_level: 5
@@ -340,7 +340,7 @@ the `page` variable contains a `page` object. The same `page` objects are used
 as `page` [navigation objects](#navigation-objects) in the global
 [navigation](#nav) and in the [pages](#pages) template variable.
 
-::: mkdocs.structure.pages.Page
+::: properdocs.structure.pages.Page
     options:
         show_root_heading: false
         show_root_toc_entry: true
@@ -349,17 +349,17 @@ as `page` [navigation objects](#navigation-objects) in the global
 
 All `page` objects contain the following attributes:
 
-::: mkdocs.structure.pages.Page.title
+::: properdocs.structure.pages.Page.title
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.pages.Page.content
+::: properdocs.structure.pages.Page.content
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.pages.Page.toc
+::: properdocs.structure.pages.Page.toc
     options:
         show_root_full_path: false
         heading_level: 5
@@ -378,7 +378,7 @@ for a page.
 </ul>
 ```
 
-::: mkdocs.structure.pages.Page.meta
+::: properdocs.structure.pages.Page.meta
     options:
         show_root_full_path: false
         heading_level: 5
@@ -406,7 +406,7 @@ documentation page.
 {% endfor %}
 ```
 
-::: mkdocs.structure.pages.Page.url
+::: properdocs.structure.pages.Page.url
     options:
         show_root_full_path: false
         heading_level: 5
@@ -418,12 +418,12 @@ page.
 <a href="{{ page.url|url }}">{{ page.title }}</a>
 ```
 
-::: mkdocs.structure.pages.Page.file
+::: properdocs.structure.pages.Page.file
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.pages.Page.abs_url
+::: properdocs.structure.pages.Page.abs_url
     options:
         show_root_full_path: false
         heading_level: 5
@@ -433,17 +433,17 @@ For example, if `site_url: https://example.com/`, then the value of
 `site_url: https://example.com/bar/`, then the value of `page.abs_url` for the
 page `foo.md` would be `/bar/foo/`.
 
-::: mkdocs.structure.pages.Page.canonical_url
+::: properdocs.structure.pages.Page.canonical_url
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.pages.Page.edit_url
+::: properdocs.structure.pages.Page.edit_url
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.pages.Page.is_homepage
+::: properdocs.structure.pages.Page.is_homepage
     options:
         show_root_full_path: false
         heading_level: 5
@@ -456,49 +456,49 @@ on the homepage:
 {% if not page.is_homepage %}{{ page.title }} - {% endif %}{{ site_name }}
 ```
 
-::: mkdocs.structure.pages.Page.previous_page
+::: properdocs.structure.pages.Page.previous_page
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.pages.Page.next_page
+::: properdocs.structure.pages.Page.next_page
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.StructureItem.parent
+::: properdocs.structure.StructureItem.parent
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.pages.Page.children
+::: properdocs.structure.pages.Page.children
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.pages.Page.active
+::: properdocs.structure.pages.Page.active
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.pages.Page.is_section
+::: properdocs.structure.pages.Page.is_section
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.pages.Page.is_page
+::: properdocs.structure.pages.Page.is_page
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.pages.Page.is_link
+::: properdocs.structure.pages.Page.is_link
     options:
         show_root_full_path: false
         heading_level: 5
 
 #### AnchorLink
 
-::: mkdocs.structure.toc.AnchorLink
+::: properdocs.structure.toc.AnchorLink
     options:
         show_root_heading: false
         show_root_toc_entry: true
@@ -523,7 +523,7 @@ URLs and are not links of any kind. However, by default, ProperDocs sorts index
 pages to the top and the first child might be used as the URL for a section if a
 theme chooses to do so.
 
-::: mkdocs.structure.nav.Section
+::: properdocs.structure.nav.Section
     options:
         show_root_heading: false
         show_root_toc_entry: true
@@ -532,37 +532,37 @@ theme chooses to do so.
 
 The following attributes are available on `section` objects:
 
-::: mkdocs.structure.nav.Section.title
+::: properdocs.structure.nav.Section.title
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.StructureItem.parent
+::: properdocs.structure.StructureItem.parent
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.nav.Section.children
+::: properdocs.structure.nav.Section.children
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.nav.Section.active
+::: properdocs.structure.nav.Section.active
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.nav.Section.is_section
+::: properdocs.structure.nav.Section.is_section
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.nav.Section.is_page
+::: properdocs.structure.nav.Section.is_page
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.nav.Section.is_link
+::: properdocs.structure.nav.Section.is_link
     options:
         show_root_full_path: false
         heading_level: 5
@@ -572,7 +572,7 @@ The following attributes are available on `section` objects:
 A `link` navigation object contains a link which does not point to an internal
 ProperDocs page.
 
-::: mkdocs.structure.nav.Link
+::: properdocs.structure.nav.Link
     options:
         show_root_heading: false
         show_root_toc_entry: true
@@ -581,42 +581,42 @@ ProperDocs page.
 
 The following attributes are available on `link` objects:
 
-::: mkdocs.structure.nav.Link.title
+::: properdocs.structure.nav.Link.title
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.nav.Link.url
+::: properdocs.structure.nav.Link.url
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.StructureItem.parent
+::: properdocs.structure.StructureItem.parent
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.nav.Link.children
+::: properdocs.structure.nav.Link.children
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.nav.Link.active
+::: properdocs.structure.nav.Link.active
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.nav.Link.is_section
+::: properdocs.structure.nav.Link.is_section
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.nav.Link.is_page
+::: properdocs.structure.nav.Link.is_page
     options:
         show_root_full_path: false
         heading_level: 5
 
-::: mkdocs.structure.nav.Link.is_link
+::: properdocs.structure.nav.Link.is_link
     options:
         show_root_full_path: false
         heading_level: 5
@@ -635,9 +635,9 @@ following `extra` configuration:
 extra:
   version: 0.13.0
   links:
-    - https://github.com/mkdocs
+    - https://github.com/properdocs
     - https://docs.readthedocs.org/en/latest/builds.html#mkdocs
-    - https://www.mkdocs.org/
+    - https://properdocs.org/
 ```
 
 And then displayed with this HTML in the custom theme.
@@ -676,7 +676,7 @@ Safely convert a Python object to a value in a JavaScript script.
 
 ```django
 <script>
-    var mkdocs_page_name = {{ page.title|tojson|safe }};
+    var properdocs_page_name = {{ page.title|tojson|safe }};
 </script>
 ```
 
@@ -725,18 +725,18 @@ full search implementation to your theme.
 <h1 id="search">Search Results</h1>
 
 <form action="search.html">
-  <input name="q" id="mkdocs-search-query" type="text" >
+  <input name="q" id="properdocs-search-query" type="text" >
 </form>
 
-<div id="mkdocs-search-results">
+<div id="properdocs-search-results">
   Sorry, page not found.
 </div>
 ```
 
 The JavaScript in the plugin works by looking for the specific ID's used in the
 above HTML. The form input for the user to type the search query must be
-identified with `id="mkdocs-search-query"` and the div where the results will be
-placed must be identified with `id="mkdocs-search-results"`.
+identified with `id="properdocs-search-query"` and the div where the results will be
+placed must be identified with `id="properdocs-search-results"`.
 
 The plugin supports the following options being set in the [theme's
 configuration file], `mkdocs_theme.yml`:
@@ -795,7 +795,7 @@ Themes should expect the index to not be present, but can choose to use the
 index when it is available. The `index` object was new in ProperDocs version *1.0*.
 
 [Jinja2 template]: https://jinja.palletsprojects.com/
-[built-in themes]: https://github.com/mkdocs/mkdocs/tree/master/mkdocs/themes
+[built-in themes]: https://github.com/properdocs/properdocs/tree/master/properdocs/themes
 [theme's configuration file]: #theme-configuration
 [lunr.js]: https://lunrjs.com/
 [site_dir]: ../user-guide/configuration.md#site_dir
@@ -860,7 +860,7 @@ from setuptools import setup, find_packages
 VERSION = '0.0.1'
 
 setup(
-    name="mkdocs-themename",
+    name="properdocs-themename",
     version=VERSION,
     url='',
     license='',
@@ -870,7 +870,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     entry_points={
-        'mkdocs.themes': [
+        'properdocs.themes': [
             'themename = theme_name',
         ]
     },
@@ -880,7 +880,7 @@ setup(
 
 Fill in the URL, license, description, author and author email address.
 
-The name should follow the convention `mkdocs-themename` (like
+The name should follow the convention `properdocs-themename` (like
 `mkdocs-bootstrap` and `mkdocs-bootswatch`), starting with ProperDocs, using
 hyphens to separate words and including the name of your theme.
 
@@ -1037,7 +1037,7 @@ WARNING:
 As **[pybabel] is not installed by default** and most users will not have
 pybabel installed, theme developers and/or translators should make sure to
 have installed the necessary dependencies
-(using `pip install 'mkdocs[i18n]'`) in order for the commands to be
+(using `pip install 'properdocs[i18n]'`) in order for the commands to be
 available for use.
 
 The translation commands should be called from the root of your theme's working tree.

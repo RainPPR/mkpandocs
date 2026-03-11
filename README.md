@@ -12,7 +12,7 @@ source files are written in Markdown, and configured with a single YAML
 configuration file. It is designed to be easy to use and can be extended with
 third-party themes, plugins, and Markdown extensions.
 
-Please see the [Documentation][mkdocs] for an introductory tutorial and a full
+Please see the [Documentation][properdocs] for an introductory tutorial and a full
 user guide.
 
 ## Features
@@ -42,7 +42,7 @@ Make sure to stick around to answer some questions as well!
 
 ## Links
 
-- [Official Documentation][mkdocs]
+- [Official Documentation][properdocs]
 - [Latest Release Notes][release-notes]
 - [Catalog of third-party plugins, themes and recipes][catalog]
 
@@ -58,22 +58,22 @@ Everyone interacting in the ProperDocs project's codebases, issue trackers, and
 discussion forums is expected to follow the [PyPA Code of Conduct].
 
 <!-- Badges -->
-[codecov-image]: https://codecov.io/github/mkdocs/mkdocs/coverage.svg?branch=master
-[codecov-link]: https://codecov.io/github/mkdocs/mkdocs?branch=master
-[pypi-v-image]: https://img.shields.io/pypi/v/mkdocs.svg
-[pypi-v-link]: https://pypi.org/project/mkdocs/
-[GHAction-image]: https://github.com/mkdocs/mkdocs/actions/workflows/ci.yml/badge.svg
-[GHAction-link]: https://github.com/mkdocs/mkdocs/actions/workflows/ci.yml
+[codecov-image]: https://codecov.io/github/properdocs/properdocs/coverage.svg?branch=master
+[codecov-link]: https://codecov.io/github/properdocs/properdocs?branch=master
+[pypi-v-image]: https://img.shields.io/pypi/v/properdocs.svg
+[pypi-v-link]: https://pypi.org/project/properdocs/
+[GHAction-image]: https://github.com/properdocs/properdocs/actions/workflows/ci.yml/badge.svg
+[GHAction-link]: https://github.com/properdocs/properdocs/actions/workflows/ci.yml
 <!-- Links -->
-[mkdocs]: https://www.mkdocs.org
-[Issue]: https://github.com/mkdocs/mkdocs/issues
-[Discussions]: https://github.com/mkdocs/mkdocs/discussions
+[properdocs]: https://properdocs.org
+[Issue]: https://github.com/properdocs/properdocs/issues
+[Discussions]: https://github.com/properdocs/properdocs/discussions
 [Chat room]: https://gitter.im/mkdocs/community
-[release-notes]: https://www.mkdocs.org/about/release-notes/
-[Contributing Guide]: https://www.mkdocs.org/about/contributing/
+[release-notes]: https://properdocs.org/about/release-notes/
+[Contributing Guide]: https://properdocs.org/about/contributing/
 [PyPA Code of Conduct]: https://www.pypa.io/en/latest/code-of-conduct/
-[catalog]: https://github.com/mkdocs/catalog
+[catalog]: https://github.com/properdocs/catalog
 
 ## License
 
-[BSD-2-Clause](https://github.com/mkdocs/mkdocs/blob/master/LICENSE)
+[BSD-2-Clause](https://github.com/properdocs/properdocs/blob/master/LICENSE)

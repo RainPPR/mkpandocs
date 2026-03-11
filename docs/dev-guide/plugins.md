@@ -12,7 +12,7 @@ ProperDocs. However, to install third party plugins, you need to determine the
 appropriate package name and install it using `pip`:
 
 ```bash
-pip install mkdocs-foo-plugin
+pip install properdocs-foo-plugin
 ```
 
 WARNING: Installing a ProperDocs plugin means installing a Python package and executing any code that the author has put in there. So, exercise the usual caution; there's no attempt at sandboxing.
@@ -64,7 +64,7 @@ points to it.
 
 ### BasePlugin
 
-A subclass of `mkdocs.plugins.BasePlugin` should define the behavior of the plugin.
+A subclass of `properdocs.plugins.BasePlugin` should define the behavior of the plugin.
 The class generally consists of actions to perform on specific events in the build
 process as well as a configuration scheme for the plugin.
 
@@ -75,16 +75,16 @@ All `BasePlugin` subclasses contain the following attributes:
 A tuple of configuration validation instances. Each item must consist of a
 two item tuple in which the first item is the string name of the
 configuration option and the second item is an instance of
-`mkdocs.config.config_options.BaseConfigOption` or any of its subclasses.
+`properdocs.config.config_options.BaseConfigOption` or any of its subclasses.
 
 For example, the following `config_scheme` defines three configuration options: `foo`, which accepts a string; `bar`, which accepts an integer; and `baz`, which accepts a boolean value.
 
 ```python
-class MyPlugin(mkdocs.plugins.BasePlugin):
+class MyPlugin(properdocs.plugins.BasePlugin):
     config_scheme = (
-        ('foo', mkdocs.config.config_options.Type(str, default='a default value')),
-        ('bar', mkdocs.config.config_options.Type(int, default=0)),
-        ('baz', mkdocs.config.config_options.Type(bool, default=True))
+        ('foo', properdocs.config.config_options.Type(str, default='a default value')),
+        ('bar', properdocs.config.config_options.Type(int, default=0)),
+        ('baz', properdocs.config.config_options.Type(bool, default=True))
     )
 ```
 
@@ -95,12 +95,12 @@ class MyPlugin(mkdocs.plugins.BasePlugin):
 > To get type safety benefits, if you're targeting only MkDocs 1.4+, define the config schema as a class instead:
 >
 > ```python
-> class MyPluginConfig(mkdocs.config.base.Config):
->     foo = mkdocs.config.config_options.Type(str, default='a default value')
->     bar = mkdocs.config.config_options.Type(int, default=0)
->     baz = mkdocs.config.config_options.Type(bool, default=True)
+> class MyPluginConfig(properdocs.config.base.Config):
+>     foo = properdocs.config.config_options.Type(str, default='a default value')
+>     bar = properdocs.config.config_options.Type(int, default=0)
+>     baz = properdocs.config.config_options.Type(bool, default=True)
 >
-> class MyPlugin(mkdocs.plugins.BasePlugin[MyPluginConfig]):
+> class MyPlugin(properdocs.plugins.BasePlugin[MyPluginConfig]):
 >     ...
 > ```
 
@@ -109,7 +109,7 @@ class MyPlugin(mkdocs.plugins.BasePlugin):
 >! EXAMPLE:
 >
 > ```python
-> from mkdocs.config import base, config_options as c
+> from properdocs.config import base, config_options as c
 >
 > class _ValidationOptions(base.Config):
 >     enabled = c.Type(bool, default=True)
@@ -143,7 +143,7 @@ class MyPlugin(mkdocs.plugins.BasePlugin):
 >
 > ```python
 > import numbers
-> from mkdocs.config import base, config_options as c
+> from properdocs.config import base, config_options as c
 >
 > class _Rectangle(base.Config):
 >     width = c.Type(numbers.Real)  # required
@@ -169,11 +169,11 @@ class MyPlugin(mkdocs.plugins.BasePlugin):
 When the user's configuration is loaded, the above scheme will be used to
 validate the configuration and fill in any defaults for settings not
 provided by the user. The validation classes may be any of the classes
-provided in `mkdocs.config.config_options` or a third party subclass defined
+provided in `properdocs.config.config_options` or a third party subclass defined
 in the plugin.
 
 Any settings provided by the user which fail validation or are not defined
-in the `config_scheme` will raise a `mkdocs.config.base.ValidationError`.
+in the `config_scheme` will raise a `properdocs.config.base.ValidationError`.
 
 #### config
 
@@ -239,7 +239,7 @@ class MyPlugin(BasePlugin):
 > To get type safety benefits, if you're targeting only MkDocs 1.4+, access config options as attributes instead:
 >
 > ```python
-> def on_config(self, config: MkDocsConfig):
+> def on_config(self, config: ProperDocsConfig):
 >     config.theme.static_templates.add('my_template.html')
 >     return config
 > ```
@@ -269,25 +269,25 @@ There are three kinds of events: [Global Events], [Page Events] and
 
 #### One-time Events
 
-One-time events run once per `mkdocs` invocation. The only case where these tangibly differ from [global events](#global-events) is for `mkdocs serve`: global events, unlike these, will run multiple times -- once per *build*.
+One-time events run once per `properdocs` invocation. The only case where these tangibly differ from [global events](#global-events) is for `properdocs serve`: global events, unlike these, will run multiple times -- once per *build*.
 
 ##### on_startup
 
-::: mkdocs.plugins.BasePlugin.on_startup
+::: properdocs.plugins.BasePlugin.on_startup
     options:
         show_root_heading: false
         show_root_toc_entry: false
 
 ##### on_shutdown
 
-::: mkdocs.plugins.BasePlugin.on_shutdown
+::: properdocs.plugins.BasePlugin.on_shutdown
     options:
         show_root_heading: false
         show_root_toc_entry: false
 
 ##### on_serve
 
-::: mkdocs.plugins.BasePlugin.on_serve
+::: properdocs.plugins.BasePlugin.on_serve
     options:
         show_root_heading: false
         show_root_toc_entry: false
@@ -300,49 +300,49 @@ entire site.
 
 ##### on_config
 
-::: mkdocs.plugins.BasePlugin.on_config
+::: properdocs.plugins.BasePlugin.on_config
     options:
         show_root_heading: false
         show_root_toc_entry: false
 
 ##### on_pre_build
 
-::: mkdocs.plugins.BasePlugin.on_pre_build
+::: properdocs.plugins.BasePlugin.on_pre_build
     options:
         show_root_heading: false
         show_root_toc_entry: false
 
 ##### on_files
 
-::: mkdocs.plugins.BasePlugin.on_files
+::: properdocs.plugins.BasePlugin.on_files
     options:
         show_root_heading: false
         show_root_toc_entry: false
 
 ##### on_nav
 
-::: mkdocs.plugins.BasePlugin.on_nav
+::: properdocs.plugins.BasePlugin.on_nav
     options:
         show_root_heading: false
         show_root_toc_entry: false
 
 ##### on_env
 
-::: mkdocs.plugins.BasePlugin.on_env
+::: properdocs.plugins.BasePlugin.on_env
     options:
         show_root_heading: false
         show_root_toc_entry: false
 
 ##### on_post_build
 
-::: mkdocs.plugins.BasePlugin.on_post_build
+::: properdocs.plugins.BasePlugin.on_post_build
     options:
         show_root_heading: false
         show_root_toc_entry: false
 
 ##### on_build_error
 
-::: mkdocs.plugins.BasePlugin.on_build_error
+::: properdocs.plugins.BasePlugin.on_build_error
     options:
         show_root_heading: false
         show_root_toc_entry: false
@@ -356,21 +356,21 @@ called after the [env] event and before any [page events].
 
 ##### on_pre_template
 
-::: mkdocs.plugins.BasePlugin.on_pre_template
+::: properdocs.plugins.BasePlugin.on_pre_template
     options:
         show_root_heading: false
         show_root_toc_entry: false
 
 ##### on_template_context
 
-::: mkdocs.plugins.BasePlugin.on_template_context
+::: properdocs.plugins.BasePlugin.on_template_context
     options:
         show_root_heading: false
         show_root_toc_entry: false
 
 ##### on_post_template
 
-::: mkdocs.plugins.BasePlugin.on_post_template
+::: properdocs.plugins.BasePlugin.on_post_template
     options:
         show_root_heading: false
         show_root_toc_entry: false
@@ -383,42 +383,42 @@ page events are called after the [post_template] event and before the
 
 ##### on_pre_page
 
-::: mkdocs.plugins.BasePlugin.on_pre_page
+::: properdocs.plugins.BasePlugin.on_pre_page
     options:
         show_root_heading: false
         show_root_toc_entry: false
 
 ##### on_page_read_source
 
-::: mkdocs.plugins.BasePlugin.on_page_read_source
+::: properdocs.plugins.BasePlugin.on_page_read_source
     options:
         show_root_heading: false
         show_root_toc_entry: false
 
 ##### on_page_markdown
 
-::: mkdocs.plugins.BasePlugin.on_page_markdown
+::: properdocs.plugins.BasePlugin.on_page_markdown
     options:
         show_root_heading: false
         show_root_toc_entry: false
 
 ##### on_page_content
 
-::: mkdocs.plugins.BasePlugin.on_page_content
+::: properdocs.plugins.BasePlugin.on_page_content
     options:
         show_root_heading: false
         show_root_toc_entry: false
 
 ##### on_page_context
 
-::: mkdocs.plugins.BasePlugin.on_page_context
+::: properdocs.plugins.BasePlugin.on_page_context
     options:
         show_root_heading: false
         show_root_toc_entry: false
 
 ##### on_post_page
 
-::: mkdocs.plugins.BasePlugin.on_post_page
+::: properdocs.plugins.BasePlugin.on_post_page
     options:
         show_root_heading: false
         show_root_toc_entry: false
@@ -429,7 +429,7 @@ For each event type, corresponding methods of plugins are called in the order th
 
 Since MkDocs 1.4, plugins can choose to set a priority value for their events. Events with higher priority are called first. Events without a chosen priority get a default of 0. Events that have the same priority are ordered as they appear in the config.
 
-#### ::: mkdocs.plugins.event_priority
+#### ::: properdocs.plugins.event_priority
 
 > NEW: **New in version 1.6**
 >
@@ -437,19 +437,19 @@ Since MkDocs 1.4, plugins can choose to set a priority value for their events. E
 >
 > `CombinedEvent` makes this possible.
 >
-> #### ::: mkdocs.plugins.CombinedEvent
+> #### ::: properdocs.plugins.CombinedEvent
 
 ### Handling Errors
 
 ProperDocs defines four error types:
 
-#### ::: mkdocs.exceptions.MkDocsException
+#### ::: properdocs.exceptions.ProperDocsException
 
-#### ::: mkdocs.exceptions.ConfigurationError
+#### ::: properdocs.exceptions.ConfigurationError
 
-#### ::: mkdocs.exceptions.BuildError
+#### ::: properdocs.exceptions.BuildError
 
-#### ::: mkdocs.exceptions.PluginError
+#### ::: properdocs.exceptions.PluginError
 
 Unexpected and uncaught exceptions will interrupt the build process and produce
 typical Python tracebacks, which are useful for debugging your code. However,
@@ -467,8 +467,8 @@ The [on_build_error] event will be triggered for any exception.
 For example:
 
 ```python
-from mkdocs.exceptions import PluginError
-from mkdocs.plugins import BasePlugin
+from properdocs.exceptions import PluginError
+from properdocs.plugins import BasePlugin
 
 
 class MyPlugin(BasePlugin):
@@ -486,14 +486,14 @@ class MyPlugin(BasePlugin):
 
 ### Logging in plugins
 
-To ensure that your plugins' log messages adhere with ProperDocs' formatting and `--verbose`/`--debug` flags, please write the logs to a logger under the `mkdocs.plugins.` namespace.
+To ensure that your plugins' log messages adhere with ProperDocs' formatting and `--verbose`/`--debug` flags, please write the logs to a logger under the `properdocs.plugins.` namespace.
 
 > EXAMPLE:
 >
 > ```python
 > import logging
 >
-> log = logging.getLogger(f"mkdocs.plugins.{__name__}")
+> log = logging.getLogger(f"properdocs.plugins.{__name__}")
 >
 > log.warning("File '%s' not found. Breaks the build if --strict is passed", my_file_name)
 > log.info("Shown normally")
@@ -503,14 +503,14 @@ To ensure that your plugins' log messages adhere with ProperDocs' formatting and
 >     log.debug("Very expensive calculation only for debugging: %s", get_my_diagnostics())
 > ```
 
-`log.error()` is another logging level that is differentiated by its look, but in all other ways it functions the same as `warning`, so it's strange to use it. If your plugin encounters an actual error, it is best to just interrupt the build by raising [`mkdocs.exceptions.PluginError`][] (which will also log an ERROR message).
+`log.error()` is another logging level that is differentiated by its look, but in all other ways it functions the same as `warning`, so it's strange to use it. If your plugin encounters an actual error, it is best to just interrupt the build by raising [`properdocs.exceptions.PluginError`][] (which will also log an ERROR message).
 
 <!-- -->
 > NEW: **New in version 1.5**
 >
 > ProperDocs now provides a `get_plugin_logger()` convenience function that returns a logger like the above that is also prefixed with the plugin's name.
 >
-> #### ::: mkdocs.plugins.get_plugin_logger
+> #### ::: properdocs.plugins.get_plugin_logger
 
 ### Entry Point
 
@@ -520,7 +520,7 @@ Add the following to your `setup.py` script:
 
 ```python
 entry_points={
-    'mkdocs.plugins': [
+    'properdocs.plugins': [
         'pluginname = path.to.some_plugin:SomePluginClass',
     ]
 }
@@ -535,7 +535,7 @@ entry point.
 
 ```python
 entry_points={
-    'mkdocs.plugins': [
+    'properdocs.plugins': [
         'featureA = path.to.my_plugins:PluginA',
         'featureB = path.to.my_plugins:PluginB'
     ]
@@ -561,6 +561,6 @@ You should publish a package on [PyPI], then add it to the [Catalog] for discove
 [post_template]: #on_post_template
 [static_templates]: ../user-guide/configuration.md#static_templates
 [Template Events]: #template-events
-[catalog]: https://github.com/mkdocs/catalog
+[catalog]: https://github.com/properdocs/catalog
 [on_build_error]: #on_build_error
 [PyPI]: https://pypi.org/

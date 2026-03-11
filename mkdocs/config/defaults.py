@@ -3,10 +3,10 @@ from __future__ import annotations
 import logging
 from typing import IO, Dict, Mapping
 
-from mkdocs.config import base
-from mkdocs.config import config_options as c
-from mkdocs.structure.pages import Page, _AbsoluteLinksValidationValue
-from mkdocs.utils.yaml import get_yaml_loader, yaml_load
+from properdocs.config import base
+from properdocs.config import config_options as c
+from properdocs.structure.pages import Page, _AbsoluteLinksValidationValue
+from properdocs.utils.yaml import get_yaml_loader, yaml_load
 
 
 class _LogLevel(c.OptionallyRequired[int]):
@@ -35,7 +35,7 @@ class _AbsoluteLinksValidation(_LogLevel):
 # NOTE: The order here is important. During validation some config options
 # depend on others. So, if config option A depends on B, then A should be
 # listed higher in the schema.
-class MkDocsConfig(base.Config):
+class ProperDocsConfig(base.Config):
     """The configuration of ProperDocs itself (the root object of mkdocs.yml)."""
 
     config_file_path: str = c.Type(str)  # type: ignore[assignment]
@@ -91,7 +91,7 @@ class MkDocsConfig(base.Config):
         option_type=c.Type(list, length=2),
     )
     """set of values for Google analytics containing the account IO and domain
-    this should look like, ['UA-27795084-5', 'mkdocs.org']"""
+    this should look like, ['UA-27795084-5', 'properdocs.org']"""
 
     dev_addr = c.IpAddress(default='127.0.0.1:8000')
     """The address on which to serve the live reloading docs server."""
@@ -164,7 +164,7 @@ class MkDocsConfig(base.Config):
     an instance of a plugin each."""
 
     watch = c.ListOfPaths(default=[])
-    """A list of extra paths to watch while running `mkdocs serve`."""
+    """A list of extra paths to watch while running `properdocs serve`."""
 
     class Validation(base.Config):
         class NavValidation(base.Config):
@@ -215,4 +215,4 @@ class MkDocsConfig(base.Config):
 
 def get_schema() -> base.PlainConfigSchema:
     """Soft-deprecated, do not use."""
-    return MkDocsConfig._schema
+    return ProperDocsConfig._schema

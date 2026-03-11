@@ -4,13 +4,13 @@ import json
 import unittest
 from unittest import mock
 
-from mkdocs.config.config_options import ValidationError
-from mkdocs.contrib import search
-from mkdocs.contrib.search import search_index
-from mkdocs.structure.files import File
-from mkdocs.structure.pages import Page
-from mkdocs.structure.toc import get_toc
-from mkdocs.tests.base import dedent, get_markdown_toc, load_config
+from properdocs.config.config_options import ValidationError
+from properdocs.contrib import search
+from properdocs.contrib.search import search_index
+from properdocs.structure.files import File
+from properdocs.structure.pages import Page
+from properdocs.structure.toc import get_toc
+from properdocs.tests.base import dedent, get_markdown_toc, load_config
 
 
 def strip_whitespace(string):
@@ -222,8 +222,8 @@ class SearchPluginTests(unittest.TestCase):
         self.assertEqual(len(result['theme'].dirs), 2)
         self.assertEqual(len(result['extra_javascript']), 0)
 
-    @mock.patch('mkdocs.utils.write_file', autospec=True)
-    @mock.patch('mkdocs.utils.copy_file', autospec=True)
+    @mock.patch('properdocs.utils.write_file', autospec=True)
+    @mock.patch('properdocs.utils.copy_file', autospec=True)
     def test_event_on_post_build_defaults(self, mock_copy_file, mock_write_file):
         plugin = search.SearchPlugin()
         plugin.load_config({})
@@ -234,8 +234,8 @@ class SearchPluginTests(unittest.TestCase):
         self.assertEqual(mock_copy_file.call_count, 0)
         self.assertEqual(mock_write_file.call_count, 1)
 
-    @mock.patch('mkdocs.utils.write_file', autospec=True)
-    @mock.patch('mkdocs.utils.copy_file', autospec=True)
+    @mock.patch('properdocs.utils.write_file', autospec=True)
+    @mock.patch('properdocs.utils.copy_file', autospec=True)
     def test_event_on_post_build_single_lang(self, mock_copy_file, mock_write_file):
         plugin = search.SearchPlugin()
         plugin.load_config({'lang': ['es']})
@@ -245,8 +245,8 @@ class SearchPluginTests(unittest.TestCase):
         self.assertEqual(mock_copy_file.call_count, 2)
         self.assertEqual(mock_write_file.call_count, 1)
 
-    @mock.patch('mkdocs.utils.write_file', autospec=True)
-    @mock.patch('mkdocs.utils.copy_file', autospec=True)
+    @mock.patch('properdocs.utils.write_file', autospec=True)
+    @mock.patch('properdocs.utils.copy_file', autospec=True)
     def test_event_on_post_build_multi_lang(self, mock_copy_file, mock_write_file):
         plugin = search.SearchPlugin()
         plugin.load_config({'lang': ['es', 'fr']})
@@ -256,8 +256,8 @@ class SearchPluginTests(unittest.TestCase):
         self.assertEqual(mock_copy_file.call_count, 4)
         self.assertEqual(mock_write_file.call_count, 1)
 
-    @mock.patch('mkdocs.utils.write_file', autospec=True)
-    @mock.patch('mkdocs.utils.copy_file', autospec=True)
+    @mock.patch('properdocs.utils.write_file', autospec=True)
+    @mock.patch('properdocs.utils.copy_file', autospec=True)
     def test_event_on_post_build_search_index_only(self, mock_copy_file, mock_write_file):
         plugin = search.SearchPlugin()
         plugin.load_config({'lang': ['es']})
@@ -510,11 +510,11 @@ class SearchIndexTests(unittest.TestCase):
             'docs': [],
             'config': {'prebuild_index': True},
         }
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             result = json.loads(index.generate_search_index())
         self.assertEqual(
             '\n'.join(cm.output),
-            'WARNING:mkdocs.contrib.search.search_index:Failed to pre-build search index. Error: Some Error',
+            'WARNING:properdocs.contrib.search.search_index:Failed to pre-build search index. Error: Some Error',
         )
 
         self.assertEqual(mock_popen.call_count, 1)
@@ -534,11 +534,11 @@ class SearchIndexTests(unittest.TestCase):
             'docs': [],
             'config': {'prebuild_index': True},
         }
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             result = json.loads(index.generate_search_index())
         self.assertEqual(
             '\n'.join(cm.output),
-            'WARNING:mkdocs.contrib.search.search_index:Failed to pre-build search index. Error: ',
+            'WARNING:properdocs.contrib.search.search_index:Failed to pre-build search index. Error: ',
         )
 
         self.assertEqual(mock_popen.call_count, 1)
@@ -558,11 +558,11 @@ class SearchIndexTests(unittest.TestCase):
             'docs': [],
             'config': {'prebuild_index': True},
         }
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             result = json.loads(index.generate_search_index())
         self.assertEqual(
             '\n'.join(cm.output),
-            'WARNING:mkdocs.contrib.search.search_index:Failed to pre-build search index. Error: ',
+            'WARNING:properdocs.contrib.search.search_index:Failed to pre-build search index. Error: ',
         )
 
         self.assertEqual(mock_popen.call_count, 1)
@@ -588,7 +588,7 @@ class SearchIndexTests(unittest.TestCase):
         self.assertEqual(result, expected)
 
     @unittest.skipUnless(search_index.haslunrpy, 'lunr.py is not installed')
-    @mock.patch('mkdocs.contrib.search.search_index.lunr', autospec=True)
+    @mock.patch('properdocs.contrib.search.search_index.lunr', autospec=True)
     def test_prebuild_index_python(self, mock_lunr):
         mock_lunr.return_value.serialize.return_value = {'mock': 'index'}
         index = search_index.SearchIndex(prebuild_index='python', lang='en')
@@ -609,7 +609,7 @@ class SearchIndexTests(unittest.TestCase):
             'docs': [],
             'config': {'prebuild_index': 'python', 'lang': 'en'},
         }
-        with self.assertLogs('mkdocs', level='WARNING'):
+        with self.assertLogs('properdocs', level='WARNING'):
             result = json.loads(index.generate_search_index())
         self.assertEqual(result, expected)
 

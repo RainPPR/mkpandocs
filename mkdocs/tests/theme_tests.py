@@ -2,15 +2,15 @@ import os
 import unittest
 from unittest import mock
 
-import mkdocs
-from mkdocs.localization import parse_locale
-from mkdocs.tests.base import tempdir
-from mkdocs.theme import Theme
+import properdocs
+from properdocs.localization import parse_locale
+from properdocs.tests.base import tempdir
+from properdocs.theme import Theme
 
 abs_path = os.path.abspath(os.path.dirname(__file__))
-mkdocs_dir = os.path.abspath(os.path.dirname(mkdocs.__file__))
-mkdocs_templates_dir = os.path.join(mkdocs_dir, 'templates')
-theme_dir = os.path.abspath(os.path.join(mkdocs_dir, 'themes'))
+properdocs_dir = os.path.abspath(os.path.dirname(properdocs.__file__))
+properdocs_templates_dir = os.path.join(properdocs_dir, 'templates')
+theme_dir = os.path.abspath(os.path.join(properdocs_dir, 'themes'))
 
 
 class ThemeTests(unittest.TestCase):
@@ -18,7 +18,7 @@ class ThemeTests(unittest.TestCase):
         theme = Theme(name='mkdocs')
         self.assertEqual(
             theme.dirs,
-            [os.path.join(theme_dir, 'mkdocs'), mkdocs_templates_dir],
+            [os.path.join(theme_dir, 'mkdocs'), properdocs_templates_dir],
         )
         self.assertEqual(theme.static_templates, {'404.html', 'sitemap.xml'})
         self.assertEqual(
@@ -49,7 +49,7 @@ class ThemeTests(unittest.TestCase):
             [
                 custom,
                 os.path.join(theme_dir, 'mkdocs'),
-                mkdocs_templates_dir,
+                properdocs_templates_dir,
             ],
         )
 
@@ -58,7 +58,7 @@ class ThemeTests(unittest.TestCase):
         theme = Theme(name=None, custom_dir=custom)
         self.assertEqual(
             theme.dirs,
-            [custom, mkdocs_templates_dir],
+            [custom, properdocs_templates_dir],
         )
 
     def static_templates(self):
@@ -100,7 +100,7 @@ class ThemeTests(unittest.TestCase):
                 [
                     os.path.join(theme_dir, 'mkdocs'),
                     os.path.join(theme_dir, 'readthedocs'),
-                    mkdocs_templates_dir,
+                    properdocs_templates_dir,
                 ],
             )
             self.assertEqual(theme.static_templates, {'sitemap.xml', 'child.html', 'parent.html'})

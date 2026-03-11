@@ -2,8 +2,8 @@
 
 import unittest
 
-from mkdocs.structure.toc import get_toc
-from mkdocs.tests.base import dedent, get_markdown_toc
+from properdocs.structure.toc import get_toc
+from properdocs.tests.base import dedent, get_markdown_toc
 
 
 class TableOfContentsTests(unittest.TestCase):

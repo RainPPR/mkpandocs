@@ -38,7 +38,7 @@ are working from a properly configured development environment.
 Make sure translation requirements are installed in your environment:
 
 ```bash
-pip install 'mkdocs[i18n]'
+pip install 'properdocs[i18n]'
 ```
 
 [babel]: https://babel.pocoo.org/en/latest/cmdline.html
@@ -54,9 +54,9 @@ translation by following the steps below.
 
 Here is a quick summary of what you'll need to do:
 
-1. [Fork and clone the ProperDocs repository](#fork-and-clone-the-mkdocs-repository) and then [install ProperDocs for development](../about/contributing.md#installing-for-development) for adding and testing translations.
+1. [Fork and clone the ProperDocs repository](#fork-and-clone-the-properdocs-repository) and then [install ProperDocs for development](../about/contributing.md#installing-for-development) for adding and testing translations.
 2. [Initialize new localization catalogs](#initializing-the-localization-catalogs) for your language (if a translation for your locale already exists, follow the instructions for [updating theme localization files](#updating-the-translation-catalogs) instead).
-3. [Add a translation](#translating-the-mkdocs-themes) for every text placeholder in the localized catalogs.
+3. [Add a translation](#translating-the-properdocs-themes) for every text placeholder in the localized catalogs.
 4. [Locally serve and test](#testing-theme-translations) the translated themes for your language.
 5. [Update the documentation](#updating-theme-documentation) about supported translations for each translated theme.
 6. [Contribute your translation](#contributing-translations) through a Pull Request.
@@ -104,21 +104,21 @@ In particular, the way to know that the `pt` language should be disambiguated as
 So, if we pick `es` (Spanish) as our example language code, to add a translation for it to both built-in themes, run these commands:
 
 ```bash
-pybabel init --input-file mkdocs/themes/mkdocs/messages.pot --output-dir mkdocs/themes/mkdocs/locales -l es
-pybabel init --input-file mkdocs/themes/readthedocs/messages.pot --output-dir mkdocs/themes/readthedocs/locales -l es
+pybabel init --input-file properdocs/themes/mkdocs/messages.pot --output-dir properdocs/themes/mkdocs/locales -l es
+pybabel init --input-file properdocs/themes/readthedocs/messages.pot --output-dir properdocs/themes/readthedocs/locales -l es
 ```
 
 The above command will create a file structure as follows:
 
 ```text
-mkdocs/themes/mkdocs/locales
+properdocs/themes/mkdocs/locales
 ├── es
 │   └── LC_MESSAGES
 │       └── messages.po
 ```
 
 You can now move on to the next step and [add a
-translation](#translating-the-mkdocs-themes) for every text placeholder in the
+translation](#translating-the-properdocs-themes) for every text placeholder in the
 localized catalog.
 
 ## Updating a theme translation
@@ -128,7 +128,7 @@ since the `messages.po` was last updated for your locale, follow the steps
 below to update the theme's `messages.po` file:
 
 1. [Update the theme's translation catalog](#updating-the-translation-catalogs) to refresh the translatable text placeholders of each theme.
-2. [Translate](#translating-the-mkdocs-themes) the newly added translatable text placeholders on every `messages.po` catalog file language you can.
+2. [Translate](#translating-the-properdocs-themes) the newly added translatable text placeholders on every `messages.po` catalog file language you can.
 3. [Locally serve and test](#testing-theme-translations) the translated themes for your language.
 4. [Contribute your translation](#contributing-translations) through a Pull Request.
 
@@ -141,14 +141,14 @@ for.
 To update the `fr` translation catalog of both built-in themes, use the following commands:
 
 ```bash
-pybabel update --ignore-obsolete --input-file mkdocs/themes/mkdocs/messages.pot --output-dir mkdocs/themes/mkdocs/locales -l fr
-pybabel update --ignore-obsolete --input-file mkdocs/themes/readthedocs/messages.pot --output-dir mkdocs/themes/readthedocs/locales -l fr
+pybabel update --ignore-obsolete --input-file properdocs/themes/mkdocs/messages.pot --output-dir properdocs/themes/mkdocs/locales -l fr
+pybabel update --ignore-obsolete --input-file properdocs/themes/readthedocs/messages.pot --output-dir properdocs/themes/readthedocs/locales -l fr
 ```
 
 You can now move on to the next step and [add a translation] for every updated
 text placeholder in the localized catalog.
 
-[add a translation]: #translating-the-mkdocs-themes
+[add a translation]: #translating-the-properdocs-themes
 
 ### Translating the ProperDocs themes
 
@@ -174,14 +174,14 @@ files of your theme into `messages.mo` files. The following commands will compil
 the `es` translation for both built-in themes:
 
 ```bash
-pybabel compile --statistics --directory mkdocs/themes/mkdocs/locales -l es
-pybabel compile --statistics --directory mkdocs/themes/readthedocs/locales -l es
+pybabel compile --statistics --directory properdocs/themes/mkdocs/locales -l es
+pybabel compile --statistics --directory properdocs/themes/readthedocs/locales -l es
 ```
 
 The above command results in the following file structure:
 
 ```text
-mkdocs/themes/mkdocs/locales
+properdocs/themes/mkdocs/locales
 ├── es
 │   └── LC_MESSAGES
 │       ├── messages.mo
@@ -200,7 +200,7 @@ theme:
   locale: es
 ```
 
-Finally, run `mkdocs serve` to check out your new localized version of the theme.
+Finally, run `properdocs serve` to check out your new localized version of the theme.
 
 > NOTE:
 > The build and release process takes care of compiling and distributing

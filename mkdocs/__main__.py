@@ -12,7 +12,7 @@ import warnings
 
 import click
 
-from mkdocs import __version__, config, utils
+from properdocs import __version__, config, utils
 
 if sys.platform.startswith("win"):
     try:
@@ -50,7 +50,7 @@ def _enable_warnings():
     # In that case, we skip warnings configuration since
     # we don't want to overwrite the user configuration.
     if not sys.warnoptions:
-        from mkdocs.commands import build
+        from properdocs.commands import build
 
         build.log.addFilter(utils.DuplicateFilter())
 
@@ -91,14 +91,14 @@ class ColorFormatter(logging.Formatter):
 class State:
     """Maintain logging level."""
 
-    def __init__(self, log_name='mkdocs', level=logging.INFO):
+    def __init__(self, log_name='properdocs', level=logging.INFO):
         self.logger = logging.getLogger(log_name)
         self.logger.setLevel(level)
         self.logger.propagate = False
 
         self.stream = logging.StreamHandler()
         self.stream.setFormatter(ColorFormatter())
-        self.stream.name = 'MkDocsStreamHandler'
+        self.stream.name = 'ProperDocsStreamHandler'
         self.logger.addHandler(self.stream)
 
     def __del__(self):
@@ -122,7 +122,7 @@ reload_help = "Enable the live reloading in the development server (this is the 
 no_reload_help = "Disable the live reloading in the development server."
 serve_dirty_help = "Only re-build files that have changed."
 serve_clean_help = (
-    "Build the site without any effects of `mkdocs serve` - pure `mkdocs build`, then serve."
+    "Build the site without any effects of `properdocs serve` - pure `properdocs build`, then serve."
 )
 commit_message_help = (
     "A commit message to use when committing to the "
@@ -266,7 +266,7 @@ def cli():
 @common_options
 def serve_command(**kwargs):
     """Run the builtin development server."""
-    from mkdocs.commands import serve
+    from properdocs.commands import serve
 
     _enable_warnings()
     serve.serve(**kwargs)
@@ -279,7 +279,7 @@ def serve_command(**kwargs):
 @common_options
 def build_command(clean, **kwargs):
     """Build the ProperDocs documentation."""
-    from mkdocs.commands import build
+    from properdocs.commands import build
 
     _enable_warnings()
     cfg = config.load_config(**kwargs)
@@ -306,7 +306,7 @@ def gh_deploy_command(
     clean, message, remote_branch, remote_name, force, no_history, ignore_version, shell, **kwargs
 ):
     """Deploy your documentation to GitHub Pages."""
-    from mkdocs.commands import build, gh_deploy
+    from properdocs.commands import build, gh_deploy
 
     _enable_warnings()
     cfg = config.load_config(remote_branch=remote_branch, remote_name=remote_name, **kwargs)
@@ -339,11 +339,11 @@ def get_deps_command(config_file, projects_file):
     """Show required PyPI packages inferred from plugins in mkdocs.yml."""
     from mkdocs_get_deps import get_deps, get_projects_file
 
-    from mkdocs.config.base import _open_config_file
+    from properdocs.config.base import _open_config_file
 
     warning_counter = utils.CountHandler()
     warning_counter.setLevel(logging.WARNING)
-    logging.getLogger('mkdocs').addHandler(warning_counter)
+    logging.getLogger('properdocs').addHandler(warning_counter)
 
     with get_projects_file(projects_file) as p:
         with _open_config_file(config_file) as f:
@@ -361,7 +361,7 @@ def get_deps_command(config_file, projects_file):
 @common_options
 def new_command(project_directory):
     """Create a new ProperDocs project."""
-    from mkdocs.commands import new
+    from properdocs.commands import new
 
     new.new(project_directory)
 

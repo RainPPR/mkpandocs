@@ -34,9 +34,9 @@
     {% if page %}
       <script>
         // Current page data
-        var mkdocs_page_name = {{ page.title|tojson }};
-        var mkdocs_page_input_path = {{ page.file.src_path|string|tojson }};
-        var mkdocs_page_url = {{ page.abs_url|tojson }};
+        var properdocs_page_name = {{ page.title|tojson }};
+        var properdocs_page_input_path = {{ page.file.src_path|string|tojson }};
+        var properdocs_page_url = {{ page.abs_url|tojson }};
       </script>
     {% endif %}
     <!--[if lt IE 9]>

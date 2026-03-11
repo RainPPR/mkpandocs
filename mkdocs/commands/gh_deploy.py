@@ -9,11 +9,11 @@ from typing import TYPE_CHECKING
 import ghp_import  # type: ignore
 from packaging import version
 
-import mkdocs
-from mkdocs.exceptions import Abort
+import properdocs
+from properdocs.exceptions import Abort
 
 if TYPE_CHECKING:
-    from mkdocs.config.defaults import MkDocsConfig
+    from properdocs.config.defaults import ProperDocsConfig
 
 log = logging.getLogger(__name__)
 
@@ -80,7 +80,7 @@ def _check_version(branch: str) -> None:
     msg = stdout.decode('utf-8').strip()
     m = re.search(r'\d+(\.\d+)+((a|b|rc)\d+)?(\.post\d+)?(\.dev\d+)?', msg, re.X | re.I)
     previousv = version.parse(m.group()) if m else None
-    currentv = version.parse(mkdocs.__version__)
+    currentv = version.parse(properdocs.__version__)
     if not previousv:
         log.warning('Version check skipped: No version specified in previous deployment.')
     elif currentv > previousv:
@@ -98,7 +98,7 @@ def _check_version(branch: str) -> None:
 
 
 def gh_deploy(
-    config: MkDocsConfig,
+    config: ProperDocsConfig,
     message: str | None = None,
     force=False,
     no_history=False,
@@ -117,7 +117,7 @@ def gh_deploy(
     if message is None:
         message = default_message
     sha = _get_current_sha(os.path.dirname(config.config_file_path))
-    message = message.format(version=mkdocs.__version__, sha=sha)
+    message = message.format(version=properdocs.__version__, sha=sha)
 
     log.info(
         "Copying '%s' to '%s' branch and pushing to GitHub.",

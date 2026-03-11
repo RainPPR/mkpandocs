@@ -3,8 +3,8 @@
 import os
 import unittest
 
-from mkdocs.commands import new
-from mkdocs.tests.base import change_dir, tempdir
+from properdocs.commands import new
+from properdocs.tests.base import change_dir, tempdir
 
 
 class NewTests(unittest.TestCase):

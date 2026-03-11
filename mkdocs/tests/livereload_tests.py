@@ -10,8 +10,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from mkdocs.livereload import LiveReloadServer
-from mkdocs.tests.base import change_dir, tempdir
+from properdocs.livereload import LiveReloadServer
+from properdocs.tests.base import change_dir, tempdir
 
 
 class FakeRequest:
@@ -127,7 +127,7 @@ class BuildTests(unittest.TestCase):
             Path(docs_dir, "foo.docs").write_text("b")
             self.assertTrue(started_building.wait(timeout=10))
 
-            with self.assertLogs("mkdocs.livereload"):
+            with self.assertLogs("properdocs.livereload"):
                 _, output = do_request(server, "GET /foo.site")
 
             self.assertIn("404", output)
@@ -288,7 +288,7 @@ class BuildTests(unittest.TestCase):
             time.sleep(0.01)
 
             err = io.StringIO()
-            with contextlib.redirect_stderr(err), self.assertLogs("mkdocs.livereload") as cm:
+            with contextlib.redirect_stderr(err), self.assertLogs("properdocs.livereload") as cm:
                 Path(docs_dir, "foo.docs").write_text("b")
                 started_building.wait(timeout=10)
 
@@ -345,7 +345,7 @@ class BuildTests(unittest.TestCase):
                 _, output = do_request(server, f"GET {path}")
                 self.assertRegex(output, r"^<body>bbb</body>$")
 
-            with self.assertLogs("mkdocs.livereload"):
+            with self.assertLogs("properdocs.livereload"):
                 headers, _ = do_request(server, "GET /foo/index.html/")
             self.assertEqual(headers["_status"], "404 Not Found")
 
@@ -357,17 +357,17 @@ class BuildTests(unittest.TestCase):
     )
     def test_redirects_to_directory(self, site_dir):
         with testing_server(site_dir, mount_path="/sub") as server:
-            with self.assertLogs("mkdocs.livereload"):
+            with self.assertLogs("properdocs.livereload"):
                 headers, _ = do_request(server, "GET /sub/foo/bar")
             self.assertEqual(headers["_status"], "302 Found")
             self.assertEqual(headers.get("location"), "/sub/foo/bar/")
 
-            with self.assertLogs("mkdocs.livereload"):
+            with self.assertLogs("properdocs.livereload"):
                 headers, _ = do_request(server, "GET /sub/foo/測試")
             self.assertEqual(headers["_status"], "302 Found")
             self.assertEqual(headers.get("location"), "/sub/foo/%E6%B8%AC%E8%A9%A6/")
 
-            with self.assertLogs("mkdocs.livereload"):
+            with self.assertLogs("properdocs.livereload"):
                 headers, _ = do_request(server, "GET /sub/foo/%E6%B8%AC%E8%A9%A6")
             self.assertEqual(headers["_status"], "302 Found")
             self.assertEqual(headers.get("location"), "/sub/foo/%E6%B8%AC%E8%A9%A6/")
@@ -380,7 +380,7 @@ class BuildTests(unittest.TestCase):
             _, output = do_request(server, "GET /%D1%8F.html")
             self.assertRegex(output, r"^<body>aaa</body>$")
 
-            with self.assertLogs("mkdocs.livereload"):
+            with self.assertLogs("properdocs.livereload"):
                 headers, _ = do_request(server, "GET /%D1.html")
             self.assertEqual(headers["_status"], "404 Not Found")
 
@@ -432,21 +432,21 @@ class BuildTests(unittest.TestCase):
     def test_error_handler(self, site_dir):
         with testing_server(site_dir) as server:
             server.error_handler = lambda code: b"[%d]" % code
-            with self.assertLogs("mkdocs.livereload") as cm:
+            with self.assertLogs("properdocs.livereload") as cm:
                 headers, output = do_request(server, "GET /missing")
 
             self.assertEqual(headers["_status"], "404 Not Found")
             self.assertEqual(output, "[404]")
             self.assertRegex(
                 "\n".join(cm.output),
-                r'^WARNING:mkdocs.livereload:.*"GET /missing HTTP/1.1" code 404',
+                r'^WARNING:properdocs.livereload:.*"GET /missing HTTP/1.1" code 404',
             )
 
     @tempdir()
     def test_bad_error_handler(self, site_dir):
         with testing_server(site_dir) as server:
             server.error_handler = lambda code: 0 / 0
-            with self.assertLogs("mkdocs.livereload") as cm:
+            with self.assertLogs("properdocs.livereload") as cm:
                 headers, output = do_request(server, "GET /missing")
 
             self.assertEqual(headers["_status"], "404 Not Found")
@@ -491,14 +491,14 @@ class BuildTests(unittest.TestCase):
             _, output = do_request(server, "GET /sub/sub/sub.html")
             self.assertRegex(output, r"^<body>bbb</body>$")
 
-            with self.assertLogs("mkdocs.livereload"):
+            with self.assertLogs("properdocs.livereload"):
                 headers, _ = do_request(server, "GET /sub/sub.html")
             self.assertEqual(headers["_status"], "404 Not Found")
 
     @tempdir()
     def test_redirects_to_mount_path(self, site_dir):
         with testing_server(site_dir, mount_path="/mount/path") as server:
-            with self.assertLogs("mkdocs.livereload"):
+            with self.assertLogs("properdocs.livereload"):
                 headers, _ = do_request(server, "GET /")
             self.assertEqual(headers["_status"], "302 Found")
             self.assertEqual(headers.get("location"), "/mount/path/")
@@ -506,7 +506,7 @@ class BuildTests(unittest.TestCase):
     @tempdir()
     def test_redirects_to_unicode_mount_path(self, site_dir):
         with testing_server(site_dir, mount_path="/mount/測試") as server:
-            with self.assertLogs("mkdocs.livereload"):
+            with self.assertLogs("properdocs.livereload"):
                 headers, _ = do_request(server, "GET /")
             self.assertEqual(headers["_status"], "302 Found")
             self.assertEqual(headers.get("location"), "/mount/%E6%B8%AC%E8%A9%A6/")
@@ -526,7 +526,7 @@ class BuildTests(unittest.TestCase):
         def wait_for_build():
             result = started_building.wait(timeout=10)
             started_building.clear()
-            with self.assertLogs("mkdocs.livereload"):
+            with self.assertLogs("properdocs.livereload"):
                 do_request(server, "GET /")
             return result
 
@@ -561,7 +561,7 @@ class BuildTests(unittest.TestCase):
         def wait_for_build():
             result = started_building.wait(timeout=10)
             started_building.clear()
-            with self.assertLogs("mkdocs.livereload"):
+            with self.assertLogs("properdocs.livereload"):
                 do_request(server, "GET /")
             return result
 

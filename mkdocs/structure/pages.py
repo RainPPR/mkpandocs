@@ -15,25 +15,25 @@ import markdown.postprocessors
 import markdown.treeprocessors
 from markdown.util import AMP_SUBSTITUTE
 
-from mkdocs import utils
-from mkdocs.structure import StructureItem
-from mkdocs.structure.toc import get_toc
-from mkdocs.utils import _removesuffix, get_build_date, get_markdown_title, meta, weak_property
-from mkdocs.utils.rendering import get_heading_text
+from properdocs import utils
+from properdocs.structure import StructureItem
+from properdocs.structure.toc import get_toc
+from properdocs.utils import _removesuffix, get_build_date, get_markdown_title, meta, weak_property
+from properdocs.utils.rendering import get_heading_text
 
 if TYPE_CHECKING:
     from xml.etree import ElementTree as etree
 
-    from mkdocs.config.defaults import MkDocsConfig
-    from mkdocs.structure.files import File, Files
-    from mkdocs.structure.toc import TableOfContents
+    from properdocs.config.defaults import ProperDocsConfig
+    from properdocs.structure.files import File, Files
+    from properdocs.structure.toc import TableOfContents
 
 
 log = logging.getLogger(__name__)
 
 
 class Page(StructureItem):
-    def __init__(self, title: str | None, file: File, config: MkDocsConfig) -> None:
+    def __init__(self, title: str | None, file: File, config: ProperDocsConfig) -> None:
         file.page = self
         self.file = file
         if title is not None:
@@ -82,7 +82,7 @@ class Page(StructureItem):
 
     toc: TableOfContents
     """An iterable object representing the Table of contents for a page. Each item in
-    the `toc` is an [`AnchorLink`][mkdocs.structure.toc.AnchorLink]."""
+    the `toc` is an [`AnchorLink`][properdocs.structure.toc.AnchorLink]."""
 
     meta: MutableMapping[str, Any]
     """A mapping of the metadata included at the top of the markdown page."""
@@ -96,7 +96,7 @@ class Page(StructureItem):
         return url
 
     file: File
-    """The documentation [`File`][mkdocs.structure.files.File] that the page is being rendered from."""
+    """The documentation [`File`][properdocs.structure.files.File] that the page is being rendered from."""
 
     abs_url: str | None
     """The absolute URL of the page from the server root as determined by the value
@@ -137,12 +137,12 @@ class Page(StructureItem):
         return self.is_top_level and self.is_index and self.file.url in ('.', './', 'index.html')
 
     previous_page: Page | None
-    """The [page][mkdocs.structure.pages.Page] object for the previous page or `None`.
+    """The [page][properdocs.structure.pages.Page] object for the previous page or `None`.
     The value will be `None` if the current page is the first item in the site navigation
     or if the current page is not included in the navigation at all."""
 
     next_page: Page | None
-    """The [page][mkdocs.structure.pages.Page] object for the next page or `None`.
+    """The [page][properdocs.structure.pages.Page] object for the next page or `None`.
     The value will be `None` if the current page is the last item in the site navigation
     or if the current page is not included in the navigation at all."""
 
@@ -205,7 +205,7 @@ class Page(StructureItem):
 
         self.edit_url = urljoin(repo_url or '', file_edit_uri)
 
-    def read_source(self, config: MkDocsConfig) -> None:
+    def read_source(self, config: ProperDocsConfig) -> None:
         source = config.plugins.on_page_read_source(page=self, config=config)
         if source is None:
             try:
@@ -261,7 +261,7 @@ class Page(StructureItem):
             title = title.capitalize()
         return title
 
-    def render(self, config: MkDocsConfig, files: Files) -> None:
+    def render(self, config: ProperDocsConfig, files: Files) -> None:
         """Convert the Markdown source file to HTML as per the config."""
         if self.markdown is None:
             raise RuntimeError("`markdown` field hasn't been set (via `read_source`)")
@@ -328,7 +328,7 @@ class Page(StructureItem):
 
 
 class _ExtractAnchorsTreeprocessor(markdown.treeprocessors.Treeprocessor):
-    def __init__(self, file: File, files: Files, config: MkDocsConfig) -> None:
+    def __init__(self, file: File, files: Files, config: ProperDocsConfig) -> None:
         self.present_anchor_ids: set[str] = set()
 
     def run(self, root: etree.Element) -> None:
@@ -341,11 +341,11 @@ class _ExtractAnchorsTreeprocessor(markdown.treeprocessors.Treeprocessor):
                     add(anchor)
 
     def _register(self, md: markdown.Markdown) -> None:
-        md.treeprocessors.register(self, "mkdocs_extract_anchors", priority=5)  # Same as 'toc'.
+        md.treeprocessors.register(self, "properdocs_extract_anchors", priority=5)  # Same as 'toc'.
 
 
 class _RelativePathTreeprocessor(markdown.treeprocessors.Treeprocessor):
-    def __init__(self, file: File, files: Files, config: MkDocsConfig) -> None:
+    def __init__(self, file: File, files: Files, config: ProperDocsConfig) -> None:
         self.file = file
         self.files = files
         self.config = config
@@ -534,7 +534,7 @@ class _RawHTMLPreprocessor(markdown.preprocessors.Preprocessor):
 
     def _register(self, md: markdown.Markdown) -> None:
         md.preprocessors.register(
-            self, "mkdocs_raw_html", priority=21  # Right before 'html_block'.
+            self, "properdocs_raw_html", priority=21  # Right before 'html_block'.
         )
 
 
@@ -563,7 +563,7 @@ class _ExtractTitleTreeprocessor(markdown.treeprocessors.Treeprocessor):
 
     def _register(self, md: markdown.Markdown) -> None:
         self.md = md
-        md.treeprocessors.register(self, "mkdocs_extract_title", priority=1)  # Close to the end.
+        md.treeprocessors.register(self, "properdocs_extract_title", priority=1)  # Close to the end.
 
 
 class _AbsoluteLinksValidationValue(enum.IntEnum):

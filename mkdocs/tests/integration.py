@@ -6,7 +6,7 @@ documentation against all of the builtin themes.
 
 From the root of the ProperDocs git repo, use:
 
-    python -m mkdocs.tests.integration --help
+    python -m properdocs.tests.integration --help
 
 
 TODOs
@@ -22,7 +22,7 @@ import tempfile
 
 import click
 
-log = logging.getLogger('mkdocs')
+log = logging.getLogger('properdocs')
 
 DIR = os.path.dirname(__file__)
 MKDOCS_CONFIG = os.path.abspath(os.path.join(DIR, '../../mkdocs.yml'))
@@ -38,7 +38,7 @@ TEST_PROJECTS = os.path.abspath(os.path.join(DIR, 'integration'))
 )
 def main(output=None):
     if output is None:
-        directory = tempfile.TemporaryDirectory(prefix='mkdocs_integration-')
+        directory = tempfile.TemporaryDirectory(prefix='properdocs_integration-')
         output = directory.name
 
     log.propagate = False
@@ -48,7 +48,7 @@ def main(output=None):
     log.addHandler(stream)
     log.setLevel(logging.DEBUG)
 
-    base_cmd = ['mkdocs', 'build', '-q', '-s', '--site-dir']
+    base_cmd = ['properdocs', 'build', '-q', '-s', '--site-dir']
 
     log.debug("Building installed themes.")
     for theme in sorted(MKDOCS_THEMES):

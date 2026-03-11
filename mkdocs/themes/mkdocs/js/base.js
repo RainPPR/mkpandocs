@@ -24,21 +24,21 @@ function applyTopPadding() {
 
 document.addEventListener("DOMContentLoaded", function () {
     var search_term = getSearchTerm();
-    var search_modal = new bootstrap.Modal(document.getElementById('mkdocs_search_modal'));
-    var keyboard_modal = new bootstrap.Modal(document.getElementById('mkdocs_keyboard_modal'));
+    var search_modal = new bootstrap.Modal(document.getElementById('properdocs_search_modal'));
+    var keyboard_modal = new bootstrap.Modal(document.getElementById('properdocs_keyboard_modal'));
 
     if (search_term) {
         search_modal.show();
     }
 
     // make sure search input gets autofocus every time modal opens.
-    document.getElementById('mkdocs_search_modal').addEventListener('shown.bs.modal', function() {
-        document.getElementById('mkdocs-search-query').focus();
+    document.getElementById('properdocs_search_modal').addEventListener('shown.bs.modal', function() {
+        document.getElementById('properdocs-search-query').focus();
     });
 
     // Close search modal when result is selected
     // The links get added later so listen to parent
-    document.getElementById('mkdocs-search-results').addEventListener('click', function(e) {
+    document.getElementById('properdocs-search-results').addEventListener('click', function(e) {
         if (e.target.tagName === 'A') {
             search_modal.hide();
         }
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
               e.preventDefault();
               keyboard_modal.hide();
               search_modal.show();
-              document.getElementById('mkdocs-search-query').focus();
+              document.getElementById('properdocs-search-query').focus();
               break;
           case shortcuts.help:
               search_modal.hide();

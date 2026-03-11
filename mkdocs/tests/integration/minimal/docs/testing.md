@@ -1,13 +1,13 @@
 # Welcome to ProperDocs
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+For full documentation visit [properdocs.org](https://properdocs.org).
 
 ## Commands
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs help` - Print this help message.
+* `properdocs new [dir-name]` - Create a new project.
+* `properdocs serve` - Start the live-reloading docs server.
+* `properdocs build` - Build the documentation site.
+* `properdocs help` - Print this help message.
 
 ## Project layout
 

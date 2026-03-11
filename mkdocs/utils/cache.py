@@ -4,11 +4,11 @@ from typing import Callable
 
 import mkdocs_get_deps.cache
 
-import mkdocs
+import properdocs
 
 
 def download_url(url: str) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": f"mkdocs/{mkdocs.__version__}"})
+    req = urllib.request.Request(url, headers={"User-Agent": f"properdocs/{properdocs.__version__}"})
     with urllib.request.urlopen(req) as resp:
         return resp.read()
 

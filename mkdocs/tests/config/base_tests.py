@@ -1,17 +1,17 @@
 import os
 import unittest
 
-from mkdocs import exceptions
-from mkdocs.config import base
-from mkdocs.config import config_options as c
-from mkdocs.config import defaults
-from mkdocs.config.base import ValidationError
-from mkdocs.tests.base import change_dir, tempdir
+from properdocs import exceptions
+from properdocs.config import base
+from properdocs.config import config_options as c
+from properdocs.config import defaults
+from properdocs.config.base import ValidationError
+from properdocs.tests.base import change_dir, tempdir
 
 
 class ConfigBaseTests(unittest.TestCase):
     def test_unrecognised_keys(self):
-        conf = defaults.MkDocsConfig()
+        conf = defaults.ProperDocsConfig()
         conf.load_dict(
             {
                 'not_a_valid_config_option': "test",
@@ -31,7 +31,7 @@ class ConfigBaseTests(unittest.TestCase):
         )
 
     def test_missing_required(self):
-        conf = defaults.MkDocsConfig()
+        conf = defaults.ProperDocsConfig()
 
         errors, warnings = conf.validate()
 
@@ -51,7 +51,7 @@ class ConfigBaseTests(unittest.TestCase):
         os.mkdir(os.path.join(temp_dir, 'docs'))
 
         cfg = base.load_config(config_file=config_file.name)
-        self.assertTrue(isinstance(cfg, defaults.MkDocsConfig))
+        self.assertTrue(isinstance(cfg, defaults.ProperDocsConfig))
         self.assertEqual(cfg.site_name, 'ProperDocs Test')
 
     @tempdir()
@@ -62,7 +62,7 @@ class ConfigBaseTests(unittest.TestCase):
         os.mkdir(os.path.join(temp_dir, 'docs'))
         with change_dir(temp_dir):
             cfg = base.load_config(config_file=None)
-            self.assertTrue(isinstance(cfg, defaults.MkDocsConfig))
+            self.assertTrue(isinstance(cfg, defaults.ProperDocsConfig))
             self.assertEqual(cfg.site_name, 'ProperDocs Test')
 
     @tempdir()
@@ -73,7 +73,7 @@ class ConfigBaseTests(unittest.TestCase):
         os.mkdir(os.path.join(temp_dir, 'docs'))
         with change_dir(temp_dir):
             cfg = base.load_config(config_file=None)
-            self.assertTrue(isinstance(cfg, defaults.MkDocsConfig))
+            self.assertTrue(isinstance(cfg, defaults.ProperDocsConfig))
             self.assertEqual(cfg.site_name, 'ProperDocs Test')
 
     @tempdir()
@@ -87,7 +87,7 @@ class ConfigBaseTests(unittest.TestCase):
         os.mkdir(os.path.join(temp_dir, 'docs'))
         with change_dir(temp_dir):
             cfg = base.load_config(config_file=None)
-            self.assertTrue(isinstance(cfg, defaults.MkDocsConfig))
+            self.assertTrue(isinstance(cfg, defaults.ProperDocsConfig))
             self.assertEqual(cfg.site_name, 'ProperDocs Test1')
 
     def test_load_from_missing_file(self):
@@ -106,7 +106,7 @@ class ConfigBaseTests(unittest.TestCase):
         os.mkdir(os.path.join(temp_path, 'docs'))
 
         cfg = base.load_config(config_file=config_file)
-        self.assertTrue(isinstance(cfg, defaults.MkDocsConfig))
+        self.assertTrue(isinstance(cfg, defaults.ProperDocsConfig))
         self.assertEqual(cfg.site_name, 'ProperDocs Test')
         # load_config will always close the file
         self.assertTrue(config_file.closed)
@@ -122,22 +122,22 @@ class ConfigBaseTests(unittest.TestCase):
         os.mkdir(os.path.join(temp_dir, 'docs'))
 
         cfg = base.load_config(config_file=config_file)
-        self.assertTrue(isinstance(cfg, defaults.MkDocsConfig))
+        self.assertTrue(isinstance(cfg, defaults.ProperDocsConfig))
         self.assertEqual(cfg.site_name, 'ProperDocs Test')
 
     @tempdir()
     def test_load_missing_required(self, temp_dir):
         """`site_name` is a required setting."""
         with open(os.path.join(temp_dir, 'mkdocs.yml'), 'w') as config_file:
-            config_file.write("site_dir: output\nsite_url: https://www.mkdocs.org\n")
+            config_file.write("site_dir: output\nsite_url: https://properdocs.org\n")
         os.mkdir(os.path.join(temp_dir, 'docs'))
 
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             with self.assertRaises(exceptions.Abort):
                 base.load_config(config_file=config_file.name)
         self.assertEqual(
             '\n'.join(cm.output),
-            "ERROR:mkdocs.config:Config value 'site_name': Required configuration not provided.",
+            "ERROR:properdocs.config:Config value 'site_name': Required configuration not provided.",
         )
 
     def test_pre_validation_error(self):
@@ -254,7 +254,7 @@ class ConfigBaseTests(unittest.TestCase):
         os.mkdir(docs_dir)
 
         cfg = base.load_config(config_file=config_file)
-        self.assertTrue(isinstance(cfg, defaults.MkDocsConfig))
+        self.assertTrue(isinstance(cfg, defaults.ProperDocsConfig))
         self.assertEqual(cfg.site_name, 'ProperDocs Test')
         self.assertEqual(cfg.docs_dir, docs_dir)
         self.assertEqual(cfg.config_file_path, config_fname)

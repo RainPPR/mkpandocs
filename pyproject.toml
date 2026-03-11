@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "mkdocs"
+name = "properdocs"
 description = "Project documentation with Markdown."
 readme = "README.md"
 license = "BSD-2-Clause"
@@ -71,30 +71,30 @@ min-versions = [
 ]
 
 [project.urls]
-Documentation = "https://www.mkdocs.org/"
-Source = "https://github.com/mkdocs/mkdocs"
-Issues = "https://github.com/mkdocs/mkdocs/issues"
-History = "https://www.mkdocs.org/about/release-notes/"
+Documentation = "https://properdocs.org/"
+Source = "https://github.com/properdocs/properdocs"
+Issues = "https://github.com/properdocs/properdocs/issues"
+History = "https://properdocs.org/about/release-notes/"
 
 [project.scripts]
-mkdocs = "mkdocs.__main__:cli"
+properdocs = "properdocs.__main__:cli"
 
-[project.entry-points."mkdocs.themes"]
-mkdocs = "mkdocs.themes.mkdocs"
-readthedocs = "mkdocs.themes.readthedocs"
+[project.entry-points."properdocs.themes"]
+mkdocs = "properdocs.themes.mkdocs"
+readthedocs = "properdocs.themes.readthedocs"
 
-[project.entry-points."mkdocs.plugins"]
-search = "mkdocs.contrib.search:SearchPlugin"
+[project.entry-points."properdocs.plugins"]
+search = "properdocs.contrib.search:SearchPlugin"
 
 [tool.hatch.version]
-path = "mkdocs/__init__.py"
+path = "properdocs/__init__.py"
 
 [tool.hatch.build]
-artifacts = ["/mkdocs/**/*.mo"]
+artifacts = ["/properdocs/**/*.mo"]
 [tool.hatch.build.targets.sdist]
-include = ["/mkdocs"]
+include = ["/properdocs"]
 [tool.hatch.build.targets.wheel]
-exclude = ["/mkdocs/tests", "*.po", "*.pot", "babel.cfg"]
+exclude = ["/properdocs/tests", "*.po", "*.pot", "babel.cfg"]
 [tool.hatch.build.hooks.custom]
 dependencies = [
     "babel",
@@ -119,9 +119,9 @@ dependencies = [
     "coverage",
 ]
 [tool.hatch.envs.test.scripts]
-test = 'python -m unittest discover -s mkdocs -p "*tests.py"'
+test = 'python -m unittest discover -s properdocs -p "*tests.py"'
 _coverage = [
-    'coverage run --source=mkdocs --omit "mkdocs/tests/*" -m unittest discover -s mkdocs -p "*tests.py"',
+    'coverage run --source=properdocs --omit "properdocs/tests/*" -m unittest discover -s properdocs -p "*tests.py"',
     "coverage xml",
     "coverage report --show-missing"
 ]
@@ -142,7 +142,7 @@ path = "mkdocs.yml"
 [tool.hatch.envs.integration]
 detached = false
 [tool.hatch.envs.integration.scripts]
-test = "python -m mkdocs.tests.integration"
+test = "python -m properdocs.tests.integration"
 [[tool.hatch.envs.integration.matrix]]
 python = ["3.8", "3.9", "3.10", "3.11", "3.12", "pypy3"]
 type = ["default", "no-babel"]
@@ -162,7 +162,7 @@ dependencies = [
     "typing-extensions",
 ]
 [tool.hatch.envs.types.scripts]
-check = "mypy mkdocs"
+check = "mypy properdocs"
 
 [tool.hatch.envs.style]
 type = "pip-compile"
@@ -174,20 +174,20 @@ dependencies = [
 ]
 [tool.hatch.envs.style.scripts]
 check = [
-    "isort --check-only --diff mkdocs docs",
-    "black -q --check --diff mkdocs docs",
+    "isort --check-only --diff properdocs docs",
+    "black -q --check --diff properdocs docs",
     "lint",
 ]
 lint = [
-    "ruff check mkdocs docs {args}"
+    "ruff check properdocs docs {args}"
 ]
 fix = [
     "lint --fix",
     "format",
 ]
 format = [
-    "isort -q mkdocs docs",
-    "black -q mkdocs docs",
+    "isort -q properdocs docs",
+    "black -q properdocs docs",
 ]
 
 [tool.hatch.envs.lint]
@@ -196,9 +196,9 @@ dependencies = [
     "codespell==2.2.6",
 ]
 [tool.hatch.envs.lint.scripts]
-spelling = 'codespell mkdocs docs *.* -S LC_MESSAGES -S "*.min.js" -S "lunr*.js" -S fontawesome-webfont.svg -S tinyseg.js -S "*.map"'
+spelling = 'codespell properdocs docs *.* -S LC_MESSAGES -S "*.min.js" -S "lunr*.js" -S fontawesome-webfont.svg -S tinyseg.js -S "*.map"'
 markdown = "npm exec --yes -- markdownlint-cli README.md CONTRIBUTING.md docs/ --ignore docs/CNAME"
-js = "npm exec --yes -- jshint mkdocs/"
+js = "npm exec --yes -- jshint properdocs/"
 check = ["markdown", "js", "css", "spelling"]
 
 [tool.hatch.env.collectors.mkdocs.docs]

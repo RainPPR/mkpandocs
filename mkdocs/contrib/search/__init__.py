@@ -4,16 +4,16 @@ import logging
 import os
 from typing import TYPE_CHECKING, List
 
-from mkdocs import utils
-from mkdocs.config import base
-from mkdocs.config import config_options as c
-from mkdocs.contrib.search.search_index import SearchIndex
-from mkdocs.plugins import BasePlugin
+from properdocs import utils
+from properdocs.config import base
+from properdocs.config import config_options as c
+from properdocs.contrib.search.search_index import SearchIndex
+from properdocs.plugins import BasePlugin
 
 if TYPE_CHECKING:
-    from mkdocs.config.defaults import MkDocsConfig
-    from mkdocs.structure.pages import Page
-    from mkdocs.utils.templates import TemplateContext
+    from properdocs.config.defaults import ProperDocsConfig
+    from properdocs.structure.pages import Page
+    from properdocs.utils.templates import TemplateContext
 
 
 log = logging.getLogger(__name__)
@@ -62,7 +62,7 @@ class _PluginConfig(base.Config):
 class SearchPlugin(BasePlugin[_PluginConfig]):
     """Add a search feature to ProperDocs."""
 
-    def on_config(self, config: MkDocsConfig, **kwargs) -> MkDocsConfig:
+    def on_config(self, config: ProperDocsConfig, **kwargs) -> ProperDocsConfig:
         """Add plugin templates and scripts to config."""
         if config.theme.get('include_search_page'):
             config.theme.static_templates.add('search.html')
@@ -84,7 +84,7 @@ class SearchPlugin(BasePlugin[_PluginConfig]):
             )
         return config
 
-    def on_pre_build(self, config: MkDocsConfig, **kwargs) -> None:
+    def on_pre_build(self, config: ProperDocsConfig, **kwargs) -> None:
         """Create search index instance for later use."""
         self.search_index = SearchIndex(**self.config)
 
@@ -92,7 +92,7 @@ class SearchPlugin(BasePlugin[_PluginConfig]):
         """Add page to search index."""
         self.search_index.add_entry_from_context(page)
 
-    def on_post_build(self, config: MkDocsConfig, **kwargs) -> None:
+    def on_post_build(self, config: ProperDocsConfig, **kwargs) -> None:
         """Build search index."""
         output_base_path = os.path.join(config.site_dir, 'search')
         search_index = self.search_index.generate_search_index()

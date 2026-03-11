@@ -3,10 +3,10 @@
 import sys
 import unittest
 
-from mkdocs.structure.files import File, Files, set_exclusions
-from mkdocs.structure.nav import Section, _get_by_type, get_navigation
-from mkdocs.structure.pages import Page
-from mkdocs.tests.base import dedent, load_config
+from properdocs.structure.files import File, Files, set_exclusions
+from properdocs.structure.nav import Section, _get_by_type, get_navigation
+from properdocs.structure.pages import Page
+from properdocs.tests.base import dedent, load_config
 
 
 class SiteNavigationTests(unittest.TestCase):
@@ -118,13 +118,13 @@ class SiteNavigationTests(unittest.TestCase):
         cfg = load_config(nav=nav_cfg, site_url='http://example.com/')
         fs = [File('index.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)]
         files = Files(fs)
-        with self.assertLogs('mkdocs', level='DEBUG') as cm:
+        with self.assertLogs('properdocs', level='DEBUG') as cm:
             site_navigation = get_navigation(files, cfg)
         self.assertEqual(
             cm.output,
             [
-                "INFO:mkdocs.structure.nav:An absolute path to '/local.html' is included in the 'nav' configuration, which presumably points to an external resource.",
-                "DEBUG:mkdocs.structure.nav:An external link to 'http://example.com/external.html' is included in the 'nav' configuration.",
+                "INFO:properdocs.structure.nav:An absolute path to '/local.html' is included in the 'nav' configuration, which presumably points to an external resource.",
+                "DEBUG:properdocs.structure.nav:An external link to 'http://example.com/external.html' is included in the 'nav' configuration.",
             ],
         )
         self.assertEqual(str(site_navigation).strip(), expected)
@@ -156,13 +156,13 @@ class SiteNavigationTests(unittest.TestCase):
             File('foo/bar.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls),
         ]
         files = Files(fs)
-        with self.assertLogs('mkdocs', level='DEBUG') as cm:
+        with self.assertLogs('properdocs', level='DEBUG') as cm:
             site_navigation = get_navigation(files, cfg)
         self.assertEqual(
             cm.output,
             [
-                "WARNING:mkdocs.structure.nav:A reference to '/local.md' is included in the 'nav' configuration, which is not found in the documentation files.",
-                "DEBUG:mkdocs.structure.nav:An external link to 'http://example.com/external.html' is included in the 'nav' configuration.",
+                "WARNING:properdocs.structure.nav:A reference to '/local.md' is included in the 'nav' configuration, which is not found in the documentation files.",
+                "DEBUG:properdocs.structure.nav:An external link to 'http://example.com/external.html' is included in the 'nav' configuration.",
             ],
         )
         self.assertEqual(str(site_navigation).strip(), expected)
@@ -185,13 +185,13 @@ class SiteNavigationTests(unittest.TestCase):
         cfg = load_config(nav=nav_cfg, site_url='http://example.com/')
         fs = [File('index.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)]
         files = Files(fs)
-        with self.assertLogs('mkdocs') as cm:
+        with self.assertLogs('properdocs') as cm:
             site_navigation = get_navigation(files, cfg)
         self.assertEqual(
             cm.output,
             [
-                "WARNING:mkdocs.structure.nav:A reference to 'missing.html' is included in the 'nav' configuration, which is not found in the documentation files.",
-                "WARNING:mkdocs.structure.nav:A reference to 'example.com' is included in the 'nav' configuration, which is not found in the documentation files.",
+                "WARNING:properdocs.structure.nav:A reference to 'missing.html' is included in the 'nav' configuration, which is not found in the documentation files.",
+                "WARNING:properdocs.structure.nav:A reference to 'example.com' is included in the 'nav' configuration, which is not found in the documentation files.",
             ],
         )
         self.assertEqual(str(site_navigation).strip(), expected)

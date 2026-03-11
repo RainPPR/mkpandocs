@@ -8,7 +8,7 @@ Guide to all available configuration settings.
 
 Project settings are configured by default using a YAML configuration file in
 the project directory named `mkdocs.yml`. You can specify another path for it
-by using the `-f`/`--config-file` option (see `mkdocs build --help`).
+by using the `-f`/`--config-file` option (see `properdocs build --help`).
 
 At a minimum, this configuration file must contain the `site_name`. All other settings are optional.
 
@@ -33,7 +33,7 @@ Set the canonical URL of the site. This will add a `link` tag with the
 ProperDocs site will be within a subdirectory of a domain, be sure to include that
 subdirectory in the setting (`https://example.com/foo/`).
 
-This setting is also used for `mkdocs serve`: the server will be mounted onto a
+This setting is also used for `properdocs serve`: the server will be mounted onto a
 path taken from the path component of the URL, e.g. `some/page.md` will be
 served from `http://127.0.0.1:8000/foo/some/page/` to mimic the expected remote
 layout.
@@ -297,7 +297,7 @@ NEW: **New in version 1.5.**
 
 > DANGER: **Changed in version 1.6:**
 >
-> This config no longer applies the "drafts" functionality for `mkdocs serve`. If you have draft documents that you want available in "serve" and not "build", replace `exclude_docs` with the new [`draft_docs`](#draft_docs) config option.
+> This config no longer applies the "drafts" functionality for `properdocs serve`. If you have draft documents that you want available in "serve" and not "build", replace `exclude_docs` with the new [`draft_docs`](#draft_docs) config option.
 
 This config defines patterns of files (under [`docs_dir`](#docs_dir)) to not be picked up into the built site.
 
@@ -342,7 +342,7 @@ exclude_docs: |
 
 NEW: **New in version 1.6.**
 
-This config defines patterns of files (under [`docs_dir`](#docs_dir)) to be treated as a draft.  Draft files are available during `mkdocs serve` and include a "DRAFT" mark but will not be included in the build. To prevent this effect and make "serve" behave the same as "build", you can run `mkdocs serve --clean`.
+This config defines patterns of files (under [`docs_dir`](#docs_dir)) to be treated as a draft.  Draft files are available during `properdocs serve` and include a "DRAFT" mark but will not be included in the build. To prevent this effect and make "serve" behave the same as "build", you can run `properdocs serve --clean`.
 
 Example:
 
@@ -393,7 +393,7 @@ NEW: **New in version 1.5.**
 
 Configure the strictness of ProperDocs' diagnostic messages when validating links to documents.
 
-This is a tree of configs, and for each one the value can be one of the three: `warn`, `info`, `ignore`. Which cause a logging message of the corresponding severity to be produced. The `warn` level is, of course, intended for use with `mkdocs build --strict` (where it becomes an error), which you can employ in continuous testing.
+This is a tree of configs, and for each one the value can be one of the three: `warn`, `info`, `ignore`. Which cause a logging message of the corresponding severity to be produced. The `warn` level is, of course, intended for use with `properdocs build --strict` (where it becomes an error), which you can employ in continuous testing.
 
 The config `validation.links.absolute_links` additionally has a special value `relative_to_docs`, for [validation of absolute links](#validation-of-absolute-links).
 
@@ -655,7 +655,7 @@ extra:
 
 ### watch
 
-Determines additional directories to watch when running `mkdocs serve`.
+Determines additional directories to watch when running `properdocs serve`.
 Configuration is a YAML list.
 
 ```yaml
@@ -665,7 +665,7 @@ watch:
 ```
 
 Allows a custom default to be set without the need to pass it through the `-w`/`--watch`
-option every time the `mkdocs serve` command is called.
+option every time the `properdocs serve` command is called.
 
 > NOTE:
 > The paths provided via the configuration file are relative to the configuration file.
@@ -722,11 +722,11 @@ This is also available as a command line flag: `--strict`.
 
 ### dev_addr
 
-Determines the address used when running `mkdocs serve`. Must be of the format
+Determines the address used when running `properdocs serve`. Must be of the format
 `IP:PORT`.
 
 Allows a custom default to be set without the need to pass it through the
-`--dev-addr` option every time the `mkdocs serve` command is called.
+`--dev-addr` option every time the `properdocs serve` command is called.
 
 **default**: `'127.0.0.1:8000'`
 
@@ -845,11 +845,11 @@ def on_page_markdown(markdown, **kwargs):
 >
 > ```python
 > import logging, re
-> import mkdocs.plugins
+> import properdocs.plugins
 >
-> log = logging.getLogger('mkdocs')
+> log = logging.getLogger('properdocs')
 >
-> @mkdocs.plugins.event_priority(-50)
+> @properdocs.plugins.event_priority(-50)
 > def on_page_markdown(markdown, page, **kwargs):
 >     path = page.file.src_uri
 >     for m in re.finditer(r'\bhttp://[^) ]+', markdown):
@@ -858,7 +858,7 @@ def on_page_markdown(markdown, **kwargs):
 
 This does not enable any new abilities compared to [plugins][], it only simplifies one-off usages, as these don't need to be *installed* like plugins do.
 
-Note that for `mkdocs serve` the hook module will *not* be reloaded on each build.
+Note that for `properdocs serve` the hook module will *not* be reloaded on each build.
 
 You might have seen this feature in the [mkdocs-simple-hooks plugin](https://github.com/aklajnert/mkdocs-simple-hooks). If using standard method names, it can be directly replaced, e.g.:
 
@@ -1179,7 +1179,7 @@ site_name: Foo Project
 site_url: https://example.com/foo
 ```
 
-When running `mkdocs build`, the file at `foo/mkdocs.yml` would be passed in as
+When running `properdocs build`, the file at `foo/mkdocs.yml` would be passed in as
 the configuration file. ProperDocs will then parse that file, retrieve and parse the
 parent file `base.yml` and deep merge the two. This would result in ProperDocs
 receiving the following merged configuration:
@@ -1259,7 +1259,7 @@ path based options in the primary configuration file only.
 The inheritance can also be used as a quick way to override keys on the command line - by using stdin as the config file. For example:
 
 ```bash
-echo '{INHERIT: mkdocs.yml, site_name: "Renamed site"}' | mkdocs build -f -
+echo '{INHERIT: mkdocs.yml, site_name: "Renamed site"}' | properdocs build -f -
 ```
 
 [Theme Developer Guide]: ../dev-guide/themes.md
@@ -1270,7 +1270,7 @@ echo '{INHERIT: mkdocs.yml, site_name: "Renamed site"}' | mkdocs build -f -
 [smarty]: https://python-markdown.github.io/extensions/smarty/
 [exts]: https://python-markdown.github.io/extensions/
 [Python-Markdown wiki]: https://github.com/Python-Markdown/markdown/wiki/Third-Party-Extensions
-[catalog]: https://github.com/mkdocs/catalog
+[catalog]: https://github.com/properdocs/catalog
 [configuring pages and navigation]: writing-your-docs.md#configure-pages-and-navigation
 [Meta-Data]: writing-your-docs.md#meta-data
 [theme_dir]: customizing-your-theme.md#using-the-theme-custom_dir

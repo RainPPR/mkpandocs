@@ -3,14 +3,14 @@ from __future__ import annotations
 from click import ClickException, echo
 
 
-class MkDocsException(ClickException):
+class ProperDocsException(ClickException):
     """
     The base class which all ProperDocs exceptions inherit from. This should
     not be raised directly. One of the subclasses should be raised instead.
     """
 
 
-class Abort(MkDocsException, SystemExit):
+class Abort(ProperDocsException, SystemExit):
     """Abort the build."""
 
     code = 1
@@ -19,7 +19,7 @@ class Abort(MkDocsException, SystemExit):
         echo('\n' + self.format_message())
 
 
-class ConfigurationError(MkDocsException):
+class ConfigurationError(ProperDocsException):
     """
     This error is raised by configuration validation when a validation error
     is encountered. This error should be raised by any configuration options
@@ -27,7 +27,7 @@ class ConfigurationError(MkDocsException):
     """
 
 
-class BuildError(MkDocsException):
+class BuildError(ProperDocsException):
     """
     This error may be raised by ProperDocs during the build process. Plugins should
     not raise this error.
@@ -36,6 +36,6 @@ class BuildError(MkDocsException):
 
 class PluginError(BuildError):
     """
-    A subclass of [`mkdocs.exceptions.BuildError`][] which can be raised by plugin
+    A subclass of [`properdocs.exceptions.BuildError`][] which can be raised by plugin
     events.
     """

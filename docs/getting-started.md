@@ -9,7 +9,7 @@ An introductory tutorial!
 To install ProperDocs, run the following command from the command line:
 
 ```bash
-pip install mkdocs
+pip install properdocs
 ```
 
 For more details, see the [Installation Guide].
@@ -20,7 +20,7 @@ Getting started is super easy. To create a new project, run the following
 command from the command line:
 
 ```bash
-mkdocs new my-project
+properdocs new my-project
 cd my-project
 ```
 
@@ -35,11 +35,11 @@ folder just contains a single documentation page, named `index.md`.
 
 ProperDocs comes with a built-in dev-server that lets you preview your documentation
 as you work on it. Make sure you're in the same directory as the `mkdocs.yml`
-configuration file, and then start the server by running the `mkdocs serve`
+configuration file, and then start the server by running the `properdocs serve`
 command:
 
 ```console
-$ mkdocs serve
+$ properdocs serve
 INFO    -  Building documentation...
 INFO    -  Cleaning site directory
 INFO    -  Documentation built in 0.22 seconds
@@ -143,7 +143,7 @@ That's looking good. You're ready to deploy the first pass of your `MkLorum`
 documentation. First build the documentation:
 
 ```bash
-mkdocs build
+properdocs build
 ```
 
 This will create a new directory, named `site`. Take a look inside the
@@ -152,13 +152,13 @@ directory:
 ```console
 $ ls site
 about  fonts  index.html  license  search.html
-css    img    js          mkdocs   sitemap.xml
+css    img    js          properdocs   sitemap.xml
 ```
 
 Notice that your source documentation has been output as two HTML files named
 `index.html` and `about/index.html`. You also have various other media that's
 been copied into the `site` directory as part of the documentation theme. You
-even have a `sitemap.xml` file and `mkdocs/search_index.json`.
+even have a `sitemap.xml` file and `properdocs/search_index.json`.
 
 If you're using source code control such as `git` you probably don't want to
 check your documentation builds into the repository. Add a line containing
@@ -177,7 +177,7 @@ There are various other commands and options available. For a complete list of
 commands, use the `--help` flag:
 
 ```bash
-mkdocs --help
+properdocs --help
 ```
 
 To view a list of options available on a given command, use the `--help` flag
@@ -185,7 +185,7 @@ with that command. For example, to get a list of all options available for the
 `build` command run the following:
 
 ```bash
-mkdocs build --help
+properdocs build --help
 ```
 
 ## Deploying
@@ -206,8 +206,8 @@ To get help with ProperDocs, please use the [GitHub discussions] or [GitHub issu
 [docs_dir]: user-guide/configuration.md#docs_dir
 [deploy]: user-guide/deploying-your-docs.md
 [nav]: user-guide/configuration.md#nav
-[GitHub discussions]: https://github.com/mkdocs/mkdocs/discussions
-[GitHub issues]: https://github.com/mkdocs/mkdocs/issues
+[GitHub discussions]: https://github.com/properdocs/properdocs/discussions
+[GitHub issues]: https://github.com/properdocs/properdocs/issues
 [site_name]: user-guide/configuration.md#site_name
 [theme]: user-guide/configuration.md#theme
 [User Guide]: user-guide/README.md

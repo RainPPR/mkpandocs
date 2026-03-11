@@ -8,8 +8,8 @@ from tempfile import TemporaryDirectory
 
 import markdown
 
-from mkdocs import utils
-from mkdocs.config.defaults import MkDocsConfig
+from properdocs import utils
+from properdocs.config.defaults import ProperDocsConfig
 
 
 def dedent(text):
@@ -23,7 +23,7 @@ def get_markdown_toc(markdown_source):
     return md.toc_tokens
 
 
-def load_config(config_file_path: str | None = None, **cfg) -> MkDocsConfig:
+def load_config(config_file_path: str | None = None, **cfg) -> ProperDocsConfig:
     """Helper to build a simple config for testing."""
     path_base = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'integration', 'minimal')
     if 'site_name' not in cfg:
@@ -33,7 +33,9 @@ def load_config(config_file_path: str | None = None, **cfg) -> MkDocsConfig:
         cfg['docs_dir'] = os.path.join(path_base, 'docs')
     if 'plugins' not in cfg:
         cfg['plugins'] = []
-    conf = MkDocsConfig(config_file_path=config_file_path or os.path.join(path_base, 'mkdocs.yml'))
+    conf = ProperDocsConfig(
+        config_file_path=config_file_path or os.path.join(path_base, 'mkdocs.yml')
+    )
     conf.load_dict(cfg)
 
     errors_warnings = conf.validate()
@@ -66,9 +68,9 @@ def tempdir(files=None, **kw):
             with open(pth, 'r', encoding='utf-8') as f:
                 assert f.read() == 'bar content'
     """
-    files = {f: '' for f in files} if isinstance(files, (list, tuple)) else files or {}
+    files = dict.fromkeys(files, '') if isinstance(files, (list, tuple)) else files or {}
 
-    kw['prefix'] = 'mkdocs_test-' + kw.get('prefix', '')
+    kw['prefix'] = 'properdocs_test-' + kw.get('prefix', '')
 
     def decorator(fn):
         @wraps(fn)

@@ -21,14 +21,14 @@ from typing import (
     overload,
 )
 
-from mkdocs import exceptions, utils
-from mkdocs.utils import weak_property
+from properdocs import exceptions, utils
+from properdocs.utils import weak_property
 
 if TYPE_CHECKING:
-    from mkdocs.config.defaults import MkDocsConfig
+    from properdocs.config.defaults import ProperDocsConfig
 
 
-log = logging.getLogger('mkdocs.config')
+log = logging.getLogger('properdocs.config')
 
 
 T = TypeVar('T')
@@ -125,7 +125,7 @@ class Config(UserDict):
     Base class for ProperDocs configuration, plugin configuration (and sub-configuration) objects.
 
     It should be subclassed and have `ConfigOption`s defined as attributes.
-    For examples, see mkdocs/contrib/search/__init__.py and mkdocs/config/defaults.py.
+    For examples, see properdocs/contrib/search/__init__.py and properdocs/config/defaults.py.
 
     Behavior as it was prior to MkDocs 1.4 is now handled by LegacyConfig.
     """
@@ -257,7 +257,7 @@ class Config(UserDict):
         """Load config options from the open file descriptor of a YAML file."""
         warnings.warn(
             "Config.load_file is not used since MkDocs 1.5 and will be removed soon. "
-            "Use MkDocsConfig.load_file instead",
+            "Use ProperDocsConfig.load_file instead",
             DeprecationWarning,
         )
         return self.load_dict(utils.yaml_load(config_file))
@@ -339,7 +339,7 @@ def _open_config_file(config_file: str | IO | None) -> Iterator[IO]:
 
 def load_config(
     config_file: str | IO | None = None, *, config_file_path: str | None = None, **kwargs
-) -> MkDocsConfig:
+) -> ProperDocsConfig:
     """
     Load the configuration for a given file object or name.
 
@@ -359,12 +359,12 @@ def load_config(
 
     with _open_config_file(config_file) as fd:
         # Initialize the config with the default schema.
-        from mkdocs.config.defaults import MkDocsConfig
+        from properdocs.config.defaults import ProperDocsConfig
 
         if config_file_path is None:
             if sys.stdin and fd is not sys.stdin.buffer:
                 config_file_path = getattr(fd, 'name', None)
-        cfg = MkDocsConfig(config_file_path=config_file_path)
+        cfg = ProperDocsConfig(config_file_path=config_file_path)
         # load the config file
         cfg.load_file(fd)
 

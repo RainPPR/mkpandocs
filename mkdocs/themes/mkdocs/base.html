@@ -113,7 +113,7 @@
                       {%- block search_button %}
                         {%- if 'search' in config.plugins %}
                         <li class="nav-item">
-                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#properdocs_search_modal">
                                 <i class="fa fa-search"></i> {% trans %}Search{% endtrans %}
                             </a>
                         </li>
@@ -222,7 +222,7 @@
             {%- if config.copyright %}
                 <p>{{ config.copyright }}</p>
             {%- endif %}
-            <p>{% trans mkdocs_link='<a href="https://www.mkdocs.org/">ProperDocs</a>' %}Documentation built with {{ mkdocs_link }}.{% endtrans %}</p>
+            <p>{% trans properdocs_link='<a href="https://properdocs.org/">ProperDocs</a>' %}Documentation built with {{ properdocs_link }}.{% endtrans %}</p>
           {%- endblock %}
         </footer>
 

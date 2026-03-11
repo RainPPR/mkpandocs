@@ -20,14 +20,14 @@ else:
         return None
 
 
-import mkdocs
-from mkdocs.config import config_options as c
-from mkdocs.config import defaults
-from mkdocs.config.base import Config
-from mkdocs.plugins import BasePlugin, PluginCollection
-from mkdocs.tests.base import tempdir
-from mkdocs.theme import Theme
-from mkdocs.utils import write_file, yaml_load
+import properdocs
+from properdocs.config import config_options as c
+from properdocs.config import defaults
+from properdocs.config.base import Config
+from properdocs.plugins import BasePlugin, PluginCollection
+from properdocs.tests.base import tempdir
+from properdocs.theme import Theme
+from properdocs.utils import write_file, yaml_load
 
 SomeConfig = TypeVar('SomeConfig', bound=Config)
 
@@ -397,9 +397,9 @@ class URLTest(TestCase):
         class Schema(Config):
             option = c.URL()
 
-        conf = self.get_config(Schema, {'option': "https://mkdocs.org"})
+        conf = self.get_config(Schema, {'option': "https://properdocs.org"})
         assert_type(conf.option, str)
-        self.assertEqual(conf.option, "https://mkdocs.org")
+        self.assertEqual(conf.option, "https://properdocs.org")
 
         conf = self.get_config(Schema, {'option': ""})
         self.assertEqual(conf.option, "")
@@ -408,11 +408,11 @@ class URLTest(TestCase):
         class Schema(Config):
             option = c.URL(is_dir=True)
 
-        conf = self.get_config(Schema, {'option': "http://mkdocs.org/"})
-        self.assertEqual(conf.option, "http://mkdocs.org/")
+        conf = self.get_config(Schema, {'option': "http://properdocs.org/"})
+        self.assertEqual(conf.option, "http://properdocs.org/")
 
-        conf = self.get_config(Schema, {'option': "https://mkdocs.org"})
-        self.assertEqual(conf.option, "https://mkdocs.org/")
+        conf = self.get_config(Schema, {'option': "https://properdocs.org"})
+        self.assertEqual(conf.option, "https://properdocs.org/")
 
     def test_optional(self):
         class Schema(Config):
@@ -431,7 +431,7 @@ class URLTest(TestCase):
         with self.expect_error(option="Required configuration not provided."):
             self.get_config(Schema, {'option': None})
 
-        for url in "www.mkdocs.org", "//mkdocs.org/test", "http:/mkdocs.org/", "/hello/":
+        for url in "properdocs.org", "//properdocs.org/test", "http:/properdocs.org/", "/hello/":
             with self.subTest(url=url):
                 with self.expect_error(
                     option="The URL isn't valid, it should include the http:// (scheme)"
@@ -456,7 +456,7 @@ class EditURITest(TestCase):
     def test_repo_name_github(self) -> None:
         conf = self.get_config(
             self.Schema,
-            {'repo_url': "https://github.com/mkdocs/mkdocs"},
+            {'repo_url': "https://github.com/properdocs/properdocs"},
         )
         assert_type(conf.repo_name, Optional[str])
         self.assertEqual(conf.repo_name, "GitHub")
@@ -485,12 +485,12 @@ class EditURITest(TestCase):
     def test_edit_uri_github(self) -> None:
         conf = self.get_config(
             self.Schema,
-            {'repo_url': "https://github.com/mkdocs/mkdocs"},
+            {'repo_url': "https://github.com/properdocs/properdocs"},
         )
         assert_type(conf.edit_uri, Optional[str])
         assert_type(conf.repo_url, Optional[str])
         self.assertEqual(conf.edit_uri, 'edit/master/docs/')
-        self.assertEqual(conf.repo_url, "https://github.com/mkdocs/mkdocs")
+        self.assertEqual(conf.repo_url, "https://github.com/properdocs/properdocs")
 
     def test_edit_uri_bitbucket(self) -> None:
         conf = self.get_config(
@@ -518,7 +518,7 @@ class EditURITest(TestCase):
     def test_repo_name_custom_and_empty_edit_uri(self) -> None:
         conf = self.get_config(
             self.Schema,
-            {'repo_url': "https://github.com/mkdocs/mkdocs", 'repo_name': 'mkdocs'},
+            {'repo_url': "https://github.com/properdocs/properdocs", 'repo_name': 'properdocs'},
         )
         self.assertEqual(conf.edit_uri, 'edit/master/docs/')
 
@@ -526,7 +526,7 @@ class EditURITest(TestCase):
         conf = self.get_config(
             self.Schema,
             {
-                'repo_url': "https://github.com/mkdocs/mkdocs",
+                'repo_url': "https://github.com/properdocs/properdocs",
                 'edit_uri_template': 'edit/foo/docs/{path}',
             },
         )
@@ -540,7 +540,7 @@ class EditURITest(TestCase):
             self.get_config(
                 self.Schema,
                 {
-                    'repo_url': "https://github.com/mkdocs/mkdocs",
+                    'repo_url': "https://github.com/properdocs/properdocs",
                     'edit_uri_template': 'edit/master/{path',
                 },
             )
@@ -549,7 +549,7 @@ class EditURITest(TestCase):
             self.get_config(
                 self.Schema,
                 {
-                    'repo_url': "https://github.com/mkdocs/mkdocs",
+                    'repo_url': "https://github.com/properdocs/properdocs",
                     'edit_uri_template': 'edit/master/{path!z}',
                 },
             )
@@ -558,7 +558,7 @@ class EditURITest(TestCase):
             self.get_config(
                 self.Schema,
                 {
-                    'repo_url': "https://github.com/mkdocs/mkdocs",
+                    'repo_url': "https://github.com/properdocs/properdocs",
                     'edit_uri_template': 'edit/master/{foo}',
                 },
             )
@@ -567,7 +567,7 @@ class EditURITest(TestCase):
         conf = self.get_config(
             self.Schema,
             {
-                'repo_url': "https://github.com/mkdocs/mkdocs",
+                'repo_url': "https://github.com/properdocs/properdocs",
                 'edit_uri': 'edit',
                 'edit_uri_template': 'edit/master/{path}',
             },
@@ -1067,7 +1067,7 @@ class SiteDirTest(TestCase):
     def test_doc_dir_in_site_dir(self) -> None:
         j = os.path.join
         # The parent dir is not the same on every system, so use the actual dir name
-        parent_dir = mkdocs.__file__.split(os.sep)[-3]
+        parent_dir = properdocs.__file__.split(os.sep)[-3]
 
         test_configs = (
             {'docs_dir': j('site', 'docs'), 'site_dir': 'site'},
@@ -1215,7 +1215,7 @@ class ThemeTest(TestCase):
             self.get_config(Schema, {'option': config})
 
     def test_theme_invalid_type(self) -> None:
-        config = ['mkdocs2']
+        config = ['mkdocs']
 
         class Schema(Config):
             option = c.Theme()
@@ -1582,7 +1582,7 @@ class NestedSubConfigTest(TestCase):
         }
 
     class Schema(Config):
-        validation = c.PropagatingSubConfig[defaults.MkDocsConfig.Validation]()
+        validation = c.PropagatingSubConfig[defaults.ProperDocsConfig.Validation]()
 
     def test_unspecified(self) -> None:
         cfgs: list[dict] = [{}, {'validation': {}}]
@@ -1946,7 +1946,7 @@ class FakeEntryPoint:
 
 
 @mock.patch(
-    'mkdocs.plugins.entry_points',
+    'properdocs.plugins.entry_points',
     mock.Mock(
         return_value=[
             FakeEntryPoint('sample', FakePlugin),

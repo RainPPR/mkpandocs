@@ -126,7 +126,7 @@ supports the following options:
     The following locales are supported by this theme:
 
     * `en`: English (default)
-    * (see the list of existing directories `mkdocs/themes/mkdocs/locales/*/`)
+    * (see the list of existing directories `properdocs/themes/mkdocs/locales/*/`)
 
     See the guide on [localizing your theme] for more information.
 
@@ -203,7 +203,7 @@ theme supports the following options:
     The following locales are supported by this theme:
 
     * `en`: English (default)
-    * (see the list of existing directories `mkdocs/themes/readthedocs/locales/*/`)
+    * (see the list of existing directories `properdocs/themes/readthedocs/locales/*/`)
 
     See the guide on [localizing your theme] for more information.
 
@@ -224,6 +224,6 @@ WARNING: Installing a ProperDocs theme means installing a Python package and exe
 [setup-GA4]: https://support.google.com/analytics/answer/9304153?hl=en&ref_topic=9303319
 [upgrade-GA4]: https://support.google.com/analytics/answer/9744165?hl=en&ref_topic=9303319
 [Read the Docs]: https://readthedocs.org/
-[community wiki]: https://github.com/mkdocs/mkdocs/wiki/ProperDocs-Themes
-[catalog]: https://github.com/mkdocs/catalog#-theming
+[community wiki]: https://github.com/properdocs/properdocs/wiki/ProperDocs-Themes
+[catalog]: https://github.com/properdocs/catalog#-theming
 [localizing your theme]: localizing-your-theme.md
