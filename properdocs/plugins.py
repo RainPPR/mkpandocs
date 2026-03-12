@@ -49,7 +49,7 @@ def get_plugins() -> dict[str, EntryPoint]:
 
     for prefix in pluginmaps:
         for plugin in entry_points(group=f'{prefix}.plugins'):
-            if plugin.value.startswith('mkdocs.'):
+            if getattr(plugin, 'value', '').startswith('mkdocs.'):
                 continue
             # Allow third-party plugins to override core plugins
             if plugin.name in pluginmaps[prefix] and plugin.value.startswith(f"{prefix}.contrib."):
