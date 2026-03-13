@@ -534,7 +534,9 @@ class _RawHTMLPreprocessor(markdown.preprocessors.Preprocessor):
 
     def _register(self, md: markdown.Markdown) -> None:
         md.preprocessors.register(
-            self, "properdocs_raw_html", priority=21  # Right before 'html_block'.
+            self,
+            "properdocs_raw_html",
+            priority=21,  # Right before 'html_block'.
         )
 
 
@@ -563,7 +565,11 @@ class _ExtractTitleTreeprocessor(markdown.treeprocessors.Treeprocessor):
 
     def _register(self, md: markdown.Markdown) -> None:
         self.md = md
-        md.treeprocessors.register(self, "properdocs_extract_title", priority=1)  # Close to the end.
+        md.treeprocessors.register(
+            self,
+            "properdocs_extract_title",
+            priority=1,  # Close to the end.
+        )
 
 
 class _AbsoluteLinksValidationValue(enum.IntEnum):

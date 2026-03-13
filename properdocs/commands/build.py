@@ -16,8 +16,10 @@ from properdocs.exceptions import Abort, BuildError
 from properdocs.structure.files import File, Files, InclusionLevel, get_files, set_exclusions
 from properdocs.structure.nav import Navigation, get_navigation
 from properdocs.structure.pages import Page
-from properdocs.utils import DuplicateFilter  # noqa: F401 - legacy re-export
-from properdocs.utils import templates
+from properdocs.utils import (
+    DuplicateFilter,  # noqa: F401 - legacy re-export
+    templates,
+)
 
 if TYPE_CHECKING:
     from properdocs.config.defaults import ProperDocsConfig
