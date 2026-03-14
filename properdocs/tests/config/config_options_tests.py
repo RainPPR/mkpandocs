@@ -2277,7 +2277,11 @@ class PluginsTest(TestCase):
         with self.expect_error(plugins="Invalid Plugins configuration"):
             self.get_config(Schema, cfg)
 
-        cfg = {
+    def test_plugin_config_multivalue_dict_empty(self) -> None:
+        class Schema(Config):
+            plugins = c.Plugins()
+
+        cfg: dict[str, list[dict[str, Any]]] = {
             'plugins': [
                 {},
             ],

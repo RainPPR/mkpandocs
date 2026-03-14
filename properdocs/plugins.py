@@ -45,7 +45,7 @@ log = logging.getLogger('properdocs.plugins')
 
 def get_plugins() -> dict[str, EntryPoint]:
     """Return a dict of all installed Plugins as {name: EntryPoint}."""
-    pluginmaps = {'properdocs': {}, 'mkdocs': {}}
+    pluginmaps: dict[str, dict[str, EntryPoint]] = {'properdocs': {}, 'mkdocs': {}}
 
     for prefix in pluginmaps:
         for plugin in entry_points(group=f'{prefix}.plugins'):
