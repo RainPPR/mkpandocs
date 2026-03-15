@@ -174,15 +174,17 @@ def get_deps(
         theme = cfg.get("theme")
     themes = {theme} if theme else set()
 
-    plugins = set(_strings(_dig(cfg, "plugins")))
-    extensions = set(_strings(_dig(cfg, "markdown_extensions")))
+    plugins = set(_strings(_dig(cfg, "plugins"))) - BUILTIN_PLUGINS
+    extensions = set(_strings(_dig(cfg, "markdown_extensions"))) - BUILTIN_EXTENSIONS
 
     wanted_plugins = (
+        (_PluginKind("properdocs_theme", "properdocs.themes"), themes),
         (_PluginKind("mkdocs_theme", "mkdocs.themes"), themes),
-        (_PluginKind("mkdocs_plugin", "mkdocs.plugins"), plugins - BUILTIN_PLUGINS),
-        (_PluginKind("markdown_extension", "markdown.extensions"), extensions - BUILTIN_EXTENSIONS),
+        (_PluginKind("properdocs_plugin", "properdocs.plugins"), plugins),
+        (_PluginKind("mkdocs_plugin", "mkdocs.plugins"), plugins),
+        (_PluginKind("markdown_extension", "markdown.extensions"), extensions),
     )
-    for kind, wanted in wanted_plugins:
+    for kind, wanted in (wanted_plugins[0], wanted_plugins[2], wanted_plugins[4]):
         log.debug(f"Wanted {kind}s: {sorted(wanted)}")
 
     if projects_file is None:
@@ -197,7 +199,7 @@ def get_deps(
                 if (  # Also check theme-namespaced plugin names against the current theme.
                     "/" in entry_name
                     and theme is not None
-                    and kind.projects_key == "mkdocs_plugin"
+                    and kind.projects_key in ("properdocs_plugin", "mkdocs_plugin")
                     and entry_name.startswith(f"{theme}/")
                     and entry_name[len(theme) + 1 :] in wanted
                     and entry_name not in wanted
@@ -220,21 +222,29 @@ def get_deps(
 
                     wanted.remove(entry_name)
 
+    warnings: dict[str, str] = {}
+
     for kind, wanted in wanted_plugins:
         for entry_name in sorted(wanted):
             dist_name = None
             ep = _entry_points(kind.entry_points_key).get(entry_name)
             if ep is not None and ep.dist is not None:
                 dist_name = ep.dist.name
-            warning = (
+            base_warning = (
                 f"{str(kind).capitalize()} '{entry_name}' is not provided by any registered project"
             )
             if ep is not None:
-                warning += " but is installed locally"
+                warning = base_warning + " but is installed locally"
                 if dist_name:
                     warning += f" from '{dist_name}'"
-                log.info(warning)
+                warnings[base_warning] = warning  # Always prefer the lesser warning
             else:
-                log.warning(warning)
+                warnings.setdefault(base_warning, base_warning)
+
+    for warning in warnings.values():
+        if " is installed " in warning:
+            log.info(warning)
+        else:
+            log.warning(warning)
 
     return sorted(packages_to_install)

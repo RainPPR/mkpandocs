@@ -2,11 +2,11 @@
 # This is an intentionally small subset of https://github.com/properdocs/catalog
 projects:
 - name: MkDocs theme
-  mkdocs_theme: [mkdocs]
+  properdocs_theme: [mkdocs]
   github_id: properdocs/properdocs
   pypi_id: properdocs-theme-mkdocs
 - name: ReadTheDocs theme
-  mkdocs_theme: [readthedocs]
+  properdocs_theme: [readthedocs]
   github_id: properdocs/properdocs
   pypi_id: properdocs-theme-readthedocs
 - name: Material for MkDocs
