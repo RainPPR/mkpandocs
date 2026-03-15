@@ -352,7 +352,10 @@ class Choice(Generic[T], OptionallyRequired[T]):
         if not length or isinstance(choices, str):
             raise ValueError(f'Expected iterable of choices, got {choices}')
         if default is not None and default not in choices:
-            raise ValueError(f'{default!r} is not one of {choices!r}')
+            if choices:
+                raise ValueError(f'{default!r} is not one of {choices!r}')
+            else:
+                raise ValueError('There are no themes installed.')
 
         self.choices = choices
 
@@ -809,10 +812,14 @@ class Theme(BaseConfigOption[theme.Theme]):
 
         themes = utils.get_theme_names()
         if theme_config['name'] is not None and theme_config['name'] not in themes:
-            raise ValidationError(
-                f"Unrecognised theme name: '{theme_config['name']}'. "
-                f"The available installed themes are: {', '.join(themes)}"
-            )
+            message = f"Unrecognised theme name: '{theme_config['name']}'."
+            if theme_config['name'] in ('mkdocs', 'readthedocs'):
+                message += f"\nAdditional dependency is needed:\n    pip install properdocs-theme-{theme_config['name']}"
+            elif themes:
+                message += f" The available installed themes are: {', '.join(themes)}"
+            else:
+                message += " There aren't any themes installed."
+            raise ValidationError(message)
 
         if not theme_config['name'] and 'custom_dir' not in theme_config:
             raise ValidationError("At least one of 'name' or 'custom_dir' must be defined.")
