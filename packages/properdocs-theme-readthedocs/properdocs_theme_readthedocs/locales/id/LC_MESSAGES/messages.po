@@ -18,59 +18,59 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.14.0\n"
 
-#: properdocs/themes/readthedocs/404.html:7
+#: properdocs_theme_readthedocs/404.html:7
 msgid "Page not found"
 msgstr "Halaman tidak ditemukan"
 
-#: properdocs/themes/readthedocs/base.html:96
+#: properdocs_theme_readthedocs/base.html:96
 msgid "Logo"
 msgstr "Logo"
 
-#: properdocs/themes/readthedocs/base.html:110
+#: properdocs_theme_readthedocs/base.html:110
 msgid "Navigation menu"
 msgstr "Menu navigasi"
 
-#: properdocs/themes/readthedocs/base.html:147
+#: properdocs_theme_readthedocs/base.html:147
 msgid "Mobile navigation menu"
 msgstr "Menu navigasi seluler"
 
-#: properdocs/themes/readthedocs/breadcrumbs.html:3
+#: properdocs_theme_readthedocs/breadcrumbs.html:3
 msgid "Docs"
 msgstr "Dokumen"
 
-#: properdocs/themes/readthedocs/breadcrumbs.html:18
-#: properdocs/themes/readthedocs/breadcrumbs.html:20
-#: properdocs/themes/readthedocs/breadcrumbs.html:22
-#: properdocs/themes/readthedocs/breadcrumbs.html:24
+#: properdocs_theme_readthedocs/breadcrumbs.html:18
+#: properdocs_theme_readthedocs/breadcrumbs.html:20
+#: properdocs_theme_readthedocs/breadcrumbs.html:22
+#: properdocs_theme_readthedocs/breadcrumbs.html:24
 #, python-format
 msgid "Edit on %(repo_name)s"
 msgstr "Sunting pada %(repo_name)s"
 
-#: properdocs/themes/readthedocs/breadcrumbs.html:26
+#: properdocs_theme_readthedocs/breadcrumbs.html:26
 msgid "Edit"
 msgstr "Sunting"
 
-#: properdocs/themes/readthedocs/breadcrumbs.html:34
+#: properdocs_theme_readthedocs/breadcrumbs.html:34
 msgid "Breadcrumb Navigation"
 msgstr "Navigasi Remah Roti"
 
-#: properdocs/themes/readthedocs/breadcrumbs.html:36
-#: properdocs/themes/readthedocs/footer.html:7
-#: properdocs/themes/readthedocs/versions.html:21
+#: properdocs_theme_readthedocs/breadcrumbs.html:36
+#: properdocs_theme_readthedocs/footer.html:7
+#: properdocs_theme_readthedocs/versions.html:21
 msgid "Previous"
 msgstr "Sebelumnya"
 
-#: properdocs/themes/readthedocs/breadcrumbs.html:39
-#: properdocs/themes/readthedocs/footer.html:10
-#: properdocs/themes/readthedocs/versions.html:24
+#: properdocs_theme_readthedocs/breadcrumbs.html:39
+#: properdocs_theme_readthedocs/footer.html:10
+#: properdocs_theme_readthedocs/versions.html:24
 msgid "Next"
 msgstr "Selanjutnya"
 
-#: properdocs/themes/readthedocs/footer.html:5
+#: properdocs_theme_readthedocs/footer.html:5
 msgid "Footer Navigation"
 msgstr "Navigasi Footer"
 
-#: properdocs/themes/readthedocs/footer.html:25
+#: properdocs_theme_readthedocs/footer.html:25
 #, python-format
 msgid ""
 "Built with %(properdocs_link)s using a %(sphinx_link)s provided by "
@@ -79,35 +79,35 @@ msgstr ""
 "Dibangun dengan %(properdocs_link)s menggunakan %(sphinx_link)s yang "
 "disediakan oleh %(rtd_link)s."
 
-#: properdocs/themes/readthedocs/footer.html:25
+#: properdocs_theme_readthedocs/footer.html:25
 msgid "theme"
 msgstr ""
 
-#: properdocs/themes/readthedocs/search.html:5
+#: properdocs_theme_readthedocs/search.html:5
 msgid "Search Results"
 msgstr "Hasil Penelusuran"
 
-#: properdocs/themes/readthedocs/search.html:9
+#: properdocs_theme_readthedocs/search.html:9
 msgid "Search the Docs"
 msgstr "Telusuri Dokumen"
 
-#: properdocs/themes/readthedocs/search.html:9
-#: properdocs/themes/readthedocs/searchbox.html:3
+#: properdocs_theme_readthedocs/search.html:9
+#: properdocs_theme_readthedocs/searchbox.html:3
 msgid "Type search term here"
 msgstr "Ketik istilah pencarian di sini"
 
-#: properdocs/themes/readthedocs/search.html:12
+#: properdocs_theme_readthedocs/search.html:12
 msgid "No results found"
 msgstr "Tidak ada hasil yang ditemukan"
 
-#: properdocs/themes/readthedocs/search.html:13
+#: properdocs_theme_readthedocs/search.html:13
 msgid "Searching..."
 msgstr "Menelusuri..."
 
-#: properdocs/themes/readthedocs/searchbox.html:3
+#: properdocs_theme_readthedocs/searchbox.html:3
 msgid "Search docs"
 msgstr "Telusuri dokumen"
 
-#: properdocs/themes/readthedocs/versions.html:1
+#: properdocs_theme_readthedocs/versions.html:1
 msgid "Versions"
 msgstr "Versi"
