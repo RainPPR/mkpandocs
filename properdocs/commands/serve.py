@@ -5,8 +5,9 @@ import logging
 import shutil
 import sys
 import tempfile
+from collections.abc import Callable
 from os.path import isdir, isfile, join
-from typing import TYPE_CHECKING, BinaryIO, Callable
+from typing import TYPE_CHECKING, BinaryIO
 from urllib.parse import urlsplit
 
 from properdocs.commands.build import build

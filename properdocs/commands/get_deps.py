@@ -8,7 +8,6 @@ import functools
 import io
 import logging
 import os
-import sys
 import urllib.parse
 from collections.abc import Collection, Mapping, Sequence
 from typing import IO, Any, BinaryIO
@@ -107,10 +106,7 @@ def _strings(obj) -> Sequence[str]:
 
 @functools.cache
 def _entry_points(group: str) -> Mapping[str, Any]:
-    if sys.version_info >= (3, 10):
-        from importlib.metadata import entry_points
-    else:
-        from importlib_metadata import entry_points
+    from importlib.metadata import entry_points
 
     eps = {ep.name: ep for ep in entry_points(group=group)}
     log.debug(f"Available '{group}' entry points: {sorted(eps)}")

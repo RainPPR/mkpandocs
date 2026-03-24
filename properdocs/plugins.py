@@ -3,17 +3,12 @@
 from __future__ import annotations
 
 import logging
-import sys
-from collections.abc import MutableMapping
-from typing import TYPE_CHECKING, Any, Callable, Generic, Literal, TypeVar, overload
-
-if sys.version_info >= (3, 10):
-    from importlib.metadata import EntryPoint, entry_points
-else:
-    from importlib_metadata import EntryPoint, entry_points
+from collections.abc import Callable, MutableMapping
+from importlib.metadata import EntryPoint, entry_points
+from typing import TYPE_CHECKING, Any, Concatenate, Generic, Literal, TypeVar, overload
 
 if TYPE_CHECKING:
-    import jinja2.environment
+    import jinja2
 
 from properdocs import utils
 from properdocs.config.base import (
@@ -33,7 +28,7 @@ if TYPE_CHECKING:
     from properdocs.utils.templates import TemplateContext
 
 if TYPE_CHECKING:
-    from typing_extensions import Concatenate, ParamSpec
+    from typing_extensions import ParamSpec
 else:
     ParamSpec = TypeVar
 
