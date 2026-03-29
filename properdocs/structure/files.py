@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import enum
 import fnmatch
 import logging
@@ -13,9 +14,7 @@ from pathlib import PurePath, PurePosixPath
 from typing import TYPE_CHECKING, overload
 from urllib.parse import quote as urlquote
 
-import pathspec
 import pathspec.gitignore
-import pathspec.util
 
 from properdocs import utils
 
@@ -366,7 +365,7 @@ class File:
     def _get_stem(self) -> str:
         """Soft-deprecated, do not use."""
         filename = posixpath.basename(self.src_uri)
-        stem, ext = posixpath.splitext(filename)
+        stem, _ext = posixpath.splitext(filename)
         return 'index' if stem == 'README' else stem
 
     name = cached_property(_get_stem)
@@ -375,7 +374,7 @@ class File:
     def _get_dest_path(self, use_directory_urls: bool | None = None) -> str:
         """Soft-deprecated, do not use."""
         if self.is_documentation_page():
-            parent, filename = posixpath.split(self.src_uri)
+            parent, _filename = posixpath.split(self.src_uri)
             if use_directory_urls is None:
                 use_directory_urls = self.use_directory_urls
             if not use_directory_urls or self.name == 'index':
@@ -482,10 +481,9 @@ class File:
         content = self._content
         if content is None:
             assert self.abs_src_path is not None
-            try:
+            # Suppress errors to let plugins write directly into site_dir.
+            with contextlib.suppress(shutil.SameFileError):
                 utils.copy_file(self.abs_src_path, output_path)
-            except shutil.SameFileError:
-                pass  # Let plugins write directly into site_dir.
         elif isinstance(content, str):
             with open(output_path, 'w', encoding='utf-8') as output_file:
                 output_file.write(content)
@@ -576,15 +574,12 @@ def get_files(config: ProperDocsConfig) -> Files:
                 log.warning(
                     f"Excluding '{a.src_uri}' from the site because it conflicts with '{b.src_uri}'."
                 )
-            try:
+            # Suppressing this to avoid errors if attempting to remove the same file twice.
+            with contextlib.suppress(ValueError):
                 files.remove(a)
-            except ValueError:
-                pass  # Catching this to avoid errors if attempting to remove the same file twice.
         else:
-            try:
+            with contextlib.suppress(ValueError):
                 files.remove(b)
-            except ValueError:
-                pass
 
     return Files(files)
 

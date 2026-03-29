@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from __future__ import annotations
 
 import contextlib
@@ -29,7 +28,7 @@ if TYPE_CHECKING:
 def build_page(title, path, config, md_src=''):
     """Helper which returns a Page object."""
     files = Files([File(path, config.docs_dir, config.site_dir, config.use_directory_urls)])
-    page = Page(title, list(files)[0], config)
+    page = Page(title, next(iter(files)), config)
     # Fake page.read_source()
     page.markdown, page.meta = meta.get_data(md_src)
     return page, files
@@ -620,18 +619,18 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
 
             top_other_path = Path(site_dir, 'other_unpublished.html')
             self.assertTrue(top_other_path.is_file())
-            self.assertIn('DRAFT', top_other_path.read_text())
+            self.assertIn('DRAFT', top_other_path.read_text(encoding='utf-8'))
 
             sub_other_path = Path(site_dir, 'test', 'other_unpublished.html')
             self.assertPathIsFile(sub_other_path)
-            self.assertIn('DRAFT', sub_other_path.read_text())
+            self.assertIn('DRAFT', sub_other_path.read_text(encoding='utf-8'))
 
             self.assertPathIsFile(site_dir, 'foo_unpublished.html')
             self.assertPathIsFile(site_dir, 'normal_file.html')
 
             good_path = Path(site_dir, 'test', 'normal_file.html')
             self.assertPathIsFile(good_path)
-            self.assertNotIn('DRAFT', good_path.read_text())
+            self.assertNotIn('DRAFT', good_path.read_text(encoding='utf-8'))
 
     @tempdir(
         files={
@@ -674,11 +673,11 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
 
             foo_path = Path(site_dir, 'test', 'foo.html')
             self.assertTrue(foo_path.is_file())
-            self.assertNotIn('DRAFT', foo_path.read_text())
+            self.assertNotIn('DRAFT', foo_path.read_text(encoding='utf-8'))
 
             baz_path = Path(site_dir, 'test', 'baz.html')
             self.assertPathIsFile(baz_path)
-            self.assertIn('DRAFT', baz_path.read_text())
+            self.assertIn('DRAFT', baz_path.read_text(encoding='utf-8'))
 
             self.assertPathNotExists(site_dir, '.zoo.html')
 
@@ -702,7 +701,7 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
 
                 index_path = Path(site_dir, 'foo', 'index.html')
                 self.assertPathIsFile(index_path)
-                self.assertRegex(index_path.read_text(), r'page2 content')
+                self.assertRegex(index_path.read_text(encoding='utf-8'), r'page2 content')
 
     @tempdir(
         files={
@@ -723,7 +722,7 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
 
                 index_path = Path(site_dir, 'foo', 'index.html')
                 self.assertPathIsFile(index_path)
-                self.assertRegex(index_path.read_text(), r'page1 content')
+                self.assertRegex(index_path.read_text(encoding='utf-8'), r'page1 content')
 
     @tempdir(
         files={
@@ -817,7 +816,7 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
     def test_plugins_adding_files_and_interacting(self, tmp_dir, site_dir, docs_dir):
         def on_files_1(files: Files, config: ProperDocsConfig) -> Files:
             # Plugin 1 generates a file.
-            Path(tmp_dir, 'SUMMARY.md').write_text('foo.md\nbar.md\n')
+            Path(tmp_dir, 'SUMMARY.md').write_text('foo.md\nbar.md\n', encoding='utf-8')
             files.append(File('SUMMARY.md', tmp_dir, config.site_dir, config.use_directory_urls))
             return files
 
@@ -857,14 +856,12 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
                     foo_path = Path(site_dir, 'foo.html')
                     self.assertPathIsFile(foo_path)
                     self.assertRegex(
-                        foo_path.read_text(),
+                        foo_path.read_text(encoding='utf-8'),
                         r'href="foo.html"[\s\S]+href="bar.html"',  # Nav order is respected
                     )
 
                     summary_path = Path(site_dir, 'SUMMARY.html')
-                    if exclude == 'full':
-                        self.assertPathNotExists(summary_path)
-                    elif exclude == 'drafts' and not serve_url:
+                    if exclude == 'full' or (exclude == 'drafts' and not serve_url):
                         self.assertPathNotExists(summary_path)
                     else:
                         self.assertPathExists(summary_path)
@@ -923,7 +920,7 @@ class BuildTests(PathAssertionMixin, unittest.TestCase):
                     build.build(config)
                 main_path = Path(config_dir, 'site', 'main', 'main.html')
                 self.assertTrue(main_path.is_file())
-                self.assertIn(textwrap.dedent(expected), main_path.read_text())
+                self.assertIn(textwrap.dedent(expected), main_path.read_text(encoding='utf-8'))
 
     # Test build.site_directory_contains_stale_files
 
@@ -944,7 +941,7 @@ class _TestPreprocessor(markdown.preprocessors.Preprocessor):
         for i, line in enumerate(lines):
             if m := re.search(r'^--8<-- "(.+)"$', line):
                 try:
-                    lines[i] = Path(self.base_path, m[1]).read_text()
+                    lines[i] = Path(self.base_path, m[1]).read_text(encoding='utf-8')
                 except OSError:
                     lines[i] = f"(Failed to read {m[1]!r})\n"
         return lines
@@ -958,4 +955,4 @@ class _TestExtension(markdown.extensions.Extension):
         md.preprocessors.register(_TestPreprocessor(self.base_path), "properdocs_test", priority=32)
 
 
-makeExtension = _TestExtension
+makeExtension = _TestExtension  # noqa: N816

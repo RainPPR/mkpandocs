@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import unittest
 
 from properdocs.structure.toc import get_toc

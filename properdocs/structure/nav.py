@@ -159,15 +159,16 @@ def get_navigation(files: Files, config: ProperDocsConfig) -> Navigation:
         log.log(
             config.validation.nav.omitted_files,
             'The following pages exist in the docs directory, but are not '
-            'included in the "nav" configuration:\n  - ' + '\n  - '.join(missing_from_config),
+            'included in the "nav" configuration:\n  - %s',
+            '\n  - '.join(missing_from_config),
         )
 
     links = _get_by_type(items, Link)
     for link in links:
         invalid: str | None = None
         try:
-            scheme, netloc, path, query, fragment = urlsplit(link.url)
-        except Exception as e:
+            scheme, netloc, _path, _query, _fragment = urlsplit(link.url)
+        except Exception:
             invalid = 'invalid'
         else:
             if scheme or netloc:
@@ -254,6 +255,6 @@ def _add_parent_links(nav) -> None:
 
 def _add_previous_and_next_links(pages: list[Page]) -> None:
     bookended = [None, *pages, None]
-    zipped = zip(bookended[:-2], pages, bookended[2:])
+    zipped = zip(bookended[:-2], pages, bookended[2:], strict=True)
     for page0, page1, page2 in zipped:
         page1.previous_page, page1.next_page = page0, page2

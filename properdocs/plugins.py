@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
+import contextlib
 import logging
 from collections.abc import Callable, MutableMapping
 from importlib.metadata import EntryPoint, entry_points
 from typing import TYPE_CHECKING, Any, Concatenate, Generic, Literal, TypeVar, overload
-
-if TYPE_CHECKING:
-    import jinja2
 
 from properdocs import utils
 from properdocs.config.base import (
@@ -20,6 +18,8 @@ from properdocs.config.base import (
 )
 
 if TYPE_CHECKING:
+    import jinja2
+
     from properdocs.config.defaults import ProperDocsConfig
     from properdocs.livereload import LiveReloadServer
     from properdocs.structure.files import Files
@@ -67,7 +67,7 @@ class BasePlugin(Generic[SomeConfig]):
 
     config_class: type[SomeConfig] = LegacyConfig  # type: ignore[assignment]
     config_scheme: PlainConfigSchema = ()
-    config: SomeConfig = {}  # type: ignore[assignment]
+    config: SomeConfig = {}  # type: ignore[assignment]  # noqa: RUF012
 
     supports_multiple_instances: bool = False
     """Set to true in subclasses to declare support for adding the same plugin multiple times."""
@@ -90,7 +90,7 @@ class BasePlugin(Generic[SomeConfig]):
     ) -> tuple[ConfigErrors, ConfigWarnings]:
         """Load config from a dict of options. Returns a tuple of (errors, warnings)."""
         if self.config_class is LegacyConfig:
-            self.config = LegacyConfig(self.config_scheme, config_file_path=config_file_path)  # type: ignore
+            self.config = LegacyConfig(self.config_scheme, config_file_path=config_file_path)  # type: ignore[assignment]
         else:
             self.config = self.config_class(config_file_path=config_file_path)
 
@@ -527,10 +527,9 @@ class PluginCollection(dict, MutableMapping[str, BasePlugin]):
                 )
             utils.insort(events, method, key=lambda m: -getattr(m, 'mkdocs_priority', 0))
             if plugin_name:
-                try:
+                # Suppress in case the method is somehow not hashable.
+                with contextlib.suppress(TypeError):
                     self._event_origins[method] = plugin_name
-                except TypeError:  # If the method is somehow not hashable.
-                    pass
 
     def __getitem__(self, key: str) -> BasePlugin:
         return super().__getitem__(key)
