@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import dataclasses
 import datetime
 import logging
