@@ -1,6 +1,6 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.7,<8"]
+build-backend = "uv_build"
 
 [project]
 name = "mkpandocs"
@@ -28,7 +28,7 @@ classifiers = [
     "Topic :: Text Processing",
     "Typing :: Typed",
 ]
-dynamic = ["version"]
+version = "1.7.0"
 requires-python = ">=3.10"
 dependencies = [
     "click >=7.0",
@@ -87,9 +87,6 @@ style = [
     "ruff",
     "mypy",
 ]
-fix = [
-    "hatch"
-]
 
 [project.urls]
 Documentation = "https://rainppr.github.io/mkpandocs/"
@@ -102,116 +99,6 @@ mkpandocs = "properdocs.__main__:cli"
 
 [project.entry-points."properdocs.plugins"]
 search = "properdocs.contrib.search:SearchPlugin"
-
-[tool.hatch.version]
-path = "properdocs/__init__.py"
-[tool.hatch.metadata]
-allow-direct-references = true
-
-[tool.hatch.build]
-artifacts = ["/properdocs/**/*.mo"]
-[tool.hatch.build.targets.sdist]
-include = ["/properdocs"]
-[tool.hatch.build.targets.wheel]
-packages = ["/properdocs"]
-exclude = ["/properdocs/tests"]
-
-[tool.hatch.env]
-requires = [
-    "hatch-properdocs",
-    "hatch-pip-compile >=1.7.0",
-]
-[tool.hatch.envs.default]
-features = ["i18n", "test"]
-
-[tool.hatch.envs.default.scripts]
-all = [
-    "hatch run style:fix",
-    "hatch run types:check",
-    "hatch run test:test",
-    "hatch run lint:check",
-    "hatch run +type=default integration:test",
-]
-
-[tool.hatch.envs.test]
-features = ["i18n"]
-extra-dependencies = [
-    "properdocs-theme-mkdocs",
-    "properdocs-theme-readthedocs",
-    "coverage",
-]
-[tool.hatch.envs.test.scripts]
-test = 'python -m unittest discover -s properdocs -p "*tests.py"'
-_coverage = [
-    'coverage run --source=properdocs --omit "properdocs/tests/*" -m unittest discover -s properdocs -p "*tests.py"',
-    "coverage xml",
-    "coverage report --show-missing"
-]
-with-coverage = "test"
-[[tool.hatch.envs.test.matrix]]
-python = ["3.10", "3.11", "3.12", "3.13", "3.14"]
-[tool.hatch.envs.test.overrides]
-matrix.type.scripts = [
-    { key = "with-coverage", value = "_coverage", if = ["default"] },
-]
-build = "mkpandocs build --strict"
-
-[tool.hatch.env.collectors.properdocs.integration]
-path = "mkpandocs.yml"
-[tool.hatch.envs.integration]
-detached = false
-template = "test"
-[tool.hatch.envs.integration.scripts]
-test = "python -m properdocs.tests.integration"
-[[tool.hatch.envs.integration.matrix]]
-python = ["3.10", "3.11", "3.12", "3.13", "3.14"]
-type = ["default", "no-babel"]
-[tool.hatch.envs.integration.overrides]
-matrix.type.features = [
-    { value = "i18n", if = ["default"] },
-]
-
-[tool.hatch.envs.types]
-dependencies = [
-    "mypy",
-    "babel",
-    "types-pytz",
-    "types-PyYAML",
-    "types-setuptools",
-    "typing-extensions",
-]
-[tool.hatch.envs.types.scripts]
-check = "mypy {args} properdocs"
-
-[tool.hatch.envs.style]
-type = "pip-compile"
-detached = true
-dependencies = [
-    "ruff",
-]
-[tool.hatch.envs.style.scripts]
-check = "ruff check properdocs {args}"
-format = "ruff format -q properdocs"
-fix = [
-    "check --fix --unsafe-fixes",
-    "format",
-]
-[tool.hatch.envs.lint]
-detached = true
-dependencies = [
-    "codespell==2.2.6",
-]
-[tool.hatch.envs.lint.scripts]
-spelling = 'codespell properdocs docs *.* -S LC_MESSAGES -S "*.min.js" -S "lunr*.js" -S fontawesome-webfont.svg -S tinyseg.js -S "*.map"'
-markdown = "npm exec --yes -- markdownlint-cli README.md CONTRIBUTING.md packages/README.md docs/ --ignore docs/CNAME"
-js = "npm exec --yes -- jshint properdocs/"
-check = ["markdown", "js", "spelling"]
-
-[tool.hatch.env.collectors.properdocs.docs]
-path = "mkpandocs.yml"
-[tool.hatch.envs.docs]
-type = "pip-compile"
-detached = false
 
 [tool.ruff]
 line-length = 100
