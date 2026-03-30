@@ -2,6 +2,12 @@ version = 1
 revision = 3
 requires-python = ">=3.10"
 
+[manifest]
+overrides = [
+    { name = "mkdocs", marker = "sys_platform == 'never'" },
+    { name = "properdocs", marker = "sys_platform == 'never'" },
+]
+
 [[package]]
 name = "babel"
 version = "2.18.0"
@@ -423,18 +429,6 @@ wheels = [
 ]
 
 [[package]]
-name = "markdown-callouts"
-version = "0.4.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "markdown" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/87/73/ae5aa379f6f7fea9d0bf4cba888f9a31d451d90f80033ae60ae3045770d5/markdown_callouts-0.4.0.tar.gz", hash = "sha256:7ed2c90486967058a73a547781121983839522d67041ae52c4979616f1b2b746", size = 9768, upload-time = "2024-01-22T23:18:18.513Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/1d/b5/7b0a0a52c82bfccd830af2a8cc8add1c5bc932e0204922434954a631dd51/markdown_callouts-0.4.0-py3-none-any.whl", hash = "sha256:ed0da38f29158d93116a0d0c6ecaf9df90b37e0d989b5337d678ee6e6d6550b7", size = 7108, upload-time = "2024-01-22T23:18:17.465Z" },
-]
-
-[[package]]
 name = "markupsafe"
 version = "3.0.3"
 source = { registry = "https://pypi.org/simple" }
@@ -571,7 +565,7 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "markdown" },
     { name = "markupsafe" },
-    { name = "mkdocs" },
+    { name = "mkdocs", marker = "sys_platform == 'never'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/52/c0/f641843de3f612a6b48253f39244165acff36657a91cc903633d456ae1ac/mkdocs_autorefs-1.4.4.tar.gz", hash = "sha256:d54a284f27a7346b9c38f1f852177940c222da508e66edc816a0fa55fc6da197", size = 56588, upload-time = "2026-02-10T15:23:55.105Z" }
 wheels = [
@@ -610,8 +604,8 @@ name = "mkdocs-literate-nav"
 version = "0.6.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "mkdocs" },
-    { name = "properdocs" },
+    { name = "mkdocs", marker = "sys_platform == 'never'" },
+    { name = "properdocs", marker = "sys_platform == 'never'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/01/af/dd3776a7a713f798f79bec7eb9c661d5cfb83ddc17d9a3667595e53e1559/mkdocs_literate_nav-0.6.3.tar.gz", hash = "sha256:edbaca22343f861fe4e34aac47d55a0c9955c640dbf02eea99fe631e914cf9ee", size = 17526, upload-time = "2026-03-16T23:26:50.688Z" }
 wheels = [
@@ -623,8 +617,8 @@ name = "mkdocs-redirects"
 version = "1.2.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "mkdocs" },
-    { name = "properdocs" },
+    { name = "mkdocs", marker = "sys_platform == 'never'" },
+    { name = "properdocs", marker = "sys_platform == 'never'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/73/25/49725f78ca5d3026b09973f7a2b3a8b179cc2e8c15e43d5a13bc79f6b274/mkdocs_redirects-1.2.3.tar.gz", hash = "sha256:5e980330999299729a2d6a125347d1af78023d68a23681a4de3053ce7dfe2e51", size = 7712, upload-time = "2026-03-28T13:57:41.766Z" }
 wheels = [
@@ -639,7 +633,7 @@ dependencies = [
     { name = "jinja2" },
     { name = "markdown" },
     { name = "markupsafe" },
-    { name = "mkdocs" },
+    { name = "mkdocs", marker = "sys_platform == 'never'" },
     { name = "mkdocs-autorefs" },
     { name = "pymdown-extensions" },
 ]
@@ -685,24 +679,8 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
-docs = [
-    { name = "markdown-callouts" },
-    { name = "mdx-gh-links" },
-    { name = "mkdocs-autorefs" },
-    { name = "mkdocs-click" },
-    { name = "mkdocs-literate-nav" },
-    { name = "mkdocs-redirects" },
-    { name = "mkdocstrings" },
-    { name = "mkdocstrings-python" },
-    { name = "pymdown-extensions" },
-]
 i18n = [
     { name = "babel" },
-]
-test = [
-    { name = "coverage" },
-    { name = "properdocs-theme-mkdocs" },
-    { name = "properdocs-theme-readthedocs" },
 ]
 
 [package.dev-dependencies]
@@ -711,6 +689,22 @@ dev = [
     { name = "ruff" },
     { name = "types-pyyaml" },
 ]
+docs = [
+    { name = "mdx-gh-links" },
+    { name = "mkdocs-autorefs" },
+    { name = "mkdocs-click" },
+    { name = "mkdocs-literate-nav" },
+    { name = "mkdocs-redirects" },
+    { name = "mkdocstrings" },
+    { name = "mkdocstrings-python" },
+    { name = "properdocs-theme-mkdocs" },
+    { name = "pymdown-extensions" },
+]
+test = [
+    { name = "coverage" },
+    { name = "properdocs-theme-mkdocs" },
+    { name = "properdocs-theme-readthedocs" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -718,39 +712,43 @@ requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.12" },
     { name = "click", specifier = ">=7.0" },
     { name = "colorama", marker = "sys_platform == 'win32'", specifier = ">=0.4" },
-    { name = "coverage", marker = "extra == 'test'" },
     { name = "ghp-import", specifier = ">=1.0" },
     { name = "html5lib", specifier = ">=1.1" },
     { name = "importlib-metadata", marker = "python_full_version < '3.10'", specifier = ">=4.4" },
     { name = "jinja2", specifier = ">=2.11.1" },
     { name = "lxml", specifier = ">=4.9" },
-    { name = "markdown-callouts", marker = "extra == 'docs'" },
     { name = "markupsafe", specifier = ">=2.0.1" },
-    { name = "mdx-gh-links", marker = "extra == 'docs'" },
-    { name = "mkdocs-autorefs", marker = "extra == 'docs'" },
-    { name = "mkdocs-click", marker = "extra == 'docs'" },
-    { name = "mkdocs-literate-nav", marker = "extra == 'docs'" },
-    { name = "mkdocs-redirects", marker = "extra == 'docs'" },
-    { name = "mkdocstrings", marker = "extra == 'docs'" },
-    { name = "mkdocstrings-python", marker = "extra == 'docs'" },
     { name = "packaging", specifier = ">=20.5" },
     { name = "pathspec", specifier = ">=0.11.1" },
     { name = "platformdirs", specifier = ">=2.2.0" },
-    { name = "properdocs-theme-mkdocs", marker = "extra == 'test'" },
-    { name = "properdocs-theme-readthedocs", marker = "extra == 'test'" },
-    { name = "pymdown-extensions", marker = "extra == 'docs'" },
     { name = "pypandoc", specifier = ">=1.13" },
     { name = "pyyaml", specifier = ">=5.1" },
     { name = "pyyaml-env-tag", specifier = ">=0.1" },
     { name = "watchdog", specifier = ">=2.0" },
 ]
-provides-extras = ["docs", "i18n", "test"]
+provides-extras = ["i18n"]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "mypy" },
     { name = "ruff" },
     { name = "types-pyyaml" },
+]
+docs = [
+    { name = "mdx-gh-links" },
+    { name = "mkdocs-autorefs" },
+    { name = "mkdocs-click" },
+    { name = "mkdocs-literate-nav" },
+    { name = "mkdocs-redirects" },
+    { name = "mkdocstrings" },
+    { name = "mkdocstrings-python" },
+    { name = "properdocs-theme-mkdocs" },
+    { name = "pymdown-extensions" },
+]
+test = [
+    { name = "coverage" },
+    { name = "properdocs-theme-mkdocs" },
+    { name = "properdocs-theme-readthedocs" },
 ]
 
 [[package]]
@@ -864,7 +862,7 @@ version = "1.6.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "babel" },
-    { name = "properdocs" },
+    { name = "properdocs", marker = "sys_platform == 'never'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/3e/26/b56fc756d812716e0b002b8c8df0e4555ecc40c0ff5082be6c6813373aa8/properdocs_theme_mkdocs-1.6.7.tar.gz", hash = "sha256:2ed30991f096e4824ac3af24c13775e2120dd436038b264bb1396f2f3957c017", size = 835699, upload-time = "2026-03-20T20:10:07.033Z" }
 wheels = [
@@ -877,7 +875,7 @@ version = "1.6.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "babel" },
-    { name = "properdocs" },
+    { name = "properdocs", marker = "sys_platform == 'never'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a0/6e/c8af61df19e661c6d02f88e5035630bcff3a7681e80262a9d61e52d16385/properdocs_theme_readthedocs-1.6.5.tar.gz", hash = "sha256:35fb78708b4c6598cd5a958e3b0800446cf5e1fa5ed1adabb6b37c6e78c25b93", size = 2790550, upload-time = "2026-03-15T23:43:41.199Z" }
 wheels = [

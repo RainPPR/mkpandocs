@@ -49,12 +49,25 @@ dependencies = [
     "colorama >=0.4; platform_system == 'Windows'",
 ]
 
+[tool.uv]
+override-dependencies = [
+    "mkdocs; sys_platform == 'never'",
+    "properdocs; sys_platform == 'never'",
+]
+
 [project.optional-dependencies]
 i18n = [
     "babel >=2.9.0",
 ]
+
+[dependency-groups]
+dev = [
+    "ruff",
+    "mypy",
+    "types-PyYAML",
+]
 docs = [
-    "markdown-callouts",
+    # "markdown-callouts",
     "mdx-gh-links",
     "mkdocs-autorefs",
     "mkdocs-click",
@@ -63,18 +76,19 @@ docs = [
     "mkdocstrings",
     "mkdocstrings-python",
     "pymdown-extensions",
+    "properdocs-theme-mkdocs"
 ]
 test = [
     "properdocs-theme-mkdocs",
     "properdocs-theme-readthedocs",
     "coverage",
 ]
-
-[dependency-groups]
-dev = [
+style = [
     "ruff",
     "mypy",
-    "types-PyYAML",
+]
+fix = [
+    "hatch"
 ]
 
 [project.urls]
@@ -91,12 +105,15 @@ search = "properdocs.contrib.search:SearchPlugin"
 
 [tool.hatch.version]
 path = "properdocs/__init__.py"
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.hatch.build]
 artifacts = ["/properdocs/**/*.mo"]
 [tool.hatch.build.targets.sdist]
 include = ["/properdocs"]
 [tool.hatch.build.targets.wheel]
+packages = ["/properdocs"]
 exclude = ["/properdocs/tests"]
 
 [tool.hatch.env]
@@ -104,6 +121,8 @@ requires = [
     "hatch-properdocs",
     "hatch-pip-compile >=1.7.0",
 ]
+[tool.hatch.envs.default]
+features = ["i18n", "test"]
 
 [tool.hatch.envs.default.scripts]
 all = [
@@ -135,6 +154,7 @@ python = ["3.10", "3.11", "3.12", "3.13", "3.14"]
 matrix.type.scripts = [
     { key = "with-coverage", value = "_coverage", if = ["default"] },
 ]
+build = "mkpandocs build --strict"
 
 [tool.hatch.env.collectors.properdocs.integration]
 path = "mkpandocs.yml"
