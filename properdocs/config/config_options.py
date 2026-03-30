@@ -13,7 +13,6 @@ import warnings
 from collections import Counter, UserString
 from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any, Generic, NamedTuple, TypeVar, Union, overload
-from typing import Any, Generic, NamedTuple, TypeVar, overload
 from urllib.parse import quote as urlquote
 from urllib.parse import urlsplit, urlunsplit
 

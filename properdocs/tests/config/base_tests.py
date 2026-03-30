@@ -56,7 +56,7 @@ class ConfigBaseTests(unittest.TestCase):
     @tempdir()
     def test_load_default_file(self, temp_dir):
         """Test that `mkpandocs.yml` will be loaded when '--config' is not set."""
-        with open(os.path.join(temp_dir, 'mkpandocs.yml', encoding='utf-8'), 'w') as config_file:
+        with open(os.path.join(temp_dir, 'mkpandocs.yml'), 'w', encoding='utf-8') as config_file:
             config_file.write("site_name: ProperDocs Test\ntheme: mkdocs\n")
         os.mkdir(os.path.join(temp_dir, 'docs'))
         with change_dir(temp_dir):
