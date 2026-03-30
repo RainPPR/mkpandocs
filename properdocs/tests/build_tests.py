@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-"""
-Simplified build tests for MkPandocs.
-
-This file contains simplified tests that don't depend on python-markdown.
-"""
-
 from __future__ import annotations
 
 import textwrap
@@ -21,7 +14,7 @@ from properdocs.utils import meta
 def build_page(title, path, config, md_src=''):
     """Helper which returns a Page object."""
     files = Files([File(path, config.docs_dir, config.site_dir, config.use_directory_urls)])
-    page = Page(title, list(files)[0], config)
+    page = Page(title, next(iter(files)), config)
     # Fake page.read_source()
     page.markdown, page.meta = meta.get_data(md_src)
     return page, files

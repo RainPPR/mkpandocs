@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-"""Simplified TOC tests for MkPandocs."""
-
 import unittest
 
 from properdocs.structure.toc import get_toc

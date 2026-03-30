@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from __future__ import annotations
 
 import logging
@@ -9,6 +7,7 @@ import sys
 import textwrap
 import traceback
 import warnings
+from typing import ClassVar
 
 import click
 
@@ -64,7 +63,7 @@ def _enable_warnings():
 
 
 class ColorFormatter(logging.Formatter):
-    colors = {
+    colors: ClassVar = {
         'CRITICAL': 'red',
         'ERROR': 'red',
         'WARNING': 'yellow',

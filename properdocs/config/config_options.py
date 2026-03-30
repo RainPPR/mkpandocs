@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import functools
 import importlib.util
 import ipaddress
@@ -12,6 +13,7 @@ import warnings
 from collections import Counter, UserString
 from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any, Generic, NamedTuple, TypeVar, Union, overload
+from typing import Any, Generic, NamedTuple, TypeVar, overload
 from urllib.parse import quote as urlquote
 from urllib.parse import urlsplit, urlunsplit
 
@@ -93,7 +95,7 @@ class SubConfig(Generic[SomeConfig], BaseConfigOption[SomeConfig]):
     def run_validation(self, value: object) -> SomeConfig:
         config = self.config_class(config_file_path=self._config_file_path)
         try:
-            config.load_dict(value)  # type: ignore
+            config.load_dict(value)  # type: ignore[arg-type]
             failed, warnings = config.validate()
         except ConfigurationError as e:
             raise ValidationError(str(e))
@@ -204,15 +206,13 @@ class ListOfItems(Generic[T], BaseConfigOption[list[T]]):
             return value
 
         fake_config = LegacyConfig(())
-        try:
+        with contextlib.suppress(AttributeError):
             fake_config.config_file_path = self._config.config_file_path
-        except AttributeError:
-            pass
 
         # Emulate a config-like environment for pre_validation and post_validation.
         parent_key_name = getattr(self, '_key_name', '')
         fake_keys = [f'{parent_key_name}[{i}]' for i in range(len(value))]
-        fake_config.data = dict(zip(fake_keys, value))
+        fake_config.data = dict(zip(fake_keys, value, strict=True))
 
         self.option_type.warnings = self.warnings
         for key_name in fake_config:
@@ -259,10 +259,8 @@ class DictOfItems(Generic[T], BaseConfigOption[dict[str, T]]):
             return value
 
         fake_config = LegacyConfig(())
-        try:
+        with contextlib.suppress(AttributeError):
             fake_config.config_file_path = self._config.config_file_path
-        except AttributeError:
-            pass
 
         # Emulate a config-like environment for pre_validation and post_validation.
         fake_config.data = value
@@ -362,7 +360,7 @@ class Choice(Generic[T], OptionallyRequired[T]):
     def run_validation(self, value: object) -> T:
         if value not in self.choices:
             raise ValidationError(f"Expected one of: {self.choices} but received: {value!r}")
-        return value  # type: ignore
+        return value  # type: ignore[return-value]
 
 
 class Deprecated(BaseConfigOption):
@@ -508,7 +506,7 @@ class URL(OptionallyRequired[str]):
         raise ValidationError("The URL isn't valid, it should include the http:// (scheme)")
 
 
-class Optional(Generic[T], BaseConfigOption[Union[T, None]]):
+class Optional(Generic[T], BaseConfigOption[T | None]):
     """
     Wraps a field and makes a None value possible for it when no value is set.
 
@@ -539,7 +537,7 @@ class Optional(Generic[T], BaseConfigOption[Union[T, None]]):
         return self.option.validate(value)
 
     def post_validation(self, config: Config, key_name: str):
-        result = self.option.post_validation(config, key_name)  # type: ignore
+        result = self.option.post_validation(config, key_name)  # type: ignore[func-returns-value]
         self.warnings = self.option.warnings
         return result
 
@@ -940,7 +938,7 @@ class ExtraScriptValue(Config):
         return self.path
 
 
-class ExtraScript(BaseConfigOption[Union[ExtraScriptValue, str]]):
+class ExtraScript(BaseConfigOption[ExtraScriptValue | str]):
     def __init__(self):
         super().__init__()
         self.option_type = SubConfig[ExtraScriptValue]()

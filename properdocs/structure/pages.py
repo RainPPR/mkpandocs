@@ -48,7 +48,7 @@ class Page(StructureItem):
         self.markdown = None
         self._title_from_render: str | None = None
         self.content = None
-        self.toc = []  # type: ignore
+        self.toc = []  # type: ignore[assignment]
         self.meta = {}
 
     def __eq__(self, other) -> bool:

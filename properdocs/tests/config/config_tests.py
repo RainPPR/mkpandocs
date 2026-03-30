@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import dataclasses
 import os
 import unittest
@@ -64,7 +62,7 @@ class ConfigTests(unittest.TestCase):
             """
         )
         config_path = os.path.join(temp_path, 'foo.yml')
-        with open(config_path, 'w') as config_file:
+        with open(config_path, 'w', encoding='utf-8') as config_file:
             config_file.write(file_contents)
 
         with self.assertRaises(ConfigurationError):
@@ -89,7 +87,7 @@ class ConfigTests(unittest.TestCase):
             """
         )
         config_path = os.path.join(temp_path, 'mkpandocs.yml')
-        with open(config_path, 'w') as config_file:
+        with open(config_path, 'w', encoding='utf-8') as config_file:
             config_file.write(file_contents)
         os.mkdir(os.path.join(temp_path, 'docs'))
 
@@ -235,7 +233,7 @@ class ConfigTests(unittest.TestCase):
             },
         )
 
-        for config_contents, result in zip(configs, results):
+        for config_contents, result in zip(configs, results, strict=True):
             with self.subTest(config_contents):
                 conf = config.Config(schema=(('theme', c.Theme(default='mkdocs')),))
                 conf.load_dict(config_contents)
