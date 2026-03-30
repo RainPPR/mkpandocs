@@ -252,10 +252,10 @@ class DeprecatedTest(TestCase):
         conf = self.get_config(
             Schema,
             {'old': 'value'},
-            warnings={
-                'old': "The configuration option 'old' has been deprecated and will be removed in a "
+            warnings=dict(
+                old="The configuration option 'old' has been deprecated and will be removed in a "
                 "future release. Use 'new' instead."
-            },
+            ),
         )
         self.assertEqual(conf, {'new': 'value', 'old': None})
 
@@ -1160,7 +1160,7 @@ class NavTest(TestCase):
         self.get_config(
             self.Schema,
             {'option': [{"a": {"b": "c.md", "d": "e.md"}}]},
-            warnings={'option': "Expected nav to be a list, got dict with keys ('b', 'd')"},
+            warnings=dict(option="Expected nav to be a list, got dict with keys ('b', 'd')"),
         )
 
 
@@ -1227,7 +1227,7 @@ class SubConfigTest(TestCase):
         conf = self.get_config(
             Schema,
             {'option': {'unknown': 0}},
-            warnings={'option': "Sub-option 'unknown': Unrecognised configuration name: unknown"},
+            warnings=dict(option="Sub-option 'unknown': Unrecognised configuration name: unknown"),
         )
         self.assertEqual(conf['option'], {"unknown": 0})
 

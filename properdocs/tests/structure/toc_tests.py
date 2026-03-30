@@ -13,8 +13,7 @@ class TableOfContentsTests(unittest.TestCase):
             ### Heading 3
             """
         )
-        tokens = get_pandoc_toc(md)
-        toc = get_toc(tokens)
+        toc = get_toc(get_markdown_toc(md))
         # Pandoc returns all headings, get_toc builds the tree
         toc_list = list(toc)
         self.assertGreater(len(toc_list), 0)
@@ -28,8 +27,7 @@ class TableOfContentsTests(unittest.TestCase):
             # Heading 3
             """
         )
-        tokens = get_pandoc_toc(md)
-        toc = get_toc(tokens)
+        toc = get_toc(get_markdown_toc(md))
         toc_list = list(toc)
         self.assertEqual(len(toc_list), 3)
         self.assertEqual(toc_list[0].title, 'Heading 1')
@@ -44,8 +42,7 @@ class TableOfContentsTests(unittest.TestCase):
             ## Heading 3
             """
         )
-        tokens = get_pandoc_toc(md)
-        toc = get_toc(tokens)
+        toc = get_toc(get_markdown_toc(md))
         toc_list = list(toc)
         self.assertEqual(len(toc_list), 3)
 
@@ -59,8 +56,7 @@ class TableOfContentsTests(unittest.TestCase):
             ### Heading 5
             """
         )
-        tokens = get_pandoc_toc(md)
-        toc = get_toc(tokens)
+        toc = get_toc(get_markdown_toc(md))
         # Should have 2 top-level headings
         toc_list = list(toc)
         h1_items = [t for t in toc_list if t.level == 1]
@@ -76,17 +72,11 @@ class TableOfContentsTests(unittest.TestCase):
             ## Heading 1.2
             """
         )
-        tokens = get_pandoc_toc(md)
-        toc = get_toc(tokens)
+        toc = get_toc(get_markdown_toc(md))
 
         def get_level_sequence(items):
             for item in items:
                 yield item.level
                 yield from get_level_sequence(item.children)
 
-        levels = tuple(get_level_sequence(toc))
-        self.assertEqual(levels, (1, 2, 3, 3, 2))
-
-
-if __name__ == '__main__':
-    unittest.main()
+        self.assertEqual(tuple(get_level_sequence(toc)), (1, 2, 3, 3, 2))

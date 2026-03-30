@@ -85,7 +85,8 @@ class BuildTests(unittest.TestCase):
             started_building.set()
             Path(site_dir, "foo.site").write_text(
                 Path(docs_dir, "foo.docs").read_text(encoding="utf-8")
-                + Path(origin_dir, "mkpandocs.yml").read_text(encoding="utf-8")
+                + Path(origin_dir, "mkpandocs.yml").read_text(encoding="utf-8"),
+                encoding="utf-8",
             )
 
         with testing_server(site_dir, rebuild) as server:

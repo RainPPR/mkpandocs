@@ -235,10 +235,10 @@ class DeprecatedTest(TestCase):
         conf = self.get_config(
             Schema,
             {'old': 'value'},
-            warnings={
-                'old': "The configuration option 'old' has been deprecated and will be removed in a "
+            warnings=dict(
+                old="The configuration option 'old' has been deprecated and will be removed in a "
                 "future release. Use 'new' instead."
-            },
+            ),
         )
         self.assertEqual(conf, {'new': 'value', 'old': None})
 
@@ -688,10 +688,10 @@ class ListOfItemsTest(TestCase):
         self.get_config(
             Schema,
             {'option': ['a']},
-            warnings={
-                'option': "The configuration option 'option[0]' has been "
+            warnings=dict(
+                option="The configuration option 'option[0]' has been "
                 "deprecated and will be removed in a future release."
-            },
+            ),
         )
 
 
@@ -746,7 +746,7 @@ class ExtraScriptsTest(TestCase):
         conf = self.get_config(
             Schema,
             {'option': [{'path': 'foo.js', 'foo': 'bar'}]},
-            warnings={'option': "Sub-option 'foo': Unrecognised configuration name: foo"},
+            warnings=dict(option="Sub-option 'foo': Unrecognised configuration name: foo"),
         )
         self.assertEqual(
             conf.option,
@@ -1387,7 +1387,7 @@ class NavTest(TestCase):
         self.get_config(
             self.Schema,
             {'option': [{"a": {"b": "c.md", "d": "e.md"}}]},
-            warnings={'option': "Expected nav to be a list, got dict with keys ('b', 'd')"},
+            warnings=dict(option="Expected nav to be a list, got dict with keys ('b', 'd')"),
         )
 
 
@@ -1423,7 +1423,7 @@ class SubConfigTest(TestCase):
         conf = self.get_config(
             Schema,
             {'option': {'unknown': 0}},
-            warnings={'option': "Sub-option 'unknown': Unrecognised configuration name: unknown"},
+            warnings=dict(option="Sub-option 'unknown': Unrecognised configuration name: unknown"),
         )
         self.assertEqual(conf.option, {"unknown": 0})
 
@@ -1647,7 +1647,7 @@ class NestedSubConfigTest(TestCase):
         conf = self.get_config(
             self.Schema,
             {'validation': {'foo': 'warn', 'not_found': 'warn'}},
-            warnings={'validation': "Sub-option 'foo': Unrecognised configuration name: foo"},
+            warnings=dict(validation="Sub-option 'foo': Unrecognised configuration name: foo"),
         )
         expected = self.defaults()
         expected['nav']['not_found'] = logging.WARNING
@@ -2192,11 +2192,11 @@ class PluginsTest(TestCase):
             conf = self.get_config(
                 Schema,
                 cfg,
-                warnings={
-                    'plugins': "Plugin 'readthedocs/sub_plugin' was specified multiple times - "
+                warnings=dict(
+                    plugins="Plugin 'readthedocs/sub_plugin' was specified multiple times - "
                     "this is likely a mistake, because the plugin doesn't declare "
                     "`supports_multiple_instances`."
-                },
+                ),
             )
             self.assertEqual(
                 set(conf.plugins),
@@ -2344,10 +2344,10 @@ class PluginsTest(TestCase):
         conf = self.get_config(
             Schema,
             cfg,
-            warnings={
-                'plugins': "Plugin 'sample2' option 'depr': The configuration option "
+            warnings=dict(
+                plugins="Plugin 'sample2' option 'depr': The configuration option "
                 "'depr' has been deprecated and will be removed in a future release."
-            },
+            ),
         )
 
         self.assertIsInstance(conf.plugins, PluginCollection)

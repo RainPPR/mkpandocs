@@ -16,6 +16,7 @@ import shutil
 import warnings
 from bisect import insort  # noqa: F401 - legacy re-export
 from collections import defaultdict
+from collections.abc import Collection, Iterable
 from datetime import datetime, timezone
 from importlib.metadata import EntryPoint, entry_points
 from pathlib import PurePath
@@ -26,8 +27,6 @@ from properdocs import exceptions
 from properdocs.utils.yaml import get_yaml_loader, yaml_load  # noqa: F401 - legacy re-export
 
 if TYPE_CHECKING:
-    from collections.abc import Collection, Iterable
-
     from properdocs.structure.pages import Page
 
 T = TypeVar('T')
