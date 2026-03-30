@@ -4,25 +4,17 @@ import enum
 import logging
 import posixpath
 import warnings
-from collections.abc import Callable, Iterator, MutableMapping, Sequence
+from collections.abc import Callable, Iterator, MutableMapping
 from typing import TYPE_CHECKING, Any
 from urllib.parse import unquote as urlunquote
 from urllib.parse import urljoin, urlsplit, urlunsplit
-
-import markdown
-import markdown.htmlparser  # type: ignore
-import markdown.treeprocessors
-from markdown.util import AMP_SUBSTITUTE
 
 from properdocs import utils
 from properdocs.structure import StructureItem
 from properdocs.structure.toc import get_toc
 from properdocs.utils import get_build_date, get_markdown_title, meta, weak_property
-from properdocs.utils.rendering import get_heading_text
 
 if TYPE_CHECKING:
-    from xml.etree import ElementTree as etree
-
     from properdocs.config.defaults import ProperDocsConfig
     from properdocs.structure.files import File, Files
     from properdocs.structure.toc import TableOfContents
@@ -217,6 +209,8 @@ class Page(StructureItem):
                 raise
 
         self.markdown, self.meta = meta.get_data(source)
+        if config.get('pandoc_keep_frontmatter', False):
+            self.markdown = source
 
     def _set_title(self) -> None:
         warnings.warn(
@@ -265,30 +259,31 @@ class Page(StructureItem):
         if self.markdown is None:
             raise RuntimeError("`markdown` field hasn't been set (via `read_source`)")
 
-        md = markdown.Markdown(
-            extensions=config['markdown_extensions'],
-            extension_configs=config['mdx_configs'] or {},
-        )
+        import pypandoc
 
-        raw_html_ext = _RawHTMLPreprocessor()
-        raw_html_ext._register(md)
+        extra_args = list(config.get('pandoc_args', []))
+        for lua_filter in config.get('pandoc_lua_filters', []):
+            extra_args.append(f'--lua-filter={lua_filter}')
 
-        extract_anchors_ext = _ExtractAnchorsTreeprocessor(self.file, files, config)
-        extract_anchors_ext._register(md)
+        try:
+            html_output = pypandoc.convert_text(
+                self.markdown,
+                to=config.get('pandoc_to', 'html5'),
+                format=config.get('pandoc_format', 'markdown'),
+                extra_args=extra_args,
+                filters=config.get('pandoc_filters', []),
+            )
+        except Exception as e:
+            log.error(f"Error rendering {self.file.src_path} with Pandoc: {e}")
+            raise
 
-        relative_path_ext = _RelativePathTreeprocessor(self.file, files, config)
-        relative_path_ext._register(md)
+        parser = _PandocHTMLParser(self.file, files, config)
+        self.content = parser.process(html_output)
 
-        extract_title_ext = _ExtractTitleTreeprocessor()
-        extract_title_ext._register(md)
-
-        self.content = md.convert(self.markdown)
-        self.toc = get_toc(getattr(md, 'toc_tokens', []))
-        self._title_from_render = extract_title_ext.title
-        self.present_anchor_ids = (
-            extract_anchors_ext.present_anchor_ids | raw_html_ext.present_anchor_ids
-        )
-        self.links_to_anchors = relative_path_ext.links_to_anchors
+        self.toc = get_toc(parser.build_toc_tokens())
+        self._title_from_render = parser.title
+        self.present_anchor_ids = parser.present_anchor_ids
+        self.links_to_anchors = parser.links_to_anchors
 
     present_anchor_ids: set[str] | None = None
     """Anchor IDs that this page contains (can be linked to in this page)."""
@@ -325,51 +320,73 @@ class Page(StructureItem):
                 )
 
 
-class _ExtractAnchorsTreeprocessor(markdown.treeprocessors.Treeprocessor):
-    def __init__(self, file: File, files: Files, config: ProperDocsConfig) -> None:
-        self.present_anchor_ids: set[str] = set()
-
-    def run(self, root: etree.Element) -> None:
-        add = self.present_anchor_ids.add
-        for element in root.iter():
-            if anchor := element.get('id'):
-                add(anchor)
-            if element.tag == 'a':
-                if anchor := element.get('name'):
-                    add(anchor)
-
-    def _register(self, md: markdown.Markdown) -> None:
-        md.treeprocessors.register(self, "properdocs_extract_anchors", priority=5)  # Same as 'toc'.
+class _AbsoluteLinksValidationValue(enum.IntEnum):
+    RELATIVE_TO_DOCS = -1
 
 
-class _RelativePathTreeprocessor(markdown.treeprocessors.Treeprocessor):
-    def __init__(self, file: File, files: Files, config: ProperDocsConfig) -> None:
+class _PandocHTMLParser:
+    """Parses Pandoc-generated HTML to extract anchors, rewrite links, extract title and build TOC."""
+
+    def __init__(self, file: File, files: Files, config: ProperDocsConfig):
         self.file = file
         self.files = files
         self.config = config
+
+        self.present_anchor_ids: set[str] = set()
         self.links_to_anchors: dict[File, dict[str, str]] = {}
 
-    def run(self, root: etree.Element) -> etree.Element:
-        """
-        Update urls on anchors and images to make them relative.
+        self.title: str | None = None
+        self.toc_tokens: list[dict[str, Any]] = []
 
-        Iterates through the full document tree looking for specific
-        tags and then makes them relative based on the site navigation
-        """
-        for element in root.iter():
-            if element.tag == 'a':
-                key = 'href'
-            elif element.tag == 'img':
-                key = 'src'
-            else:
-                continue
+    def process(self, html_output: str) -> str:
+        import logging
+        from bs4 import BeautifulSoup
 
-            url = element.get(key)
-            assert url is not None
-            new_url = self.path_to_url(url)
-            element.set(key, new_url)
+        # Suppress html5lib warnings about unclosed tags
+        html5lib_logger = logging.getLogger("html5lib")
+        old_level = html5lib_logger.level
+        html5lib_logger.setLevel(logging.ERROR)
+        try:
+            soup = BeautifulSoup(html_output, "html5lib")
+        finally:
+            html5lib_logger.setLevel(old_level)
 
-        return root
+        # 1. Extract anchors
+        for tag in soup.find_all(id=True):
+            self.present_anchor_ids.add(tag['id'])
+        for a in soup.find_all('a', attrs={'name': True}):
+            self.present_anchor_ids.add(a['name'])
+
+        # 2. Extract Headings and build TOC
+        for tag in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
+            level = int(tag.name[1])
+            anchor_id = tag.get('id', '')
+            name = tag.get_text().strip()
+
+            if self.title is None and level == 1:
+                self.title = name
+
+            self.toc_tokens.append({'level': level, 'id': anchor_id, 'name': name})
+
+        # 3. Rewrite Links
+        for a in soup.find_all('a', href=True):
+            url = a['href']
+            assert isinstance(url, str)
+            new_url = self._path_to_url(url)
+            if new_url != url:
+                a['href'] = new_url
+
+        for img in soup.find_all('img', src=True):
+            url = img['src']
+            assert isinstance(url, str)
+            new_url = self._path_to_url(url)
+            if new_url != url:
+                img['src'] = new_url
+
+        if soup.body:
+            return soup.body.decode_contents()
+        else:
+            return str(soup)
 
     @classmethod
     def _target_uri(cls, src_path: str, dest_path: str) -> str:
@@ -381,12 +398,10 @@ class _RelativePathTreeprocessor(markdown.treeprocessors.Treeprocessor):
     def _possible_target_uris(
         cls, file: File, path: str, use_directory_urls: bool, suggest_absolute: bool = False
     ) -> Iterator[str]:
-        """First yields the resolved file uri for the link, then proceeds to yield guesses for possible mistakes."""
         target_uri = cls._target_uri(file.src_uri, path)
         yield target_uri
 
         if posixpath.normpath(path) == '.':
-            # Explicitly link to current file.
             yield file.src_uri
             return
         tried = {target_uri}
@@ -415,10 +430,10 @@ class _RelativePathTreeprocessor(markdown.treeprocessors.Treeprocessor):
                     yield guess
                     tried.add(guess)
 
-    def path_to_url(self, url: str) -> str:
+    def _path_to_url(self, url: str) -> str:
         try:
             scheme, netloc, path, query, anchor = urlsplit(url)
-        except ValueError:  # Invalid URL, e.g. invalid IPv6.
+        except ValueError:
             log.log(
                 self.config.validation.links.unrecognized_links,
                 f"Doc file '{self.file.src_uri}' contains an invalid link '{url}', "
@@ -429,41 +444,32 @@ class _RelativePathTreeprocessor(markdown.treeprocessors.Treeprocessor):
         absolute_link = None
         warning_level, warning = 0, ''
 
-        # Ignore URLs unless they are a relative link to a source file.
-        if scheme or netloc:  # External link.
+        if scheme or netloc:
             return url
-        elif url.startswith(('/', '\\')):  # Absolute link.
+        elif url.startswith(('/', '\\')):
             absolute_link = self.config.validation.links.absolute_links
             if absolute_link is not _AbsoluteLinksValidationValue.RELATIVE_TO_DOCS:
                 warning_level = absolute_link
                 warning = f"Doc file '{self.file.src_uri}' contains an absolute link '{url}', it was left as is."
-        elif AMP_SUBSTITUTE in url:  # AMP_SUBSTITUTE is used internally by Markdown only for email.
-            return url
-        elif not path:  # Self-link containing only query or anchor.
+        elif not path:
             if anchor:
-                # Register that the page links to itself with an anchor.
                 self.links_to_anchors.setdefault(self.file, {}).setdefault(anchor, url)
             return url
 
         path = urlunquote(path)
-        # Determine the filepath of the target.
         possible_target_uris = self._possible_target_uris(
             self.file, path, self.config.use_directory_urls
         )
 
         if warning:
-            # For absolute path (already has a warning), the primary lookup path should be preserved as a tip option.
             target_uri = url
             target_file = None
         else:
-            # Validate that the target exists in files collection.
             target_uri = next(possible_target_uris)
             target_file = self.files.get_file_from_path(target_uri)
 
         if target_file is None and not warning:
-            # Primary lookup path had no match, definitely produce a warning, just choose which one.
             if not posixpath.splitext(path)[-1] and absolute_link is None:
-                # No '.' in the last part of a path indicates path does not point to a file.
                 warning_level = self.config.validation.links.unrecognized_links
                 warning = (
                     f"Doc file '{self.file.src_uri}' contains an unrecognized relative link '{url}', "
@@ -481,7 +487,6 @@ class _RelativePathTreeprocessor(markdown.treeprocessors.Treeprocessor):
             if self.file.inclusion.is_excluded():
                 warning_level = min(logging.INFO, warning_level)
 
-            # There was no match, so try to guess what other file could've been intended.
             if warning_level > logging.DEBUG:
                 suggest_url = ''
                 for path in possible_target_uris:
@@ -506,7 +511,6 @@ class _RelativePathTreeprocessor(markdown.treeprocessors.Treeprocessor):
         assert target_file is not None
 
         if anchor:
-            # Register that this page links to the target file with an anchor.
             self.links_to_anchors.setdefault(target_file, {}).setdefault(anchor, url)
 
         if target_file.inclusion.is_excluded():
@@ -519,64 +523,20 @@ class _RelativePathTreeprocessor(markdown.treeprocessors.Treeprocessor):
                 f"'{target_uri}' which is excluded from the built site."
             )
             log.log(warning_level, warning)
+
         path = utils.get_relative_url(target_file.url, self.file.url)
         return urlunsplit(('', '', path, query, anchor))
 
-    def _register(self, md: markdown.Markdown) -> None:
-        md.treeprocessors.register(self, "relpath", 0)
-
-
-class _RawHTMLPreprocessor(markdown.preprocessors.Preprocessor):
-    def __init__(self) -> None:
-        super().__init__()
-        self.present_anchor_ids: set[str] = set()
-
-    def run(self, lines: list[str]) -> list[str]:
-        parser = _HTMLHandler()
-        parser.feed('\n'.join(lines))
-        parser.close()
-        self.present_anchor_ids = parser.present_anchor_ids
-        return lines
-
-    def _register(self, md: markdown.Markdown) -> None:
-        md.preprocessors.register(
-            self,
-            "properdocs_raw_html",
-            priority=21,  # Right before 'html_block'.
-        )
-
-
-class _HTMLHandler(markdown.htmlparser.htmlparser.HTMLParser):  # type: ignore[name-defined]
-    def __init__(self) -> None:
-        super().__init__()
-        self.present_anchor_ids: set[str] = set()
-
-    def handle_starttag(self, tag: str, attrs: Sequence[tuple[str, str]]) -> None:
-        for k, v in attrs:
-            if k == 'id' or (k == 'name' and tag == 'a'):
-                self.present_anchor_ids.add(v)
-        return super().handle_starttag(tag, attrs)
-
-
-class _ExtractTitleTreeprocessor(markdown.treeprocessors.Treeprocessor):
-    title: str | None = None
-    md: markdown.Markdown
-
-    def run(self, root: etree.Element) -> etree.Element:
-        for el in root:
-            if el.tag == 'h1':
-                self.title = get_heading_text(el, self.md)
-            break
+    def build_toc_tokens(self) -> list[dict[str, Any]]:
+        root = []
+        stack = []
+        for item in self.toc_tokens:
+            node = {'level': item['level'], 'id': item['id'], 'name': item['name'], 'children': []}
+            while stack and stack[-1]['level'] >= node['level']:
+                stack.pop()
+            if not stack:
+                root.append(node)
+            else:
+                stack[-1]['children'].append(node)
+            stack.append(node)
         return root
-
-    def _register(self, md: markdown.Markdown) -> None:
-        self.md = md
-        md.treeprocessors.register(
-            self,
-            "properdocs_extract_title",
-            priority=1,  # Close to the end.
-        )
-
-
-class _AbsoluteLinksValidationValue(enum.IntEnum):
-    RELATIVE_TO_DOCS = -1

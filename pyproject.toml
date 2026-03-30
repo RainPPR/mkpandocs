@@ -36,7 +36,9 @@ dependencies = [
     "click >=7.0",
     "Jinja2 >=2.11.1",
     "markupsafe >=2.0.1",
-    "Markdown >=3.3.6",
+    "pypandoc >=1.13",
+    "beautifulsoup4 >=4.12",
+    "html5lib >=1.1",
     "PyYAML >=5.1",
     "watchdog >=2.0",
     "ghp-import >=1.0",
@@ -130,7 +132,6 @@ matrix.type.features = [
 dependencies = [
     "mypy",
     "babel",
-    "types-Markdown",
     "types-pytz",
     "types-PyYAML",
     "types-setuptools",

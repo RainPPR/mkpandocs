@@ -34,22 +34,6 @@ extra_css:
 exclude_docs: |
   *.py
 
-markdown_extensions:
-  - toc:
-      permalink: 
-  - attr_list
-  - def_list
-  - tables
-  - pymdownx.highlight:
-      use_pygments: false
-  - pymdownx.snippets
-  - pymdownx.superfences
-  - callouts
-  - mdx_gh_links:
-      user: properdocs
-      repo: properdocs
-  - mkdocs-click
-
 copyright: Copyright &copy; 2014 <a href="https://twitter.com/starletdreaming">Tom Christie</a>, Maintained by the <a href="/about/release-notes/#maintenance-team">ProperDocs Team</a>.
 
 hooks:

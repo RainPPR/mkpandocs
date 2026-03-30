@@ -68,3 +68,5 @@ ENV/
 
 # ProperDocs documentation
 site*/
+
+*.msi

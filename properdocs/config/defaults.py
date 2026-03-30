@@ -133,10 +133,28 @@ class ProperDocsConfig(base.Config):
     markdown_extensions = c.MarkdownExtensions(
         builtins=['toc', 'tables', 'fenced_code'], configkey='mdx_configs'
     )
-    """PyMarkdown extension names."""
+    """PyMarkdown extension names (Deprecated in ProperDocs Pandoc migration)."""
 
     mdx_configs = c.Private[dict[str, dict]]()
     """PyMarkdown extension configs. Populated from `markdown_extensions`."""
+
+    pandoc_format = c.Type(str, default='markdown')
+    """The input format to pandoc."""
+
+    pandoc_to = c.Type(str, default='html5')
+    """The output format from pandoc."""
+
+    pandoc_args = c.Type(list, default=[])
+    """Extra arguments to pass to pandoc."""
+
+    pandoc_filters = c.Type(list, default=[])
+    """List of pandoc filters to use."""
+
+    pandoc_lua_filters = c.Type(list, default=[])
+    """List of pandoc lua filters to use."""
+
+    pandoc_keep_frontmatter = c.Type(bool, default=False)
+    """If False, strips YAML frontmatter before pandoc processing (like standard MkDocs). If True, passes it along."""
 
     strict = c.Type(bool, default=False)
     """Enabling strict mode causes ProperDocs to stop the build when a problem is

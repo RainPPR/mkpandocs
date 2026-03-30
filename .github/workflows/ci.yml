@@ -57,6 +57,9 @@ jobs:
       - name: Install dependencies
         run: |
           hatch run test:pip freeze
+      - name: Install Pandoc
+        run: |
+          hatch run +py=${{matrix.python}} test:properdocs install-deps
       - name: Run tests
         run: |
           hatch run +py=${{matrix.python}} test:test

@@ -368,6 +368,15 @@ def get_deps_command(config_file, projects_file):
         sys.exit(1)
 
 
+@cli.command(name="install-deps")
+@common_options
+def install_deps_command(**kwargs):
+    """Download and install the pandoc executable."""
+    from properdocs.commands import install_deps
+
+    install_deps.install_deps()
+
+
 @cli.command(name="new")
 @click.argument("project_directory")
 @common_options

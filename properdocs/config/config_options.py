@@ -7,7 +7,6 @@ import logging
 import os
 import string
 import sys
-import traceback
 import types
 import warnings
 from collections import Counter, UserString
@@ -16,8 +15,6 @@ from types import SimpleNamespace
 from typing import Any, Generic, NamedTuple, TypeVar, Union, overload
 from urllib.parse import quote as urlquote
 from urllib.parse import urlsplit, urlunsplit
-
-import markdown
 import pathspec.gitignore
 
 from properdocs import plugins, theme, utils
@@ -1016,22 +1013,16 @@ class MarkdownExtensions(OptionallyRequired[list[str]]):
 
         extensions = utils.reduce_list(self.builtins + extensions)
 
-        # Confirm that Markdown considers extensions to be valid
-        md = markdown.Markdown()
-        for ext in extensions:
-            try:
-                md.registerExtensions((ext,), self.configdata)
-            except Exception as e:
-                stack: list = []
-                for frame in reversed(traceback.extract_tb(sys.exc_info()[2])):
-                    if not frame.line:  # Ignore frames before <frozen importlib._bootstrap>
-                        break
-                    stack.insert(0, frame)
-                tb = ''.join(traceback.format_list(stack))
-
-                raise ValidationError(
-                    f"Failed to load extension '{ext}'.\n{tb}{type(e).__name__}: {e}"
-                )
+        # In Pandoc migration, we do not load markdown extensions using the `markdown` library.
+        # We just store them and if users provided custom python-markdown extensions, we can
+        # raise a warning or error, but here we simply return them to not break config loading.
+        non_builtins = [ext for ext in extensions if ext not in self.builtins]
+        if non_builtins:
+            # We can log a warning that python-markdown extensions are deprecated
+            log.warning(
+                f"python-markdown extensions {non_builtins} are ignored because properdocs now uses Pandoc. "
+                "Please use pandoc_args or lua filters instead."
+            )
 
         return extensions
 
