@@ -138,11 +138,11 @@ def get_deps(
     projects_file: IO | None = None,
 ) -> Collection[str]:
     """
-    Print PyPI package dependencies inferred from a properdocs.yml file based on a reverse mapping of known projects.
+    Print PyPI package dependencies inferred from a mkpandocs.yml file based on a reverse mapping of known projects.
 
     Args:
-        config_file: Non-default properdocs.yml file - content as a buffer, or path.
-        projects_file: File/buffer that declares all known ProperDocs-related projects.
+        config_file: Non-default mkpandocs.yml file - content as a buffer, or path.
+        projects_file: File/buffer that declares all known MkPandocs-related projects.
             The file is in YAML format and contains `projects: [{mkdocs_theme:, mkdocs_plugin:, markdown_extension:}]
     """
     if isinstance(config_file, (str, os.PathLike)):
@@ -157,12 +157,12 @@ def get_deps(
     packages_to_install = set()
 
     if all(c not in cfg for c in ("site_name", "theme", "plugins", "markdown_extensions")):
-        log.warning(f"The file {config_file!r} doesn't seem to be a properdocs.yml config file")
+        log.warning(f"The file {config_file!r} doesn't seem to be a mkpandocs.yml config file")
     else:
         if _dig(cfg, "theme.locale") not in (_NotFound, "en"):
-            packages_to_install.add("properdocs[i18n]")
+            packages_to_install.add("mkpandocs[i18n]")
         else:
-            packages_to_install.add("properdocs")
+            packages_to_install.add("mkpandocs")
 
     try:
         theme = cfg["theme"]["name"]

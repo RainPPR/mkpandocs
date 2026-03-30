@@ -27,7 +27,7 @@ h1 {
 }
 ```
 
-Then you need to add it to `properdocs.yml`:
+Then you need to add it to `mkpandocs.yml`:
 
 ```yaml
 extra_css:
@@ -88,7 +88,7 @@ next to your `docs_dir`:
 mkdir custom_theme
 ```
 
-And then point your `properdocs.yml` configuration file at the new directory:
+And then point your `mkpandocs.yml` configuration file at the new directory:
 
 ```yaml
 theme:

@@ -265,6 +265,10 @@ class Page(StructureItem):
         for lua_filter in config.get('pandoc_lua_filters', []):
             extra_args.append(f'--lua-filter={lua_filter}')
 
+        # Add --quiet to suppress Pandoc warnings about unclosed tags
+        if '--quiet' not in extra_args:
+            extra_args.append('--quiet')
+
         try:
             html_output = pypandoc.convert_text(
                 self.markdown,
@@ -342,14 +346,19 @@ class _PandocHTMLParser:
         import logging
         from bs4 import BeautifulSoup
 
-        # Suppress html5lib warnings about unclosed tags
+        # Get the HTML parser from config, default to html.parser
+        parser = self.config.get('html_parser', 'html.parser')
+
+        # Suppress html5lib warnings about unclosed tags if using html5lib
         html5lib_logger = logging.getLogger("html5lib")
         old_level = html5lib_logger.level
-        html5lib_logger.setLevel(logging.ERROR)
+        if parser == 'html5lib':
+            html5lib_logger.setLevel(logging.ERROR)
         try:
-            soup = BeautifulSoup(html_output, "html5lib")
+            soup = BeautifulSoup(html_output, parser)
         finally:
-            html5lib_logger.setLevel(old_level)
+            if parser == 'html5lib':
+                html5lib_logger.setLevel(old_level)
 
         # 1. Extract anchors
         for tag in soup.find_all(id=True):

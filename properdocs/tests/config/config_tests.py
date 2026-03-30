@@ -74,7 +74,7 @@ class ConfigTests(unittest.TestCase):
     def test_config_option(self, temp_path):
         """
         Users can explicitly set the config file using the '--config' option.
-        Allows users to specify a config other than the default `properdocs.yml`.
+        Allows users to specify a config other than the default `mkpandocs.yml`.
         """
         expected_result = {
             'site_name': 'Example',
@@ -88,7 +88,7 @@ class ConfigTests(unittest.TestCase):
             - 'Introduction': 'index.md'
             """
         )
-        config_path = os.path.join(temp_path, 'properdocs.yml')
+        config_path = os.path.join(temp_path, 'mkpandocs.yml')
         with open(config_path, 'w') as config_file:
             config_file.write(file_contents)
         os.mkdir(os.path.join(temp_path, 'docs'))
@@ -248,7 +248,7 @@ class ConfigTests(unittest.TestCase):
 
     def test_empty_nav(self):
         conf = defaults.ProperDocsConfig(
-            config_file_path=os.path.join(os.path.abspath('.'), 'properdocs.yml')
+            config_file_path=os.path.join(os.path.abspath('.'), 'mkpandocs.yml')
         )
         conf.load_dict({'site_name': 'Example', 'theme': 'mkdocs'})
         conf.validate()
@@ -288,7 +288,7 @@ class ConfigTests(unittest.TestCase):
                         ('docs_dir', c.Dir(default='docs')),
                         ('site_dir', c.SiteDir(default='site')),
                     ),
-                    config_file_path=os.path.join(os.path.abspath('..'), 'properdocs.yml'),
+                    config_file_path=os.path.join(os.path.abspath('..'), 'mkpandocs.yml'),
                 )
                 conf.load_dict(test_config)
 

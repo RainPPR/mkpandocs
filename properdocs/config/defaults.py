@@ -37,10 +37,10 @@ class _AbsoluteLinksValidation(_LogLevel):
 # depend on others. So, if config option A depends on B, then A should be
 # listed higher in the schema.
 class ProperDocsConfig(base.Config):
-    """The configuration of ProperDocs itself (the root object of properdocs.yml)."""
+    """The configuration of MkPandocs itself (the root object of mkpandocs.yml)."""
 
     config_file_path: str = c.Type(str)  # type: ignore[assignment]
-    """The path to the properdocs.yml config file. Can't be populated from the config."""
+    """The path to the mkpandocs.yml config file. Can't be populated from the config."""
 
     site_name = c.Type(str)
     """The title to use for the documentation."""
@@ -155,6 +155,9 @@ class ProperDocsConfig(base.Config):
 
     pandoc_keep_frontmatter = c.Type(bool, default=False)
     """If False, strips YAML frontmatter before pandoc processing (like standard MkDocs). If True, passes it along."""
+
+    html_parser = c.Choice(('html.parser', 'lxml', 'html5lib'), default='html.parser')
+    """The HTML parser to use for BeautifulSoup. Options: 'html.parser' (Python built-in), 'lxml', 'html5lib'."""
 
     strict = c.Type(bool, default=False)
     """Enabling strict mode causes ProperDocs to stop the build when a problem is

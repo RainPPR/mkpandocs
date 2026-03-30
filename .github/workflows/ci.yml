@@ -59,7 +59,7 @@ jobs:
           hatch run test:pip freeze
       - name: Install Pandoc
         run: |
-          hatch run +py=${{matrix.python}} test:properdocs install-deps
+          hatch run +py=${{matrix.python}} test:mkpandocs install-deps
       - name: Run tests
         run: |
           hatch run +py=${{matrix.python}} test:test
@@ -123,5 +123,5 @@ jobs:
         run: |
           expected_wheel=(-eproperdocs/{templates/sitemap.xml,config/base.py,py.typed,contrib/search/lunr-language/lunr.nl.js})
           expected_sdist=("${expected_wheel[@]}" -epyproject.toml)
-          test "$(tar -ztf dist/properdocs-*.tar.gz | grep -F "${expected_sdist[@]}" | tee /dev/stderr | wc -l)" -eq "${#expected_sdist[@]}"
-          test "$(unzip -l dist/properdocs-*any.whl | grep -F "${expected_wheel[@]}" | tee /dev/stderr | wc -l)" -eq "${#expected_wheel[@]}"
+          test "$(tar -ztf dist/mkpandocs-*.tar.gz | grep -F "${expected_sdist[@]}" | tee /dev/stderr | wc -l)" -eq "${#expected_sdist[@]}"
+          test "$(unzip -l dist/mkpandocs-*any.whl | grep -F "${expected_wheel[@]}" | tee /dev/stderr | wc -l)" -eq "${#expected_wheel[@]}"

@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "properdocs"
+name = "mkpandocs"
 description = "Project documentation with Markdown."
 readme = "README.md"
 license = "BSD-2-Clause"
@@ -39,6 +39,7 @@ dependencies = [
     "pypandoc >=1.13",
     "beautifulsoup4 >=4.12",
     "html5lib >=1.1",
+    "lxml >=4.9",
     "PyYAML >=5.1",
     "watchdog >=2.0",
     "ghp-import >=1.0",
@@ -55,13 +56,13 @@ i18n = [
 ]
 
 [project.urls]
-Documentation = "https://properdocs.org/"
-Source = "https://github.com/properdocs/properdocs"
-Issues = "https://github.com/properdocs/properdocs/issues"
-History = "https://github.com/properdocs/properdocs/releases"
+Documentation = "https://mkpandocs.raincatsoft.com/"
+Source = "https://github.com/RainPPR/mkpandocs"
+Issues = "https://github.com/RainPPR/mkpandocs/issues"
+History = "https://github.com/RainPPR/mkpandocs/releases"
 
 [project.scripts]
-properdocs = "properdocs.__main__:cli"
+mkpandocs = "properdocs.__main__:cli"
 
 [project.entry-points."properdocs.plugins"]
 search = "properdocs.contrib.search:SearchPlugin"
@@ -74,6 +75,7 @@ artifacts = ["/properdocs/**/*.mo"]
 [tool.hatch.build.targets.sdist]
 include = ["/properdocs"]
 [tool.hatch.build.targets.wheel]
+packages = ["/properdocs"]
 exclude = ["/properdocs/tests"]
 
 [tool.hatch.env]

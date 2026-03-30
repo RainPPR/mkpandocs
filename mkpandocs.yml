@@ -1,9 +1,9 @@
-site_name: ProperDocs
-site_url: https://properdocs.org/
+site_name: MkPandocs
+site_url: https://mkpandocs.raincatsoft.com/
 site_description: Project documentation with Markdown.
-site_author: ProperDocs Team
+site_author: MkPandocs Team
 
-repo_url: https://github.com/properdocs/properdocs/
+repo_url: https://github.com/RainPPR/mkpandocs/
 edit_uri: blob/master/docs/
 
 theme:
@@ -11,7 +11,6 @@ theme:
   color_mode: auto
   user_color_mode_toggle: true
   locale: en
-  analytics: {gtag: 'G-274394082'}
   highlightjs: true
   hljs_languages:
     - yaml
@@ -34,7 +33,7 @@ extra_css:
 exclude_docs: |
   *.py
 
-copyright: Copyright &copy; 2014 <a href="https://twitter.com/starletdreaming">Tom Christie</a>, Maintained by the <a href="/about/release-notes/#maintenance-team">ProperDocs Team</a>.
+copyright: Copyright &copy; 2026 <a href="https://github.com/RainPPR">Tom RainPPR</a>, Maintained by the <a href="/about/release-notes/#maintenance-team">MkPandocs Team</a>.
 
 hooks:
   - docs/hooks.py

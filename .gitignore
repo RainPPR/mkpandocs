@@ -70,3 +70,4 @@ ENV/
 site*/
 
 *.msi
+build_err.txt

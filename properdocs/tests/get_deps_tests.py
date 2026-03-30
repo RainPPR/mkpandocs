@@ -25,7 +25,7 @@ class TestGetDeps(unittest.TestCase):
         if yml:
             yml = "site_name: Test\n" + textwrap.dedent(yml)
         with tempfile.TemporaryDirectory() as tempdir:
-            properdocs_yml = os.path.join(tempdir, "properdocs.yml")
+            properdocs_yml = os.path.join(tempdir, "mkpandocs.yml")
             with open(properdocs_yml, "w", encoding="utf-8") as f:
                 f.write(yml)
             with open(_projects_file_path, encoding="utf-8") as projects_file:
@@ -33,7 +33,7 @@ class TestGetDeps(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_empty_config(self):
-        expected_logs = "WARNING:The file '.+' doesn't seem to be a properdocs.yml config file"
+        expected_logs = "WARNING:The file '.+' doesn't seem to be a mkpandocs.yml config file"
         with self._assert_logs(expected_logs):
             self._test_get_deps("", [])
 

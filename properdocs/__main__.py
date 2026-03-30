@@ -120,11 +120,11 @@ pass_state = click.make_pass_decorator(State, ensure=True)
 
 clean_help = "Remove old files from the site_dir before building (the default)."
 config_help = (
-    "Provide a specific ProperDocs config. This can be a file name, or '-' to read from stdin."
+    "Provide a specific MkPandocs config. This can be a file name, or '-' to read from stdin."
 )
 dev_addr_help = "IP address and port to serve documentation locally (default: localhost:8000)"
 serve_open_help = "Open the website in a Web browser after the initial build finishes."
-strict_help = "Enable strict mode. This will cause ProperDocs to abort the build on any warnings."
+strict_help = "Enable strict mode. This will cause MkPandocs to abort the build on any warnings."
 theme_help = "The theme to use when building your documentation."
 theme_choices = sorted(utils.get_theme_names())
 site_dir_help = "The directory to output the result of the documentation build."
@@ -132,10 +132,12 @@ use_directory_urls_help = "Use directory URLs when building pages (the default).
 reload_help = "Enable the live reloading in the development server (this is the default)"
 no_reload_help = "Disable the live reloading in the development server."
 serve_dirty_help = "Only re-build files that have changed."
-serve_clean_help = "Build the site without any effects of `properdocs serve` - pure `properdocs build`, then serve."
+serve_clean_help = (
+    "Build the site without any effects of `mkpandocs serve` - pure `mkpandocs build`, then serve."
+)
 commit_message_help = (
     "A commit message to use when committing to the "
-    "GitHub Pages remote branch. Commit {sha} and ProperDocs {version} are available as expansions"
+    "GitHub Pages remote branch. Commit {sha} and MkPandocs {version} are available as expansions"
 )
 remote_branch_help = (
     "The remote branch to commit to for GitHub Pages. This overrides the value specified in config"
@@ -146,7 +148,7 @@ remote_name_help = (
 force_help = "Force the push to the repository."
 no_history_help = "Replace the whole Git history with one new commit."
 ignore_version_help = (
-    "Ignore check that build is not being deployed with an older version of ProperDocs."
+    "Ignore check that build is not being deployed with an older version of MkPandocs."
 )
 watch_theme_help = (
     "Include the theme in list of files to watch for live reloading. "
@@ -155,7 +157,7 @@ watch_theme_help = (
 shell_help = "Use the shell when invoking Git."
 watch_help = "A directory or file to watch for live reloading. Can be supplied multiple times."
 projects_file_help = (
-    "URL or local path of the registry file that declares all known ProperDocs-related projects."
+    "URL or local path of the registry file that declares all known MkPandocs-related projects."
 )
 
 
@@ -255,7 +257,7 @@ PKG_DIR = os.path.dirname(os.path.abspath(__file__))
 @common_options
 @color_option
 def cli():
-    """ProperDocs - Project documentation with Markdown."""
+    """MkPandocs - Project documentation with Markdown."""
 
 
 @cli.command(name="serve")
@@ -291,7 +293,7 @@ def serve_command(**kwargs):
 @click.option('-d', '--site-dir', type=click.Path(), help=site_dir_help)
 @common_options
 def build_command(clean, **kwargs):
-    """Build the ProperDocs documentation."""
+    """Build the MkPandocs documentation."""
     from properdocs.commands import build
 
     _enable_warnings()
@@ -349,7 +351,7 @@ def gh_deploy_command(
     show_default=True,
 )
 def get_deps_command(config_file, projects_file):
-    """Show required PyPI packages inferred from plugins in properdocs.yml."""
+    """Show required PyPI packages inferred from plugins in mkpandocs.yml."""
     from properdocs.commands.get_deps import get_deps, get_projects_file
     from properdocs.config.base import _open_config_file
 
@@ -381,7 +383,7 @@ def install_deps_command(**kwargs):
 @click.argument("project_directory")
 @common_options
 def new_command(project_directory):
-    """Create a new ProperDocs project."""
+    """Create a new MkPandocs project."""
     from properdocs.commands import new
 
     new.new(project_directory)

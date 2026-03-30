@@ -969,7 +969,7 @@ class FilesystemObjectTest(TestCase):
                 conf = self.get_config(
                     Schema,
                     {'dir': 'foo'},
-                    config_file_path=os.path.join(base_path, 'properdocs.yml'),
+                    config_file_path=os.path.join(base_path, 'mkpandocs.yml'),
                 )
                 self.assertEqual(conf.dir, os.path.join(base_path, 'foo'))
 
@@ -984,7 +984,7 @@ class FilesystemObjectTest(TestCase):
             self.get_config(
                 Schema,
                 {'dir': '.'},
-                config_file_path=os.path.join(os.path.abspath('.'), 'properdocs.yml'),
+                config_file_path=os.path.join(os.path.abspath('.'), 'mkpandocs.yml'),
             )
 
 
@@ -1063,7 +1063,7 @@ class ListOfPathsTest(TestCase):
         conf = self.get_config(
             Schema,
             {'watch': ['foo']},
-            config_file_path=os.path.join(base_path, 'properdocs.yml'),
+            config_file_path=os.path.join(base_path, 'mkpandocs.yml'),
         )
 
         self.assertEqual(conf.watch, [os.path.join(base_path, 'foo')])
@@ -2373,7 +2373,7 @@ class HooksTest(TestCase):
         conf = self.get_config(
             self.Schema,
             {'hooks': ['hooks/my_hook.py']},
-            config_file_path=os.path.join(src_dir, 'properdocs.yml'),
+            config_file_path=os.path.join(src_dir, 'mkpandocs.yml'),
         )
         self.assertIn('hooks/my_hook.py', conf.plugins)
         hook = conf.plugins['hooks/my_hook.py']

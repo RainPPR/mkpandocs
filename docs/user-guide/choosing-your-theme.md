@@ -6,7 +6,7 @@ Selecting and configuring a theme.
 
 ProperDocs includes two official themes ([mkdocs](#mkdocs) and [readthedocs](#readthedocs)), as documented below. Many [third party themes] are available to choose from as well.
 
-To choose a theme, set the [theme] configuration option in your `properdocs.yml`
+To choose a theme, set the [theme] configuration option in your `mkpandocs.yml`
 config file.
 
 ```yaml

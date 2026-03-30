@@ -279,20 +279,25 @@ def _open_config_file(config_file: str | IO | None) -> Iterator[IO]:
     A context manager which yields an open file descriptor ready to be read.
 
     Accepts a filename as a string, an open or closed file descriptor, or None.
-    When None, it defaults to `properdocs.yml` in the CWD. If a closed file descriptor
+    When None, it defaults to `mkpandocs.yml` in the CWD. If a closed file descriptor
     is received, a new file descriptor is opened for the same file.
 
     The file descriptor is automatically closed when the context manager block is existed.
     """
+    # Legacy config files that are not compatible with MkPandocs
+    LEGACY_CONFIG_FILES = ['properdocs.yml', 'properdocs.yaml', 'mkdocs.yml', 'mkdocs.yaml']
+
     # Default to the standard config filename.
     if config_file is None:
-        paths_to_try = ['properdocs.yml', 'properdocs.yaml', 'mkdocs.yml', 'mkdocs.yaml']
+        paths_to_try = ['mkpandocs.yml', 'mkpandocs.yaml']
     # If it is a string, we can assume it is a path and attempt to open it.
     elif isinstance(config_file, str):
         paths_to_try = [config_file]
+        LEGACY_CONFIG_FILES = []  # User explicitly specified a config file
     else:
         result_config_file = config_file
         paths_to_try = None
+        LEGACY_CONFIG_FILES = []
 
     if paths_to_try:
         # config_file is not a file descriptor, so open it as a path.
@@ -301,16 +306,28 @@ def _open_config_file(config_file: str | IO | None) -> Iterator[IO]:
             log.debug(f"Loading configuration file: {abspath}")
             try:
                 result_config_file = open(abspath, 'rb')
-                if len(paths_to_try) > 1 and path in ('mkdocs.yml', 'mkdocs.yaml'):
-                    log.info(
-                        f"The configuration file '{path}' should be renamed to 'properdocs.yml', OR it should be passed explicitly on the command line: `-f {path}`.\n"
-                        "Support for using this legacy file name as a fallback will eventually be removed from ProperDocs."
-                    )
                 break
             except FileNotFoundError:
                 continue
         else:
-            raise exceptions.ConfigurationError(f"Config file '{paths_to_try[0]}' does not exist.")
+            # No mkpandocs config file found, check for legacy config files
+            found_legacy = None
+            for legacy_file in LEGACY_CONFIG_FILES:
+                if os.path.exists(legacy_file):
+                    found_legacy = legacy_file
+                    break
+
+            if found_legacy:
+                raise exceptions.ConfigurationError(
+                    f"Found legacy config file '{found_legacy}'. "
+                    f"MkPandocs requires its own config file 'mkpandocs.yml'.\n"
+                    f"Please rename your config file or create a new 'mkpandocs.yml' file.\n"
+                    f"Note: MkPandocs is not compatible with MkDocs/ProperDocs config files."
+                )
+            else:
+                raise exceptions.ConfigurationError(
+                    f"Config file '{paths_to_try[0]}' does not exist."
+                )
     else:
         log.debug(f"Loading configuration file: {result_config_file}")
         # Ensure file descriptor is at beginning
@@ -333,7 +350,7 @@ def load_config(
     Load the configuration for a given file object or name.
 
     The config_file can either be a file object, string or None. If it is None
-    the default `properdocs.yml` filename will loaded.
+    the default `mkpandocs.yml` filename will loaded.
 
     Extra kwargs are passed to the configuration to replace any default values
     unless they themselves are None.
