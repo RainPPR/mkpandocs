@@ -116,7 +116,7 @@ matrix.type.scripts = [
 ]
 
 [tool.hatch.env.collectors.properdocs.integration]
-path = "properdocs.yml"
+path = "mkpandocs.yml"
 [tool.hatch.envs.integration]
 detached = false
 template = "test"
@@ -167,7 +167,7 @@ js = "npm exec --yes -- jshint properdocs/"
 check = ["markdown", "js", "spelling"]
 
 [tool.hatch.env.collectors.properdocs.docs]
-path = "properdocs.yml"
+path = "mkpandocs.yml"
 [tool.hatch.envs.docs]
 type = "pip-compile"
 detached = false

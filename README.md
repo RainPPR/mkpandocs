@@ -5,7 +5,7 @@
 
 MkPandocs is a static site generator intended for project documentation. Source files are written in Markdown and converted to static HTML during the build process.
 
-Project configuration is defined in a YAML configuration file (`properdocs.yml`). This file specifies the documentation structure, theme configuration, and optional plugin settings.
+Project configuration is defined in a YAML configuration file (`mkpandocs.yml`). This file specifies the documentation structure, theme configuration, and optional plugin settings.
 
 MkPandocs supports extension through plugins, themes and Markdown extensions.
 
