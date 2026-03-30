@@ -659,6 +659,7 @@ wheels = [
 
 [[package]]
 name = "mkpandocs"
+version = "1.7.0"
 source = { editable = "." }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -699,6 +700,10 @@ docs = [
     { name = "mkdocstrings-python" },
     { name = "properdocs-theme-mkdocs" },
     { name = "pymdown-extensions" },
+]
+style = [
+    { name = "mypy" },
+    { name = "ruff" },
 ]
 test = [
     { name = "coverage" },
@@ -744,6 +749,10 @@ docs = [
     { name = "mkdocstrings-python" },
     { name = "properdocs-theme-mkdocs" },
     { name = "pymdown-extensions" },
+]
+style = [
+    { name = "mypy" },
+    { name = "ruff" },
 ]
 test = [
     { name = "coverage" },

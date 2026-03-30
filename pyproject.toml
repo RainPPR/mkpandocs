@@ -1,5 +1,5 @@
 [build-system]
-requires = ["uv_build>=0.7,<8"]
+requires = ["uv_build"]
 build-backend = "uv_build"
 
 [project]
@@ -99,6 +99,11 @@ mkpandocs = "properdocs.__main__:cli"
 
 [project.entry-points."properdocs.plugins"]
 search = "properdocs.contrib.search:SearchPlugin"
+
+[tool.uv.build-backend]
+module-name = "properdocs"
+module-root = ""
+wheel-exclude = ["properdocs/tests/**"]
 
 [tool.ruff]
 line-length = 100
