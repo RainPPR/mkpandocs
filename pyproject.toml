@@ -70,6 +70,13 @@ test = [
     "coverage",
 ]
 
+[dependency-groups]
+dev = [
+    "ruff",
+    "mypy",
+    "types-PyYAML",
+]
+
 [project.urls]
 Documentation = "https://mkpandocs.raincatsoft.com/"
 Source = "https://github.com/RainPPR/mkpandocs"

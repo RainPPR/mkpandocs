@@ -69,7 +69,7 @@ jobs:
       - name: Install Python
         run: uv python install 3.13
       - name: Sync dependencies
-        run: uv sync --all-extras --group dev
+        run: uv sync --all-extras
       - name: Check with ruff
         if: always()
         run: uv run ruff check properdocs
