@@ -284,7 +284,7 @@ class Page(StructureItem):
         parser = _PandocHTMLParser(self.file, files, config)
         self.content = parser.process(html_output)
 
-        self.toc = get_toc(cast(list[_TocToken], parser.build_toc_tokens()))
+        self.toc = get_toc(cast('list[_TocToken]', parser.build_toc_tokens()))
         self._title_from_render = parser.title
         self.present_anchor_ids = parser.present_anchor_ids
         self.links_to_anchors = parser.links_to_anchors
