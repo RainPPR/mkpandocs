@@ -33,7 +33,7 @@ extra_css:
 exclude_docs: |
   *.py
 
-copyright: Copyright &copy; 2026 <a href="https://github.com/RainPPR">Tom RainPPR</a>, Maintained by the <a href="/about/release-notes/#maintenance-team">MkPandocs Team</a>.
+copyright: Copyright &copy; 2026 <a href="https://github.com/RainPPR">RainPPR</a>, Maintained by the <a href="/about/release-notes/#maintenance-team">MkPandocs Team</a>.
 
 hooks:
   - docs/hooks.py

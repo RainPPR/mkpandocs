@@ -9,6 +9,7 @@ readme = "README.md"
 license = "BSD-2-Clause"
 authors = [
     {name = "Tom Christie", email = "tom@tomchristie.com"},
+    {name = "RainPPR", email="PPR2125773894@163.com"},
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
