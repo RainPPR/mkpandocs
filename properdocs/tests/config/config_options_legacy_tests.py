@@ -9,7 +9,6 @@ import sys
 import textwrap
 import unittest
 from typing import Any
-from unittest import mock
 
 import properdocs
 from properdocs.config import base
@@ -1355,7 +1354,6 @@ class ConfigItemsTest(TestCase):
 
 
 class MarkdownExtensionsTest(TestCase):
-    @mock.patch('markdown.Markdown', mock.Mock())
     def test_simple_list(self):
         class Schema:
             markdown_extensions = c.MarkdownExtensions()
@@ -1364,11 +1362,12 @@ class MarkdownExtensionsTest(TestCase):
         config = {
             'markdown_extensions': ['foo', 'bar'],
         }
-        conf = self.get_config(Schema, config)
+        # With Pandoc migration, custom extensions generate a warning
+        with self.assertLogs('properdocs.config.config_options', level='WARNING'):
+            conf = self.get_config(Schema, config)
         self.assertEqual(conf['markdown_extensions'], ['foo', 'bar'])
         self.assertEqual(conf['mdx_configs'], {})
 
-    @mock.patch('markdown.Markdown', mock.Mock())
     def test_list_dicts(self):
         class Schema:
             markdown_extensions = c.MarkdownExtensions()
@@ -1381,7 +1380,8 @@ class MarkdownExtensionsTest(TestCase):
                 {'baz': None},
             ]
         }
-        conf = self.get_config(Schema, config)
+        with self.assertLogs('properdocs.config.config_options', level='WARNING'):
+            conf = self.get_config(Schema, config)
         self.assertEqual(conf['markdown_extensions'], ['foo', 'bar', 'baz'])
         self.assertEqual(
             conf['mdx_configs'],
@@ -1391,7 +1391,6 @@ class MarkdownExtensionsTest(TestCase):
             },
         )
 
-    @mock.patch('markdown.Markdown', mock.Mock())
     def test_mixed_list(self):
         class Schema:
             markdown_extensions = c.MarkdownExtensions()
@@ -1403,7 +1402,8 @@ class MarkdownExtensionsTest(TestCase):
                 {'bar': {'bar_option': 'bar value'}},
             ]
         }
-        conf = self.get_config(Schema, config)
+        with self.assertLogs('properdocs.config.config_options', level='WARNING'):
+            conf = self.get_config(Schema, config)
         self.assertEqual(conf['markdown_extensions'], ['foo', 'bar'])
         self.assertEqual(
             conf['mdx_configs'],
@@ -1412,7 +1412,6 @@ class MarkdownExtensionsTest(TestCase):
             },
         )
 
-    @mock.patch('markdown.Markdown', mock.Mock())
     def test_dict_of_dicts(self):
         class Schema:
             markdown_extensions = c.MarkdownExtensions()
@@ -1425,7 +1424,8 @@ class MarkdownExtensionsTest(TestCase):
                 'baz': {},
             }
         }
-        conf = self.get_config(Schema, config)
+        with self.assertLogs('properdocs.config.config_options', level='WARNING'):
+            conf = self.get_config(Schema, config)
         self.assertEqual(conf['markdown_extensions'], ['foo', 'bar', 'baz'])
         self.assertEqual(
             conf['mdx_configs'],
@@ -1435,7 +1435,6 @@ class MarkdownExtensionsTest(TestCase):
             },
         )
 
-    @mock.patch('markdown.Markdown', mock.Mock())
     def test_builtins(self):
         class Schema:
             markdown_extensions = c.MarkdownExtensions(builtins=['meta', 'toc'])
@@ -1444,7 +1443,8 @@ class MarkdownExtensionsTest(TestCase):
         config = {
             'markdown_extensions': ['foo', 'bar'],
         }
-        conf = self.get_config(Schema, config)
+        with self.assertLogs('properdocs.config.config_options', level='WARNING'):
+            conf = self.get_config(Schema, config)
         self.assertEqual(conf['markdown_extensions'], ['meta', 'toc', 'foo', 'bar'])
         self.assertEqual(conf['mdx_configs'], {})
 
@@ -1474,7 +1474,6 @@ class MarkdownExtensionsTest(TestCase):
         self.assertEqual(conf['markdown_extensions'], ['meta', 'toc'])
         self.assertEqual(conf['mdx_configs'], {'toc': {'permalink': True}})
 
-    @mock.patch('markdown.Markdown', mock.Mock())
     def test_configkey(self):
         class Schema:
             markdown_extensions = c.MarkdownExtensions(configkey='bar')
@@ -1485,7 +1484,8 @@ class MarkdownExtensionsTest(TestCase):
                 {'foo': {'foo_option': 'foo value'}},
             ]
         }
-        conf = self.get_config(Schema, config)
+        with self.assertLogs('properdocs.config.config_options', level='WARNING'):
+            conf = self.get_config(Schema, config)
         self.assertEqual(conf['markdown_extensions'], ['foo'])
         self.assertEqual(
             conf['bar'],
@@ -1515,7 +1515,6 @@ class MarkdownExtensionsTest(TestCase):
         self.assertEqual(conf['markdown_extensions'], [])
         self.assertEqual(conf['mdx_configs'], {})
 
-    @mock.patch('markdown.Markdown', mock.Mock())
     def test_not_list(self):
         class Schema:
             option = c.MarkdownExtensions()
@@ -1523,7 +1522,6 @@ class MarkdownExtensionsTest(TestCase):
         with self.expect_error(option="Invalid Markdown Extensions configuration"):
             self.get_config(Schema, {'option': 'not a list'})
 
-    @mock.patch('markdown.Markdown', mock.Mock())
     def test_invalid_config_option(self):
         class Schema:
             markdown_extensions = c.MarkdownExtensions()
@@ -1538,7 +1536,6 @@ class MarkdownExtensionsTest(TestCase):
         ):
             self.get_config(Schema, config)
 
-    @mock.patch('markdown.Markdown', mock.Mock())
     def test_invalid_config_item(self):
         class Schema:
             markdown_extensions = c.MarkdownExtensions()
@@ -1551,7 +1548,6 @@ class MarkdownExtensionsTest(TestCase):
         with self.expect_error(markdown_extensions="Invalid Markdown Extensions configuration"):
             self.get_config(Schema, config)
 
-    @mock.patch('markdown.Markdown', mock.Mock())
     def test_invalid_dict_item(self):
         class Schema:
             markdown_extensions = c.MarkdownExtensions()
@@ -1572,7 +1568,8 @@ class MarkdownExtensionsTest(TestCase):
             'markdown_extensions': ['unknown'],
         }
         # With Pandoc migration, unknown extensions generate a warning instead of error
-        cfg = self.get_config(Schema, config)
+        with self.assertLogs('properdocs.config.config_options', level='WARNING'):
+            cfg = self.get_config(Schema, config)
         self.assertIsNotNone(cfg)
 
     def test_multiple_markdown_config_instances(self):
@@ -1582,12 +1579,13 @@ class MarkdownExtensionsTest(TestCase):
             markdown_extensions = c.MarkdownExtensions()
             mdx_configs = c.Private()
 
-        conf = self.get_config(
-            Schema,
-            {
-                'markdown_extensions': [{'toc': {'permalink': '##'}}],
-            },
-        )
+        with self.assertLogs('properdocs.config.config_options', level='WARNING'):
+            conf = self.get_config(
+                Schema,
+                {
+                    'markdown_extensions': [{'toc': {'permalink': '##'}}],
+                },
+            )
         self.assertEqual(conf['mdx_configs']['toc'], {'permalink': '##'})
 
         conf = self.get_config(
