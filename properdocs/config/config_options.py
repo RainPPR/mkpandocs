@@ -8,11 +8,13 @@ import logging
 import os
 import string
 import sys
+import traceback
 import types
 import warnings
 from collections import Counter, UserString
+from collections.abc import Callable, Collection, Iterator, Mapping, MutableMapping
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, Any, Generic, NamedTuple, TypeVar, Union, overload
+from typing import Any, Generic, NamedTuple, TypeVar, overload
 from urllib.parse import quote as urlquote
 from urllib.parse import urlsplit, urlunsplit
 
@@ -86,7 +88,7 @@ class SubConfig(Generic[SomeConfig], BaseConfigOption[SomeConfig]):
     def __class_getitem__(cls, config_class: type[Config]):
         """Eliminates the need to write `config_class = FooConfig` when subclassing SubConfig[FooConfig]."""
         name = f'{cls.__name__}[{config_class.__name__}]'
-        return type(name, (cls,), {'config_class': config_class})
+        return type(name, (cls,), dict(config_class=config_class))
 
     def pre_validation(self, config: Config, key_name: str):
         self._config_file_path = config.config_file_path

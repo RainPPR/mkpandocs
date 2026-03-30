@@ -6,7 +6,7 @@ import os
 config_text = 'site_name: My Docs\n'
 index_text = """# Welcome to MkPandocs
 
-For full documentation visit [mkpandocs.raincatsoft.com](https://mkpandocs.raincatsoft.com).
+For full documentation visit [rainppr.github.io/mkpandocs](https://rainppr.github.io/mkpandocs).
 
 ## Commands
 

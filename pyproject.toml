@@ -78,7 +78,7 @@ dev = [
 ]
 
 [project.urls]
-Documentation = "https://mkpandocs.raincatsoft.com/"
+Documentation = "https://rainppr.github.io/mkpandocs/"
 Source = "https://github.com/RainPPR/mkpandocs"
 Issues = "https://github.com/RainPPR/mkpandocs/issues"
 History = "https://github.com/RainPPR/mkpandocs/releases"

@@ -9,16 +9,14 @@ import io
 import logging
 import os
 import urllib.parse
-from typing import IO, TYPE_CHECKING, Any, BinaryIO
+from collections.abc import Collection, Mapping, Sequence
+from typing import IO, Any, BinaryIO
 
 import yaml
 
 from properdocs.config.base import _open_config_file
 from properdocs.utils import cache
 from properdocs.utils import yaml as yaml_util
-
-if TYPE_CHECKING:
-    from collections.abc import Collection, Mapping, Sequence
 
 SafeLoader: type[yaml.SafeLoader | yaml.CSafeLoader]
 try:

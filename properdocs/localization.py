@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
+from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
 from jinja2.ext import Extension, InternationalizationExtension
@@ -9,8 +10,6 @@ from jinja2.ext import Extension, InternationalizationExtension
 from properdocs.config.base import ValidationError
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
-
     import jinja2
 
 try:

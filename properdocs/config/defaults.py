@@ -1,15 +1,13 @@
 from __future__ import annotations
 
 import logging
-from typing import IO, TYPE_CHECKING
+from collections.abc import Mapping
+from typing import IO
 
 from properdocs.config import base
 from properdocs.config import config_options as c
 from properdocs.structure.pages import Page, _AbsoluteLinksValidationValue
 from properdocs.utils.yaml import get_yaml_loader, yaml_load
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
 
 
 class _LogLevel(c.OptionallyRequired[int]):

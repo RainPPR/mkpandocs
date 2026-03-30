@@ -75,7 +75,7 @@ class BasePlugin(Generic[SomeConfig]):
     def __class_getitem__(cls, config_class: type[Config]):
         """Eliminates the need to write `config_class = FooConfig` when subclassing BasePlugin[FooConfig]."""
         name = f'{cls.__name__}[{config_class.__name__}]'
-        return type(name, (cls,), {'config_class': config_class})
+        return type(name, (cls,), dict(config_class=config_class))
 
     def __init_subclass__(cls):
         if not issubclass(cls.config_class, Config):

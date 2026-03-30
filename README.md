@@ -75,11 +75,11 @@ MkPandocs is distributed under the [**BSD-2-Clause license**](LICENSE).
 [GHAction-link]: https://github.com/RainPPR/mkpandocs/actions/workflows/ci.yml
 
 <!-- Links -->
-[mkpandocs]: https://mkpandocs.raincatsoft.com
+[mkpandocs]: https://rainppr.github.io/mkpandocs
 [Issue]: https://github.com/RainPPR/mkpandocs/issues
 [Discussions]: https://github.com/RainPPR/mkpandocs/discussions
 [Discord server]: https://discord.gg/CwYAgEPHZd
-[release-notes]: https://mkpandocs.raincatsoft.com/about/release-notes/
-[Contributing Guide]: https://mkpandocs.raincatsoft.com/about/contributing/
+[release-notes]: https://rainppr.github.io/mkpandocs/about/release-notes/
+[Contributing Guide]: https://rainppr.github.io/mkpandocs/about/contributing/
 [PSF Code of Conduct]: https://www.python.org/psf/conduct/
 [catalog]: https://github.com/properdocs/catalog

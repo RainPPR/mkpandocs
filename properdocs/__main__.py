@@ -246,7 +246,7 @@ PYTHON_VERSION = f"{sys.version_info.major}.{sys.version_info.minor}"
 PKG_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-@click.group(context_settings={"help_option_names": ['-h', '--help'], "max_content_width": 120})
+@click.group(context_settings=dict(help_option_names=['-h', '--help'], max_content_width=120))
 @click.version_option(
     __version__,
     '-V',
