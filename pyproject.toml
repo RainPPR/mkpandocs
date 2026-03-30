@@ -28,7 +28,7 @@ classifiers = [
     "Topic :: Text Processing",
     "Typing :: Typed",
 ]
-version = "1.7.0"
+version = "1.0.0"
 requires-python = ">=3.10"
 dependencies = [
     "click >=7.0",

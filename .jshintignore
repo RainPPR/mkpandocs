@@ -1,9 +1,0 @@
-properdocs/themes/**/js/jquery-**.min.js
-packages/properdocs-theme-mkdocs/properdocs_theme_mkdocs/js/highlight.pack.js
-packages/properdocs-theme-mkdocs/properdocs_theme_mkdocs/js/bootstrap.bundle.min.js
-packages/properdocs-theme-mkdocs/properdocs_theme_mkdocs/js/modernizr-**.min.js
-packages/properdocs-theme-readthedocs/properdocs_theme_readthedocs/js/theme.js
-packages/properdocs-theme-readthedocs/properdocs_theme_readthedocs/js/html5shiv.min.js
-properdocs/contrib/search/templates/search/lunr.js
-properdocs/contrib/search/lunr-language/lunr.**.js
-properdocs/contrib/search/lunr-language/tinyseg.js

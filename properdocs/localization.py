@@ -13,8 +13,8 @@ if TYPE_CHECKING:
     import jinja2
 
 try:
-    from babel.core import Locale, UnknownLocaleError
-    from babel.support import NullTranslations, Translations
+    from babel.core import Locale, UnknownLocaleError  # type: ignore[import-not-found]
+    from babel.support import NullTranslations, Translations  # type: ignore[import-not-found]
 
     has_babel = True
 except ImportError:  # pragma: no cover

@@ -8,7 +8,6 @@ import logging
 import os
 import string
 import sys
-import traceback
 import types
 import warnings
 from collections import Counter, UserString

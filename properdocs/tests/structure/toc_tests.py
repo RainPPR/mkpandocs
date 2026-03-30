@@ -1,7 +1,7 @@
 import unittest
 
 from properdocs.structure.toc import get_toc
-from properdocs.tests.base import dedent, get_pandoc_toc
+from properdocs.tests.base import dedent, get_markdown_toc
 
 
 class TableOfContentsTests(unittest.TestCase):

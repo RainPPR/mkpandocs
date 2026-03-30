@@ -4,14 +4,14 @@ import enum
 import logging
 import posixpath
 import warnings
-from collections.abc import Callable, Iterator, MutableMapping, Sequence
-from typing import TYPE_CHECKING, Any
+from collections.abc import Callable, Iterator, MutableMapping
+from typing import TYPE_CHECKING, Any, cast
 from urllib.parse import unquote as urlunquote
 from urllib.parse import urljoin, urlsplit, urlunsplit
 
 from properdocs import utils
 from properdocs.structure import StructureItem
-from properdocs.structure.toc import get_toc
+from properdocs.structure.toc import _TocToken, get_toc
 from properdocs.utils import get_build_date, get_markdown_title, meta, weak_property
 
 if TYPE_CHECKING:
@@ -259,7 +259,7 @@ class Page(StructureItem):
         if self.markdown is None:
             raise RuntimeError("`markdown` field hasn't been set (via `read_source`)")
 
-        import pypandoc
+        import pypandoc  # type: ignore[import-untyped]
 
         extra_args = list(config.get('pandoc_args', []))
         for lua_filter in config.get('pandoc_lua_filters', []):
@@ -284,7 +284,7 @@ class Page(StructureItem):
         parser = _PandocHTMLParser(self.file, files, config)
         self.content = parser.process(html_output)
 
-        self.toc = get_toc(parser.build_toc_tokens())
+        self.toc = get_toc(cast(list[_TocToken], parser.build_toc_tokens()))
         self._title_from_render = parser.title
         self.present_anchor_ids = parser.present_anchor_ids
         self.links_to_anchors = parser.links_to_anchors
@@ -363,9 +363,9 @@ class _PandocHTMLParser:
 
         # 1. Extract anchors
         for tag in soup.find_all(id=True):
-            self.present_anchor_ids.add(tag['id'])
+            self.present_anchor_ids.add(str(tag['id']))
         for a in soup.find_all('a', attrs={'name': True}):
-            self.present_anchor_ids.add(a['name'])
+            self.present_anchor_ids.add(str(a['name']))
 
         # 2. Extract Headings and build TOC
         for tag in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
@@ -539,7 +539,7 @@ class _PandocHTMLParser:
 
     def build_toc_tokens(self) -> list[dict[str, Any]]:
         root = []
-        stack = []
+        stack = []  # type: ignore[var-annotated]
         for item in self.toc_tokens:
             node = {'level': item['level'], 'id': item['id'], 'name': item['name'], 'children': []}
             while stack and stack[-1]['level'] >= node['level']:

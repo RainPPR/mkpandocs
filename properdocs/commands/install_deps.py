@@ -1,6 +1,6 @@
 import logging
 
-import pypandoc.pandoc_download
+import pypandoc.pandoc_download  # type: ignore[import-untyped]
 
 log = logging.getLogger(__name__)
 

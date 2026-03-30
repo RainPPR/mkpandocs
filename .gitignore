@@ -177,3 +177,4 @@ pyrightconfig.json
 
 *.msi
 build_err.txt
+*.ps1
