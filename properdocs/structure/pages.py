@@ -4,6 +4,7 @@ import enum
 import logging
 import posixpath
 import warnings
+from collections.abc import Callable, Iterator, MutableMapping, Sequence
 from typing import TYPE_CHECKING, Any
 from urllib.parse import unquote as urlunquote
 from urllib.parse import urljoin, urlsplit, urlunsplit
@@ -14,8 +15,6 @@ from properdocs.structure.toc import get_toc
 from properdocs.utils import get_build_date, get_markdown_title, meta, weak_property
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterator, MutableMapping
-
     from properdocs.config.defaults import ProperDocsConfig
     from properdocs.structure.files import File, Files
     from properdocs.structure.toc import TableOfContents

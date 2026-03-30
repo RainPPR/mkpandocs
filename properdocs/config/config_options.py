@@ -30,9 +30,6 @@ from properdocs.config.base import (
 )
 from properdocs.exceptions import ConfigurationError
 
-if TYPE_CHECKING:
-    from collections.abc import Callable, Collection, Iterator, Mapping, MutableMapping
-
 T = TypeVar('T')
 SomeConfig = TypeVar('SomeConfig', bound=Config)
 
