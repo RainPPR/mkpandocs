@@ -15,12 +15,12 @@ jobs:
         uses: astral-sh/setup-uv@v5
       - name: Install Python
         run: uv python install 3.13
-      - name: Install dependencies
-        run: uv pip install -e ".[i18n,docs]"
+      - name: Sync dependencies
+        run: uv sync --all-extras
       - name: Install Pandoc
-        run: mkpandocs install-deps
+        run: uv run mkpandocs install-deps
       - name: Build site
-        run: mkpandocs build --strict
+        run: uv run mkpandocs build --strict
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v4
         with:

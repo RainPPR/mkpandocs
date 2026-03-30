@@ -51,15 +51,13 @@ jobs:
         if: matrix.versions == 'minimal'
         run: |
           sed -i -E 's/#min //; s/\b >=([0-9])/ ==\1/' pyproject.toml
-      - name: Install dependencies
-        run: |
-          uv pip install -e ".[i18n,test]"
+      - name: Sync dependencies
+        run: uv sync --all-extras
       - name: Install Pandoc
         run: |
           uv run mkpandocs install-deps
       - name: Run tests
-        run: |
-          uv run python -m unittest discover -s properdocs -p "*tests.py"
+        run: uv run python -m unittest discover -s properdocs -p "*tests.py"
 
   style:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
@@ -71,9 +69,8 @@ jobs:
         uses: astral-sh/setup-uv@v5
       - name: Install Python
         run: uv python install 3.13
-      - name: Install dependencies
-        run: |
-          uv pip install -e ".[i18n]" ruff mypy types-pyyaml
+      - name: Sync dependencies
+        run: uv sync --all-extras --group dev
       - name: Check with ruff
         if: always()
         run: uv run ruff check properdocs
@@ -90,8 +87,8 @@ jobs:
         uses: astral-sh/setup-uv@v5
       - name: Install Python
         run: uv python install 3.13
-      - name: Install build dependencies
-        run: uv pip install build
+      - name: Sync dependencies
+        run: uv sync
       - name: Build package
         run: uv run python -m build
       - name: Check packaged files
