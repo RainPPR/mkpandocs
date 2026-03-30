@@ -41,7 +41,7 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
         stack = [frame for frame in traceback.extract_stack() if frame.line][-4:-2]
         # Make sure the actual affected file's name is still present (the case of syntax warning):
         if not any(frame.filename == filename for frame in stack):
-            stack = stack[-1:] + [traceback.FrameSummary(filename, lineno, '')]
+            stack = [*stack[-1:], traceback.FrameSummary(filename, lineno, '')]
 
         tb = ''.join(traceback.format_list(stack))
     except Exception:
@@ -247,7 +247,7 @@ PYTHON_VERSION = f"{sys.version_info.major}.{sys.version_info.minor}"
 PKG_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-@click.group(context_settings=dict(help_option_names=['-h', '--help'], max_content_width=120))
+@click.group(context_settings={"help_option_names": ['-h', '--help'], "max_content_width": 120})
 @click.version_option(
     __version__,
     '-V',

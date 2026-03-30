@@ -4,7 +4,6 @@ import gzip
 import logging
 import os
 import time
-from collections.abc import Sequence
 from typing import TYPE_CHECKING
 from urllib.parse import urljoin, urlsplit
 
@@ -23,6 +22,8 @@ from properdocs.utils import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from properdocs.config.defaults import ProperDocsConfig
 
 

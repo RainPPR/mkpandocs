@@ -21,11 +21,13 @@ import urllib.parse
 import webbrowser
 import wsgiref.simple_server
 import wsgiref.util
-from collections.abc import Callable, Iterable
-from typing import Any, BinaryIO
+from typing import TYPE_CHECKING, Any, BinaryIO
 
 import watchdog.events
 import watchdog.observers.polling
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable
 
 _SCRIPT_TEMPLATE_STR = """
 var livereload = function(epoch, requestId) {

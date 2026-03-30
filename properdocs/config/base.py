@@ -285,7 +285,7 @@ def _open_config_file(config_file: str | IO | None) -> Iterator[IO]:
     The file descriptor is automatically closed when the context manager block is existed.
     """
     # Legacy config files that are not compatible with MkPandocs
-    LEGACY_CONFIG_FILES = ['properdocs.yml', 'properdocs.yaml', 'mkdocs.yml', 'mkdocs.yaml']
+    legacy_config_files = ['properdocs.yml', 'properdocs.yaml', 'mkdocs.yml', 'mkdocs.yaml']
 
     # Default to the standard config filename.
     if config_file is None:
@@ -293,11 +293,11 @@ def _open_config_file(config_file: str | IO | None) -> Iterator[IO]:
     # If it is a string, we can assume it is a path and attempt to open it.
     elif isinstance(config_file, str):
         paths_to_try = [config_file]
-        LEGACY_CONFIG_FILES = []  # User explicitly specified a config file
+        legacy_config_files = []  # User explicitly specified a config file
     else:
         result_config_file = config_file
         paths_to_try = None
-        LEGACY_CONFIG_FILES = []
+        legacy_config_files = []
 
     if paths_to_try:
         # config_file is not a file descriptor, so open it as a path.
@@ -312,7 +312,7 @@ def _open_config_file(config_file: str | IO | None) -> Iterator[IO]:
         else:
             # No mkpandocs config file found, check for legacy config files
             found_legacy = None
-            for legacy_file in LEGACY_CONFIG_FILES:
+            for legacy_file in legacy_config_files:
                 if os.path.exists(legacy_file):
                     found_legacy = legacy_file
                     break

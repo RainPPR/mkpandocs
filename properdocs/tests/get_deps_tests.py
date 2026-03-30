@@ -51,7 +51,7 @@ class TestGetDeps(unittest.TestCase):
               locale: en
             markdown_extensions:
               - toc:
-                  permalink: 
+                  permalink:
               - attr_list
               - def_list
               - tables

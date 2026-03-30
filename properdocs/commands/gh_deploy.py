@@ -163,7 +163,6 @@ def gh_deploy(
         log.info('Your documentation should be available shortly.')
     else:
         username, repo = path.split('/', 1)
-        if repo.endswith('.git'):
-            repo = repo[: -len('.git')]
+        repo = repo.removesuffix('.git')
         url = f'https://{username}.github.io/{repo}/'
         log.info(f"Your documentation should shortly be available at: {url}")

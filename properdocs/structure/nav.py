@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Iterator
 from typing import TYPE_CHECKING, TypeVar
 from urllib.parse import urlsplit
 
@@ -12,6 +11,8 @@ from properdocs.structure.pages import Page, _AbsoluteLinksValidationValue
 from properdocs.utils import nest_paths
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
+
     from properdocs.config.defaults import ProperDocsConfig
     from properdocs.structure.files import Files
 

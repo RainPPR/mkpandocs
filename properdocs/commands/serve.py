@@ -5,7 +5,6 @@ import logging
 import shutil
 import sys
 import tempfile
-from collections.abc import Callable
 from os.path import isdir, isfile, join
 from typing import TYPE_CHECKING, BinaryIO
 from urllib.parse import urlsplit
@@ -15,6 +14,8 @@ from properdocs.config import load_config
 from properdocs.livereload import LiveReloadServer, _serve_url
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from properdocs.config.defaults import ProperDocsConfig
 
 log = logging.getLogger(__name__)

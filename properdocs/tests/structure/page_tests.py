@@ -1,4 +1,5 @@
-"""Simplified page tests for MkPandocs.
+"""
+Simplified page tests for MkPandocs.
 
 This file contains simplified tests that don't depend on python-markdown.
 """
@@ -12,7 +13,6 @@ import unittest
 from properdocs.config.defaults import ProperDocsConfig
 from properdocs.structure.files import File, Files
 from properdocs.structure.pages import Page
-from properdocs.tests.base import tempdir
 
 DOCS_DIR = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), '..', 'integration', 'subpages', 'docs'

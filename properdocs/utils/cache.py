@@ -8,11 +8,14 @@ import logging
 import os
 import random
 import urllib.request
-from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 import platformdirs
 
 import properdocs
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 log = logging.getLogger(__name__)
 

@@ -149,7 +149,7 @@ class SiteNavigationTests(unittest.TestCase):
         cfg = load_config(
             nav=nav_cfg,
             site_url='http://example.com/',
-            validation=dict(nav=dict(absolute_links='relative_to_docs')),
+            validation={'nav': {'absolute_links': 'relative_to_docs'}},
         )
         fs = [
             File('index.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls),

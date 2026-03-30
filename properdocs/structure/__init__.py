@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import abc
-from collections.abc import Iterable
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from properdocs.structure.nav import Section
 
 

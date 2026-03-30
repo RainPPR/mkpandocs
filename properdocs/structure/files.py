@@ -7,19 +7,18 @@ import os
 import posixpath
 import shutil
 import warnings
-from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from functools import cached_property
 from pathlib import PurePath, PurePosixPath
 from typing import TYPE_CHECKING, overload
 from urllib.parse import quote as urlquote
 
-import pathspec
 import pathspec.gitignore
-import pathspec.util
 
 from properdocs import utils
 
 if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
+
     import jinja2.environment
 
     from properdocs.config.defaults import ProperDocsConfig

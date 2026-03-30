@@ -52,44 +52,44 @@ class UtilsTests(unittest.TestCase):
 
     def test_get_relative_url(self):
         for case in [
-            dict(url='foo/bar', other='foo', expected='bar'),
-            dict(url='foo/bar.txt', other='foo', expected='bar.txt'),
-            dict(url='foo', other='foo/bar', expected='..'),
-            dict(url='foo', other='foo/bar.txt', expected='.'),
-            dict(url='foo/../../bar', other='.', expected='bar'),
-            dict(url='foo/../../bar', other='foo', expected='../bar'),
-            dict(url='foo//./bar/baz', other='foo/bar/baz', expected='.'),
-            dict(url='a/b/.././../c', other='.', expected='c'),
-            dict(url='a/b/c/d/ee', other='a/b/c/d/e', expected='../ee'),
-            dict(url='a/b/c/d/ee', other='a/b/z/d/e', expected='../../../c/d/ee'),
-            dict(url='foo', other='bar.', expected='foo'),
-            dict(url='foo', other='bar./', expected='../foo'),
-            dict(url='foo', other='foo/bar./', expected='..'),
-            dict(url='foo', other='foo/bar./.', expected='..'),
-            dict(url='foo', other='foo/bar././', expected='..'),
-            dict(url='foo/', other='foo/bar././', expected='../'),
-            dict(url='foo', other='foo', expected='.'),
-            dict(url='.foo', other='.foo', expected='.foo'),
-            dict(url='.foo/', other='.foo', expected='.foo/'),
-            dict(url='.foo', other='.foo/', expected='.'),
-            dict(url='.foo/', other='.foo/', expected='./'),
-            dict(url='///', other='', expected='./'),
-            dict(url='a///', other='', expected='a/'),
-            dict(url='a///', other='a', expected='./'),
-            dict(url='.', other='here', expected='..'),
-            dict(url='..', other='here', expected='..'),
-            dict(url='../..', other='here', expected='..'),
-            dict(url='../../a', other='here', expected='../a'),
-            dict(url='..', other='here.txt', expected='.'),
-            dict(url='a', other='', expected='a'),
-            dict(url='a', other='..', expected='a'),
-            dict(url='a', other='b', expected='../a'),
+            {'url': 'foo/bar', 'other': 'foo', 'expected': 'bar'},
+            {'url': 'foo/bar.txt', 'other': 'foo', 'expected': 'bar.txt'},
+            {'url': 'foo', 'other': 'foo/bar', 'expected': '..'},
+            {'url': 'foo', 'other': 'foo/bar.txt', 'expected': '.'},
+            {'url': 'foo/../../bar', 'other': '.', 'expected': 'bar'},
+            {'url': 'foo/../../bar', 'other': 'foo', 'expected': '../bar'},
+            {'url': 'foo//./bar/baz', 'other': 'foo/bar/baz', 'expected': '.'},
+            {'url': 'a/b/.././../c', 'other': '.', 'expected': 'c'},
+            {'url': 'a/b/c/d/ee', 'other': 'a/b/c/d/e', 'expected': '../ee'},
+            {'url': 'a/b/c/d/ee', 'other': 'a/b/z/d/e', 'expected': '../../../c/d/ee'},
+            {'url': 'foo', 'other': 'bar.', 'expected': 'foo'},
+            {'url': 'foo', 'other': 'bar./', 'expected': '../foo'},
+            {'url': 'foo', 'other': 'foo/bar./', 'expected': '..'},
+            {'url': 'foo', 'other': 'foo/bar./.', 'expected': '..'},
+            {'url': 'foo', 'other': 'foo/bar././', 'expected': '..'},
+            {'url': 'foo/', 'other': 'foo/bar././', 'expected': '../'},
+            {'url': 'foo', 'other': 'foo', 'expected': '.'},
+            {'url': '.foo', 'other': '.foo', 'expected': '.foo'},
+            {'url': '.foo/', 'other': '.foo', 'expected': '.foo/'},
+            {'url': '.foo', 'other': '.foo/', 'expected': '.'},
+            {'url': '.foo/', 'other': '.foo/', 'expected': './'},
+            {'url': '///', 'other': '', 'expected': './'},
+            {'url': 'a///', 'other': '', 'expected': 'a/'},
+            {'url': 'a///', 'other': 'a', 'expected': './'},
+            {'url': '.', 'other': 'here', 'expected': '..'},
+            {'url': '..', 'other': 'here', 'expected': '..'},
+            {'url': '../..', 'other': 'here', 'expected': '..'},
+            {'url': '../../a', 'other': 'here', 'expected': '../a'},
+            {'url': '..', 'other': 'here.txt', 'expected': '.'},
+            {'url': 'a', 'other': '', 'expected': 'a'},
+            {'url': 'a', 'other': '..', 'expected': 'a'},
+            {'url': 'a', 'other': 'b', 'expected': '../a'},
             # The dots are considered a file. Documenting a long-standing bug:
-            dict(url='a', other='b/..', expected='../a'),
-            dict(url='a', other='b/../..', expected='a'),
-            dict(url='a/..../b', other='a/../b', expected='../a/..../b'),
-            dict(url='a/я/b', other='a/я/c', expected='../b'),
-            dict(url='a/я/b', other='a/яя/c', expected='../../я/b'),
+            {'url': 'a', 'other': 'b/..', 'expected': '../a'},
+            {'url': 'a', 'other': 'b/../..', 'expected': 'a'},
+            {'url': 'a/..../b', 'other': 'a/../b', 'expected': '../a/..../b'},
+            {'url': 'a/я/b', 'other': 'a/я/c', 'expected': '../b'},
+            {'url': 'a/я/b', 'other': 'a/яя/c', 'expected': '../../я/b'},
         ]:
             url, other, expected = case['url'], case['other'], case['expected']
             with self.subTest(url=url, other=other):
@@ -302,21 +302,21 @@ class UtilsTests(unittest.TestCase):
     @tempdir()
     def test_copy_files(self, src_dir, dst_dir):
         cases = [
-            dict(
-                src_path='foo.txt',
-                dst_path='foo.txt',
-                expected='foo.txt',
-            ),
-            dict(
-                src_path='bar.txt',
-                dst_path='foo/',  # ensure src filename is appended
-                expected='foo/bar.txt',
-            ),
-            dict(
-                src_path='baz.txt',
-                dst_path='foo/bar/baz.txt',  # ensure missing dirs are created
-                expected='foo/bar/baz.txt',
-            ),
+            {
+                'src_path': 'foo.txt',
+                'dst_path': 'foo.txt',
+                'expected': 'foo.txt',
+            },
+            {
+                'src_path': 'bar.txt',
+                'dst_path': 'foo/',  # ensure src filename is appended
+                'expected': 'foo/bar.txt',
+            },
+            {
+                'src_path': 'baz.txt',
+                'dst_path': 'foo/bar/baz.txt',  # ensure missing dirs are created
+                'expected': 'foo/bar/baz.txt',
+            },
         ]
 
         for case in cases:
@@ -333,9 +333,9 @@ class UtilsTests(unittest.TestCase):
     @tempdir()
     def test_copy_files_without_permissions(self, src_dir, dst_dir):
         cases = [
-            dict(src_path='foo.txt', expected='foo.txt'),
-            dict(src_path='bar.txt', expected='bar.txt'),
-            dict(src_path='baz.txt', expected='baz.txt'),
+            {'src_path': 'foo.txt', 'expected': 'foo.txt'},
+            {'src_path': 'bar.txt', 'expected': 'bar.txt'},
+            {'src_path': 'baz.txt', 'expected': 'baz.txt'},
         ]
 
         try:

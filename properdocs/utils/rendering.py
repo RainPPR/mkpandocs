@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 import copy
-from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 import markdown
 import markdown.treeprocessors
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from xml.etree import ElementTree as etree
 
 # TODO: This will become unnecessary after min-versions have Markdown >=3.4

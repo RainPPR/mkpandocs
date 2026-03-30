@@ -92,6 +92,9 @@ search = "properdocs.contrib.search:SearchPlugin"
 [tool.hatch.version]
 path = "properdocs/__init__.py"
 
+[tool.hatch.metadata]
+allow-direct-references = true
+
 [tool.hatch.build]
 artifacts = ["/properdocs/**/*.mo"]
 [tool.hatch.build.targets.sdist]

@@ -1,20 +1,16 @@
 #!/usr/bin/env python
-"""Simplified build tests for MkPandocs.
+"""
+Simplified build tests for MkPandocs.
 
 This file contains simplified tests that don't depend on python-markdown.
 """
 
 from __future__ import annotations
 
-import io
-import os.path
 import textwrap
 import unittest
-from pathlib import Path
-from unittest import mock
 
 from properdocs.commands import build
-from properdocs.config import base
 from properdocs.structure.files import File, Files
 from properdocs.structure.nav import get_navigation
 from properdocs.structure.pages import Page
