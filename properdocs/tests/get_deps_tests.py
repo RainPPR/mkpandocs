@@ -41,17 +41,17 @@ class TestGetDeps(unittest.TestCase):
         cfg = """
             plugins: [search]
         """
-        self._test_get_deps(cfg, ["properdocs"])
+        self._test_get_deps(cfg, ["mkpandocs"])
 
     def test_properdocs_config(self):
         cfg = """
-            site_name: ProperDocs
+            site_name: MkPandocs
             theme:
               name: mkdocs
               locale: en
             markdown_extensions:
               - toc:
-                  permalink: 
+                  permalink: 
               - attr_list
               - def_list
               - tables
@@ -61,8 +61,8 @@ class TestGetDeps(unittest.TestCase):
               - pymdownx.superfences
               - callouts
               - mdx_gh_links:
-                  user: properdocs
-                  repo: properdocs
+                  user: mkpandocs
+                  repo: mkpandocs
               - mkdocs-click
             plugins:
               - search
@@ -88,7 +88,7 @@ class TestGetDeps(unittest.TestCase):
                 "mkdocs-redirects",
                 "mkdocstrings",
                 "mkdocstrings-python",
-                "properdocs",
+                "mkpandocs",
                 "properdocs-theme-mkdocs",
                 "pymdown-extensions",
             ],
@@ -107,7 +107,7 @@ class TestGetDeps(unittest.TestCase):
                 emoji_generator: !!python/name:materialx.emoji.to_svg
         """
         self._test_get_deps(
-            cfg, ["mkdocs-code-validator", "mkdocs-material", "properdocs", "pymdown-extensions"]
+            cfg, ["mkdocs-code-validator", "mkdocs-material", "mkpandocs", "pymdown-extensions"]
         )
 
     def test_theme_precedence(self):
@@ -116,19 +116,19 @@ class TestGetDeps(unittest.TestCase):
               - tags
             theme: material
         """
-        self._test_get_deps(cfg, ["mkdocs-material", "properdocs"])
+        self._test_get_deps(cfg, ["mkdocs-material", "mkpandocs"])
 
         cfg = """
             plugins:
               - material/tags
         """
-        self._test_get_deps(cfg, ["mkdocs-material", "properdocs"])
+        self._test_get_deps(cfg, ["mkdocs-material", "mkpandocs"])
 
         cfg = """
             plugins:
               - tags
         """
-        self._test_get_deps(cfg, ["mkdocs-plugin-tags", "properdocs"])
+        self._test_get_deps(cfg, ["mkdocs-plugin-tags", "mkpandocs"])
 
     def test_nonexistent(self):
         cfg = """
@@ -147,7 +147,7 @@ class TestGetDeps(unittest.TestCase):
             WARNING:Extension 'saqdhyndpvpa' is not provided by any registered project
         """
         with self._assert_logs(expected_logs):
-            self._test_get_deps(cfg, ["mkdocs-redirects", "properdocs"])
+            self._test_get_deps(cfg, ["mkdocs-redirects", "mkpandocs"])
 
     def test_git_and_shadowed(self):
         cfg = """
@@ -156,14 +156,14 @@ class TestGetDeps(unittest.TestCase):
         """
         self._test_get_deps(
             cfg,
-            ["git+https://github.com/andyoakley/mkdocs-blog", "mkdocs-bootstrap4", "properdocs"],
+            ["git+https://github.com/andyoakley/mkdocs-blog", "mkdocs-bootstrap4", "mkpandocs"],
         )
 
     def test_multi_theme(self):
         cfg = """
             theme: minty
         """
-        self._test_get_deps(cfg, ["mkdocs-bootswatch", "properdocs"])
+        self._test_get_deps(cfg, ["mkdocs-bootswatch", "mkpandocs"])
 
     def test_with_locale(self):
         cfg = """
@@ -171,4 +171,4 @@ class TestGetDeps(unittest.TestCase):
                 name: mkdocs
                 locale: uk
         """
-        self._test_get_deps(cfg, ["properdocs-theme-mkdocs", "properdocs[i18n]"])
+        self._test_get_deps(cfg, ["mkpandocs[i18n]", "properdocs-theme-mkdocs"])

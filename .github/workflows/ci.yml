@@ -43,30 +43,23 @@ jobs:
     steps:
       - name: Download source
         uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
       - name: Install Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: ${{matrix.python}}
+        run: uv python install ${{matrix.python}}
       - name: Pin to lowest versions
         if: matrix.versions == 'minimal'
         run: |
           sed -i -E 's/#min //; s/\b >=([0-9])/ ==\1/' pyproject.toml
-      - name: Install Hatch
-        run: |
-          pip install hatch
       - name: Install dependencies
         run: |
-          hatch run test:pip freeze
+          uv pip install -e ".[i18n,test]"
       - name: Install Pandoc
         run: |
-          hatch run +py=${{matrix.python}} test:mkpandocs install-deps
+          uv run mkpandocs install-deps
       - name: Run tests
         run: |
-          hatch run +py=${{matrix.python}} test:test
-      - name: Run integration tests
-        if: matrix.versions != 'minimal'
-        run: |
-          hatch run +py=${{matrix.python}} integration:test
+          uv run python -m unittest discover -s properdocs -p "*tests.py"
 
   style:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
@@ -74,50 +67,33 @@ jobs:
     steps:
       - name: Download source
         uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
       - name: Install Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.13'
-      - name: Install Hatch
-        run: |
-          pip install hatch
-      - name: Install Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
+        run: uv python install 3.13
       - name: Install dependencies
         run: |
-          hatch run style:pip freeze
-          hatch run types:pip freeze
+          uv pip install -e ".[i18n]" ruff mypy types-pyyaml
       - name: Check with ruff
         if: always()
-        run: hatch run style:check
+        run: uv run ruff check properdocs
       - name: Check with mypy
         if: always()
-        run: hatch run types:check
-      - name: Check Markdown style
-        if: always()
-        run: hatch run lint:markdown
-      - name: Check JS style
-        if: always()
-        run: hatch run lint:js
-      - name: Check spelling
-        if: always()
-        run: hatch run lint:spelling
+        run: uv run mypy properdocs
 
   package:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Setup Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.13'
-      - name: Install dependencies
-        run: pip install -U build
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Install Python
+        run: uv python install 3.13
+      - name: Install build dependencies
+        run: uv pip install build
       - name: Build package
-        run: python -m build
+        run: uv run python -m build
       - name: Check packaged files
         shell: bash -e -x {0}
         run: |

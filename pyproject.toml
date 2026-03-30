@@ -18,14 +18,12 @@ classifiers = [
     "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
-    # Begin Python versions
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
-    # End Python versions
     "Topic :: Documentation",
     "Topic :: Text Processing",
     "Typing :: Typed",
@@ -50,9 +48,26 @@ dependencies = [
     "platformdirs >=2.2.0",
     "colorama >=0.4; platform_system == 'Windows'",
 ]
+
 [project.optional-dependencies]
 i18n = [
     "babel >=2.9.0",
+]
+docs = [
+    "markdown-callouts",
+    "mdx-gh-links",
+    "mkdocs-autorefs",
+    "mkdocs-click",
+    "mkdocs-literate-nav",
+    "mkdocs-redirects",
+    "mkdocstrings",
+    "mkdocstrings-python",
+    "pymdown-extensions",
+]
+test = [
+    "properdocs-theme-mkdocs",
+    "properdocs-theme-readthedocs",
+    "coverage",
 ]
 
 [project.urls]
@@ -78,57 +93,24 @@ include = ["/properdocs"]
 packages = ["/properdocs"]
 exclude = ["/properdocs/tests"]
 
-[tool.hatch.env]
-requires = [
-    "hatch-properdocs",
-    "hatch-pip-compile >=1.7.0",
-]
-
+[tool.hatch.envs.default]
+features = ["i18n", "test"]
 [tool.hatch.envs.default.scripts]
-all = [
-    "hatch run style:fix",
-    "hatch run types:check",
-    "hatch run test:test",
-    "hatch run lint:check",
-    "hatch run +type=default integration:test",
-]
-
-[tool.hatch.envs.test]
-features = ["i18n"]
-extra-dependencies = [
-    "properdocs-theme-mkdocs @ {root:uri}/packages/properdocs-theme-mkdocs",
-    "properdocs-theme-readthedocs @ {root:uri}/packages/properdocs-theme-readthedocs",
-    "coverage",
-]
-[tool.hatch.envs.test.scripts]
 test = 'python -m unittest discover -s properdocs -p "*tests.py"'
-_coverage = [
-    'coverage run --source=properdocs --omit "properdocs/tests/*" -m unittest discover -s properdocs -p "*tests.py"',
-    "coverage xml",
-    "coverage report --show-missing"
-]
-with-coverage = "test"
-[[tool.hatch.envs.test.matrix]]
-python = ["3.10", "3.11", "3.12", "3.13", "3.14"]
-[tool.hatch.envs.test.overrides]
-matrix.type.scripts = [
-    { key = "with-coverage", value = "_coverage", if = ["default"] },
-]
+build = "mkpandocs build --strict"
 
-[tool.hatch.env.collectors.properdocs.integration]
-path = "mkpandocs.yml"
-[tool.hatch.envs.integration]
-detached = false
-template = "test"
-[tool.hatch.envs.integration.scripts]
-test = "python -m properdocs.tests.integration"
-[[tool.hatch.envs.integration.matrix]]
-python = ["3.10", "3.11", "3.12", "3.13", "3.14"]
-type = ["default", "no-babel"]
-[tool.hatch.envs.integration.overrides]
-matrix.type.features = [
-    { value = "i18n", if = ["default"] },
-]
+[tool.hatch.envs.docs]
+features = ["i18n", "docs"]
+[tool.hatch.envs.docs.scripts]
+build = "mkpandocs build --strict"
+
+[tool.hatch.envs.style]
+detached = true
+dependencies = ["ruff"]
+[tool.hatch.envs.style.scripts]
+check = "ruff check properdocs {args}"
+format = "ruff format -q properdocs"
+fix = ["check --fix --unsafe-fixes", "format"]
 
 [tool.hatch.envs.types]
 dependencies = [
@@ -142,41 +124,10 @@ dependencies = [
 [tool.hatch.envs.types.scripts]
 check = "mypy {args} properdocs"
 
-[tool.hatch.envs.style]
-type = "pip-compile"
-detached = true
-dependencies = [
-    "ruff",
-]
-[tool.hatch.envs.style.scripts]
-check = "ruff check properdocs {args}"
-format = "ruff format -q properdocs"
-fix = [
-    "check --fix --unsafe-fixes",
-    "format",
-]
-[tool.hatch.envs.lint]
-detached = true
-dependencies = [
-    "codespell==2.2.6",
-]
-[tool.hatch.envs.lint.scripts]
-spelling = 'codespell properdocs docs *.* -S LC_MESSAGES -S "*.min.js" -S "lunr*.js" -S fontawesome-webfont.svg -S tinyseg.js -S "*.map"'
-markdown = "npm exec --yes -- markdownlint-cli README.md CONTRIBUTING.md docs/ --ignore docs/CNAME"
-js = "npm exec --yes -- jshint properdocs/"
-check = ["markdown", "js", "spelling"]
-
-[tool.hatch.env.collectors.properdocs.docs]
-path = "mkpandocs.yml"
-[tool.hatch.envs.docs]
-type = "pip-compile"
-detached = false
-
 [tool.ruff]
 line-length = 100
 [tool.ruff.format]
 quote-style = "preserve"
-
 [tool.ruff.lint]
 preview = true
 select = [
@@ -206,10 +157,6 @@ select = [
 ignore = ["E501", "E731", "UP038", "UP045", "UP007", "F841"]
 [tool.ruff.lint.per-file-ignores]
 "properdocs/tests/**" = ["PLC2701", "PLR6301"]
-[tool.ruff.lint.flake8-comprehensions]
-allow-dict-calls-with-keyword-arguments = true
-[tool.ruff.lint.flake8-type-checking]
-exempt-modules = ["typing", "collections.abc"]
 
 [tool.mypy]
 warn_unreachable = true
