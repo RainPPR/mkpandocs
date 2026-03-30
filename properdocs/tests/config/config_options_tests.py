@@ -173,10 +173,10 @@ class DeprecatedTest(TestCase):
         self.get_config(
             Schema,
             {'d': 'value'},
-            warnings={
-                'd': "The configuration option 'd' has been deprecated and will be removed in a "
+            warnings=dict(
+                d="The configuration option 'd' has been deprecated and will be removed in a "
                 "future release."
-            },
+            ),
         )
 
     def test_deprecated_option_message(self) -> None:
@@ -192,10 +192,10 @@ class DeprecatedTest(TestCase):
         self.get_config(
             Schema,
             {'d': 'value'},
-            warnings={
-                'd': "The configuration option 'd' has been deprecated and will be removed in a "
+            warnings=dict(
+                d="The configuration option 'd' has been deprecated and will be removed in a "
                 "future release."
-            },
+            ),
         )
 
     def test_deprecated_option_with_invalid_type(self) -> None:
@@ -206,10 +206,10 @@ class DeprecatedTest(TestCase):
             self.get_config(
                 Schema,
                 {'d': 'value'},
-                warnings={
-                    'd': "The configuration option 'd' has been deprecated and will be removed in a "
+                warnings=dict(
+                    d="The configuration option 'd' has been deprecated and will be removed in a "
                     "future release."
-                },
+                ),
             )
 
     def test_removed_option(self) -> None:
@@ -250,10 +250,10 @@ class DeprecatedTest(TestCase):
         conf = self.get_config(
             Schema,
             {'old': 'value'},
-            warnings={
-                'old': "The configuration option 'old' has been deprecated and will be removed in a "
+            warnings=dict(
+                old="The configuration option 'old' has been deprecated and will be removed in a "
                 "future release. Use 'foo.bar' instead."
-            },
+            ),
         )
         self.assertEqual(conf, {'foo': {'bar': 'value'}, 'old': None})
 
@@ -265,10 +265,10 @@ class DeprecatedTest(TestCase):
         conf = self.get_config(
             Schema,
             {'old': 'value', 'foo': {'existing': 'existing'}},
-            warnings={
-                'old': "The configuration option 'old' has been deprecated and will be removed in a "
+            warnings=dict(
+                old="The configuration option 'old' has been deprecated and will be removed in a "
                 "future release. Use 'foo.bar' instead."
-            },
+            ),
         )
         self.assertEqual(conf, {'foo': {'existing': 'existing', 'bar': 'value'}, 'old': None})
 
@@ -281,10 +281,10 @@ class DeprecatedTest(TestCase):
             self.get_config(
                 Schema,
                 {'old': 'value', 'foo': 'wrong type'},
-                warnings={
-                    'old': "The configuration option 'old' has been deprecated and will be removed in a "
+                warnings=dict(
+                    old="The configuration option 'old' has been deprecated and will be removed in a "
                     "future release. Use 'foo.bar' instead."
-                },
+                ),
             )
 
 
@@ -581,9 +581,9 @@ class EditURITest(TestCase):
                 'edit_uri': 'edit',
                 'edit_uri_template': 'edit/master/{path}',
             },
-            warnings={
-                'edit_uri_template': "The option 'edit_uri' has no effect when 'edit_uri_template' is set."
-            },
+            warnings=dict(
+                edit_uri_template="The option 'edit_uri' has no effect when 'edit_uri_template' is set."
+            ),
         )
         self.assertEqual(conf.edit_uri_template, 'edit/master/{path}')
 
