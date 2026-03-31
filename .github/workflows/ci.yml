@@ -12,9 +12,8 @@ jobs:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     strategy:
       fail-fast: false
-      max-parallel: 3
       matrix:
-        python: [3.14, 3.13, 3.12, 3.11, 3.10]
+        python: ['3.14', '3.13', '3.12', '3.11', '3.10']
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{matrix.os}}
     steps:
@@ -24,6 +23,8 @@ jobs:
         uses: astral-sh/setup-uv@v5
       - name: Install Python
         run: uv python install ${{matrix.python}}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Sync dependencies
         run: uv sync --group test
       - name: Install Pandoc
