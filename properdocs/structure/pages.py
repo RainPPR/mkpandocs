@@ -209,7 +209,7 @@ class Page(StructureItem):
                 raise
 
         self.markdown, self.meta = meta.get_data(source)
-        if config.get('pandoc_keep_frontmatter', False):
+        if config.pandoc.keep_frontmatter:
             self.markdown = source
 
     def _set_title(self) -> None:
@@ -259,24 +259,65 @@ class Page(StructureItem):
         if self.markdown is None:
             raise RuntimeError("`markdown` field hasn't been set (via `read_source`)")
 
+        import sys
+
         import pypandoc  # type: ignore[import-untyped]
 
-        extra_args = list(config.get('pandoc_args', []))
-        for lua_filter in config.get('pandoc_lua_filters', []):
+        extra_args = list(config.pandoc.args)
+        for lua_filter in config.pandoc.lua_filters:
             extra_args.append(f'--lua-filter={lua_filter}')
 
         # Add --quiet to suppress Pandoc warnings about unclosed tags
         if '--quiet' not in extra_args:
             extra_args.append('--quiet')
 
+        json_filters = config.pandoc.json_filters
+        pandoc_format = config.pandoc.format
+        pandoc_to = config.pandoc.to
+
         try:
-            html_output = pypandoc.convert_text(
-                self.markdown,
-                to=config.get('pandoc_to', 'html5'),
-                format=config.get('pandoc_format', 'markdown'),
-                extra_args=extra_args,
-                filters=config.get('pandoc_filters', []),
-            )
+            if json_filters:
+                # Pipeline: markdown → JSON AST → filter chain → target format
+                json_ast = pypandoc.convert_text(
+                    self.markdown,
+                    to='json',
+                    format=pandoc_format,
+                    extra_args=extra_args,
+                    filters=config.pandoc.filters,
+                )
+                json_data = json_ast.encode('utf-8')
+
+                import subprocess
+
+                for filter_path in json_filters:
+                    result = subprocess.run(
+                        [sys.executable, filter_path],
+                        input=json_data,
+                        capture_output=True,
+                    )
+                    if result.returncode != 0:
+                        stderr = result.stderr.decode('utf-8', errors='replace')
+                        log.error(f"JSON filter {filter_path} failed: {stderr}")
+                        raise RuntimeError(
+                            f"JSON filter {filter_path} failed with exit code {result.returncode}"
+                        )
+                    json_data = result.stdout
+
+                html_output = pypandoc.convert_text(
+                    json_data.decode('utf-8'),
+                    to=pandoc_to,
+                    format='json',
+                    extra_args=['--quiet'],
+                )
+            else:
+                # Direct: markdown → target format
+                html_output = pypandoc.convert_text(
+                    self.markdown,
+                    to=pandoc_to,
+                    format=pandoc_format,
+                    extra_args=extra_args,
+                    filters=config.pandoc.filters,
+                )
         except Exception as e:
             log.error(f"Error rendering {self.file.src_path} with Pandoc: {e}")
             raise
@@ -348,7 +389,7 @@ class _PandocHTMLParser:
         from bs4 import BeautifulSoup
 
         # Get the HTML parser from config, default to html.parser
-        parser = self.config.get('html_parser', 'html.parser')
+        parser = self.config.pandoc.html_parser
 
         # Suppress html5lib warnings about unclosed tags if using html5lib
         html5lib_logger = logging.getLogger("html5lib")

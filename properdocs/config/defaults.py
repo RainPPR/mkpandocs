@@ -33,6 +33,35 @@ class _AbsoluteLinksValidation(_LogLevel):
     }
 
 
+class PandocConfig(base.Config):
+    """Configuration for the Pandoc rendering engine."""
+
+    format = c.Type(str, default='markdown')
+    """The input format to pandoc."""
+
+    to = c.Type(str, default='html5')
+    """The output format from pandoc."""
+
+    args = c.Type(list, default=[])
+    """Extra arguments to pass to pandoc."""
+
+    filters = c.Type(list, default=[])
+    """List of pandoc filters to use."""
+
+    lua_filters = c.Type(list, default=[])
+    """List of pandoc lua filters to use."""
+
+    keep_frontmatter = c.Type(bool, default=False)
+    """If False, strips YAML frontmatter before pandoc processing (like standard MkDocs). If True, passes it along."""
+
+    html_parser = c.Choice(('html.parser', 'lxml', 'html5lib'), default='html.parser')
+    """The HTML parser to use for BeautifulSoup. Options: 'html.parser' (Python built-in), 'lxml', 'html5lib'."""
+
+    json_filters = c.Type(list, default=[])
+    """List of Python scripts for JSON AST filtering. Each script receives Pandoc JSON AST via stdin
+    and outputs modified JSON AST via stdout. Paths are relative to the current working directory."""
+
+
 # NOTE: The order here is important. During validation some config options
 # depend on others. So, if config option A depends on B, then A should be
 # listed higher in the schema.
@@ -138,26 +167,8 @@ class ProperDocsConfig(base.Config):
     mdx_configs = c.Private[dict[str, dict]]()
     """PyMarkdown extension configs. Populated from `markdown_extensions`."""
 
-    pandoc_format = c.Type(str, default='markdown')
-    """The input format to pandoc."""
-
-    pandoc_to = c.Type(str, default='html5')
-    """The output format from pandoc."""
-
-    pandoc_args = c.Type(list, default=[])
-    """Extra arguments to pass to pandoc."""
-
-    pandoc_filters = c.Type(list, default=[])
-    """List of pandoc filters to use."""
-
-    pandoc_lua_filters = c.Type(list, default=[])
-    """List of pandoc lua filters to use."""
-
-    pandoc_keep_frontmatter = c.Type(bool, default=False)
-    """If False, strips YAML frontmatter before pandoc processing (like standard MkDocs). If True, passes it along."""
-
-    html_parser = c.Choice(('html.parser', 'lxml', 'html5lib'), default='html.parser')
-    """The HTML parser to use for BeautifulSoup. Options: 'html.parser' (Python built-in), 'lxml', 'html5lib'."""
+    pandoc = c.SubConfig(PandocConfig)
+    """Pandoc rendering configuration."""
 
     strict = c.Type(bool, default=False)
     """Enabling strict mode causes ProperDocs to stop the build when a problem is

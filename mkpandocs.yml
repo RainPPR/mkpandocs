@@ -1,6 +1,6 @@
 site_name: MkPandocs
 site_url: https://rainppr.github.io/mkpandocs/
-site_description: Project documentation with Markdown.
+site_description: 使用 Pandoc 渲染的项目文档生成器。
 site_author: MkPandocs Team
 
 repo_url: https://github.com/RainPPR/mkpandocs/
@@ -8,25 +8,18 @@ edit_uri: blob/master/docs/
 
 theme:
   name: material
-  language: en
+  language: zh
   features:
     - navigation.instant
-    - navigation.instant.prefetch
     - navigation.tracking
-    - navigation.tabs
-    - navigation.tabs.sticky
     - navigation.sections
     - navigation.expand
     - navigation.indexes
     - navigation.top
-    - navigation.footer
     - toc.follow
     - search.suggest
     - search.highlight
-    - search.share
     - content.code.copy
-    - content.code.annotate
-    - content.tabs.link
     - header.autohide
   palette:
     - scheme: default
@@ -34,72 +27,39 @@ theme:
       accent: indigo
       toggle:
         icon: material/brightness-7
-        name: Switch to dark mode
+        name: 切换到深色模式
     - scheme: slate
       primary: indigo
       accent: indigo
       toggle:
         icon: material/brightness-4
-        name: Switch to light mode
-  icon:
-    repo: fontawesome/brands/github
-  font:
-    text: Roboto
-    code: Roboto Mono
+        name: 切换到浅色模式
 
 nav:
-  - Home: index.md
-  - Getting Started: getting-started.md
-  - User Guide: user-guide/
-  - Developer Guide: dev-guide/
-  - About:
-    - Release Notes: about/release-notes.md
-    - Contributing: about/contributing.md
-    - License: about/license.md
-    - Who We Are: about/who-we-are.md
+  - 首页: index.md
+  - 入门: getting-started.md
+  - 用户指南:
+    - 配置: user-guide/configuration.md
+    - 编写文档: user-guide/writing-your-docs.md
+    - 命令行: user-guide/cli.md
+    - 部署: user-guide/deploying.md
+    - JSON 过滤器: user-guide/json-filters.md
+  - 开发指南:
+    - 插件开发: dev-guide/plugins.md
+    - 主题开发: dev-guide/themes.md
+    - 架构: dev-guide/architecture.md
 
-extra_css:
-  - css/extra.css
-
-exclude_docs: |
-  *.py
-
-extra:
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/RainPPR/mkpandocs
-      name: GitHub
-  generator: false
-  version:
-    provider: mike
-
-copyright: Copyright &copy; 2026 <a href="https://github.com/RainPPR">RainPPR</a>, Maintained by the <a href="/about/release-notes/#maintenance-team">MkPandocs Team</a>.
-
-hooks:
-  - docs/hooks.py
+pandoc:
+  format: markdown+raw_html+raw_attribute
+  to: html5
+  html_parser: html.parser
 
 plugins:
   - search
-  - redirects:
-      redirect_maps:
-        user-guide/plugins.md: dev-guide/plugins.md
-        user-guide/custom-themes.md: dev-guide/themes.md
-        user-guide/styling-your-docs.md: user-guide/choosing-your-theme.md
   - autorefs
-  - literate-nav:
-      nav_file: README.md
-      implicit_index: true
-  - mkdocstrings:
-      handlers:
-        python:
-          options:
-            docstring_section_style: list
-            members_order: source
-            show_root_heading: true
-            show_source: false
-            show_signature_annotations: true
   - tags
-  - meta
+
+copyright: Copyright &copy; 2026 <a href="https://github.com/RainPPR">RainPPR</a>
 
 watch:
   - properdocs

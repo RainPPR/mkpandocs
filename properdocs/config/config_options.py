@@ -1019,7 +1019,7 @@ class MarkdownExtensions(OptionallyRequired[list[str]]):
             # We can log a warning that python-markdown extensions are deprecated
             log.warning(
                 f"python-markdown extensions {non_builtins} are ignored because properdocs now uses Pandoc. "
-                "Please use pandoc_args or lua filters instead."
+                "Please use pandoc.args or pandoc.lua_filters instead."
             )
 
         return extensions

@@ -1,88 +1,41 @@
-# ProperDocs
+# MkPandocs
 
-Project documentation with&nbsp;Markdown.
+MkPandocs 是一个静态站点生成器，专为项目文档设计。它是 [MkDocs](https://www.mkdocs.org/) 的 Pandoc 渲染分支，基于 [properdocs](https://github.com/mkdocs/mkdocs) 修改，使用 [Pandoc](https://pandoc.org/) 替代 Python-Markdown 作为渲染引擎。
 
----
+> **⚠️ 项目状态**
+>
+> 本项目仍在积极开发中，功能和 API 随时可能发生变更。目前尚未完善，**不建议用于生产环境**。
 
-ProperDocs is a **fast**, **simple** and **downright gorgeous** static site
-generator that's geared towards building project documentation. Documentation
-source files are written in Markdown, and configured with a single YAML
-configuration file. Start by reading the [introductory tutorial], then check the
-[User Guide] for more information.
+## 与 MkDocs 的区别
 
-[introductory tutorial]: getting-started.md
-[User Guide]: user-guide/README.md
+| 特性 | MkDocs | MkPandocs |
+|------|--------|-----------|
+| 渲染引擎 | Python-Markdown | Pandoc |
+| 配置文件 | `mkdocs.yml` | `mkpandocs.yml` |
+| 扩展语法 | Markdown 扩展 | Pandoc 扩展 / Lua 过滤器 / JSON 过滤器 |
+| 数学公式 | 需要扩展 | 原生支持 |
+| 代码高亮 | 需要扩展 | 内置支持 |
+| JSON 过滤器 | 不支持 | 支持自定义 Python 脚本处理 AST |
 
-<div class="text-center">
-<a href="getting-started/" class="btn btn-primary" role="button">Getting Started</a>
-<a href="user-guide/" class="btn btn-primary" role="button">User Guide</a>
-</div>
+## 快速导航
 
-<div class="pt-2 pb-4 px-4 my-4 bg-body-tertiary rounded-3">
-<h2 class="display-4 text-center">Features</h2>
+- [入门教程](getting-started.md) — 安装、创建项目、预览、构建
+- [配置](user-guide/configuration.md) — 所有配置项说明
+- [编写文档](user-guide/writing-your-docs.md) — Markdown 语法、数学公式、代码高亮
+- [命令行](user-guide/cli.md) — CLI 命令及参数
+- [部署](user-guide/deploying.md) — GitHub Pages、Netlify 等
+- [JSON 过滤器](user-guide/json-filters.md) — 编写自定义 AST 处理脚本
+- [插件开发](dev-guide/plugins.md) — 事件钩子、插件结构
+- [主题开发](dev-guide/themes.md) — 模板结构、自定义主题
+- [架构](dev-guide/architecture.md) — 渲染流程、配置系统
 
-<div class="row">
-  <div class="col-sm-6">
-    <div class="card mb-4">
-      <div class="card-body">
-        <h3 class="card-title">Great themes available</h3>
-        <p class="card-text">
-            There's a stack of good looking <a href="user-guide/choosing-your-theme">themes</a> available for ProperDocs.
-            Choose between the official themes:
-            <a href="user-guide/choosing-your-theme/#mkdocs">mkdocs</a> and
-            <a href="user-guide/choosing-your-theme/#readthedocs">readthedocs</a>,
-            select one of the third-party themes
-            (on the <a href="https://github.com/properdocs/catalog#-theming">ProperDocs Catalog</a>),
-            or <a href="dev-guide/themes/">build your own</a>.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="card mb-4">
-      <div class="card-body">
-        <h3 class="card-title">Easy to customize</h3>
-        <p class="card-text">
-            Get your project documentation looking just the way you want it by
-            <a href="user-guide/customizing-your-theme/">customizing your
-            theme</a> and/or installing some <a
-            href="user-guide/configuration/#plugins">plugins</a>. Modify
-            Markdown's behavior with <a
-            href="user-guide/configuration/#markdown_extensions">Markdown
-            extensions</a>. Many <a
-            href="user-guide/configuration/">configuration options</a> are
-            available.
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
+## 贡献
 
-<div class="row">
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-        <h3 class="card-title">Preview your site as you work</h3>
-        <p class="card-text">
-            The built-in dev-server allows you to preview your documentation
-            as you're writing it. It will even auto-reload and refresh your
-            browser whenever you save your changes.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-        <h3 class="card-title">Host anywhere</h3>
-        <p class="card-text">
-            ProperDocs builds completely static HTML sites that you can host on
-            GitHub Pages, Amazon S3, or <a
-            href="user-guide/deploying-your-docs/">anywhere</a> else you
-            choose.
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
+欢迎参与贡献！你可以通过以下方式参与：
+
+- [GitHub 仓库](https://github.com/RainPPR/mkpandocs) — Fork → 创建分支 → 提交 → PR
+- [问题反馈](https://github.com/RainPPR/mkpandocs/issues) — 报告 Bug 或提出建议
+
+## 许可证
+
+本项目基于 [BSD-2-Clause 许可证](https://github.com/RainPPR/mkpandocs/blob/master/LICENSE) 发布。

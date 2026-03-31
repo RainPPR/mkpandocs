@@ -1,1289 +1,410 @@
-# Configuration
+# 配置
 
-Guide to all available configuration settings.
+MkPandocs 通过项目根目录下的 `mkpandocs.yml` 文件进行配置。所有配置项均可选，但 `site_name` 是唯一必须设置的项。
 
----
-
-## Introduction
-
-Project settings are configured by default using a YAML configuration file in
-the project directory named `mkpandocs.yml`. You can specify another path for it
-by using the `-f`/`--config-file` option (see `properdocs build --help`).
-
-At a minimum, this configuration file must contain the `site_name`. All other settings are optional.
-
-## Project information
+## 基本配置
 
 ### site_name
 
-This is a **required setting**, and should be a string that is used as the main
-title for the project documentation. For example:
+文档站点的标题，这是唯一的必填配置。
 
 ```yaml
-site_name: Marshmallow Generator
+site_name: 我的项目文档
 ```
-
-When rendering the theme this setting will be passed as the `site_name` context
-variable.
 
 ### site_url
 
-Set the canonical URL of the site. This will add a `link` tag with the
-`canonical` URL to the `head` section of each HTML page. If the 'root' of the
-ProperDocs site will be within a subdirectory of a domain, be sure to include that
-subdirectory in the setting (`https://example.com/foo/`).
-
-This setting is also used for `properdocs serve`: the server will be mounted onto a
-path taken from the path component of the URL, e.g. `some/page.md` will be
-served from `http://127.0.0.1:8000/foo/some/page/` to mimic the expected remote
-layout.
-
-**default**: `null`
-
-### repo_url
-
-When set, provides a link to your repository (GitHub, Bitbucket, GitLab, ...)
-on each page.
+站点的完整 URL，用于生成 canonical 链接。
 
 ```yaml
-repo_url: https://github.com/example/repository/
+site_url: https://example.com/docs/
 ```
-
-**default**: `null`
-
-### repo_name
-
-When set, provides the name for the link to your repository on each page.
-
-**default**: `'GitHub'`, `'Bitbucket'` or `'GitLab'` if the `repo_url` matches
-those domains, otherwise the hostname from the `repo_url`.
-
-### edit_uri
-
-The path from the base `repo_url` to the docs directory when directly viewing a
-page, accounting for specifics of the repository host (e.g. GitHub, Bitbucket,
-etc), the branch, and the docs directory itself. ProperDocs concatenates `repo_url`
-and `edit_uri`, and appends the input path of the page.
-
-When set, and if your theme supports it, provides a link directly to the page in
-your source repository. This makes it easier to find and edit the source for the
-page. If `repo_url` is not set, this option is ignored. On some themes, setting
-this option may cause an edit link to be used in place of a repository link.
-Other themes may show both links.
-
-The `edit_uri` supports query ('?') and fragment ('#') characters. For
-repository hosts that use a query or a fragment to access the files, the
-`edit_uri` might be set as follows. (Note the `?` and `#` in the URI...)
-
-```yaml
-# Query string example
-edit_uri: '?query=root/path/docs/'
-```
-
-```yaml
-# Hash fragment example
-edit_uri: '#root/path/docs/'
-```
-
-For other repository hosts, simply specify the relative path to the docs
-directory.
-
-```yaml
-# Query string example
-edit_uri: root/path/docs/
-```
-
-For example, having this config:
-
-```yaml
-repo_url: https://example.com/project/repo
-edit_uri: blob/main/docs/
-```
-
-means that a page named 'foo/bar.md' will have its edit link lead to:  
-<https://example.com/project/repo/blob/main/docs/foo/bar.md>
-
-`edit_uri` can actually be just an absolute URL, not necessarily relative to `repo_url`, so this can achieve the same result:
-
-```yaml
-edit_uri: https://example.com/project/repo/blob/main/docs/
-```
-
-For more flexibility, see [edit_uri_template](#edit_uri_template) below.
-
-> NOTE:
-> On a few known hosts (specifically GitHub, Bitbucket and GitLab), the
-> `edit_uri` is derived from the 'repo_url' and does not need to be set
-> manually. Simply defining a `repo_url` will automatically populate the
-> `edit_uri` configs setting.
->
-> For example, for a GitHub- or GitLab-hosted repository, the `edit_uri`
-> would be automatically set as `edit/master/docs/` (Note the `edit` path
-> and `master` branch).
->
-> For a Bitbucket-hosted repository, the equivalent `edit_uri` would be
-> automatically set as `src/default/docs/` (note the `src` path and `default`
-> branch).
->
-> To use a different URI than the default (for example a different branch),
-> simply set the `edit_uri` to your desired string. If you do not want any
-> "edit URL link" displayed on your pages, then set `edit_uri` to an empty
-> string to disable the automatic setting.
-
-WARNING:
-On GitHub and GitLab, the default "edit" path (`edit/master/docs/`) opens
-the page in the online editor. This functionality requires that the user
-have and be logged in to a GitHub/GitLab account. Otherwise, the user will
-be redirected to a login/signup page. Alternatively, use the "blob" path
-(`blob/master/docs/`) to open a read-only view, which supports anonymous
-access.
-
-**default**: `edit/master/docs/` for GitHub and GitLab repos or
-`src/default/docs/` for a Bitbucket repo, if `repo_url` matches those domains,
-otherwise `null`
-
-### edit_uri_template
-
-The more flexible variant of [edit_uri](#edit_uri). These two are equivalent:
-
-```yaml
-edit_uri: 'blob/main/docs/'
-edit_uri_template: 'blob/main/docs/{path}'
-```
-
-(they are also mutually exclusive -- don't specify both).
-
-Starting from here, you can change the positioning or formatting of the path, in case the default behavior of appending the path isn't enough.
-
-The contents of `edit_uri_template` are normal [Python format strings](https://docs.python.org/3/library/string.html#formatstrings), with only these fields available:
-
-* `{path}`, e.g. `foo/bar.md`
-* `{path_noext}`, e.g. `foo/bar`
-
-And the conversion flag `!q` is available, to percent-encode the field:
-
-* `{path!q}`, e.g. `foo%2Fbar.md`
-
->? NOTE: **Suggested useful configurations:**
->
-> *   GitHub Wiki:  
->     (e.g. `https://github.com/project/repo/wiki/foo/bar/_edit`)
->
->     ```yaml
->     repo_url: 'https://github.com/project/repo/wiki'
->     edit_uri_template: '{path_noext}/_edit'
->     ```
->
-> *   BitBucket editor:  
->     (e.g. `https://bitbucket.org/project/repo/src/master/docs/foo/bar.md?mode=edit`)
->
->     ```yaml
->     repo_url: 'https://bitbucket.org/project/repo/'
->     edit_uri_template: 'src/master/docs/{path}?mode=edit'
->     ```
->
-> *   GitLab Static Site Editor:  
->     (e.g. `https://gitlab.com/project/repo/-/sse/master/docs%2Ffoo%2bar.md`)
->
->     ```yaml
->     repo_url: 'https://gitlab.com/project/repo'
->     edit_uri_template: '-/sse/master/docs%2F{path!q}'
->     ```
->
-> *   GitLab Web IDE:  
->     (e.g. `https://gitlab.com/-/ide/project/repo/edit/master/-/docs/foo/bar.md`)
->
->     ```yaml
->     edit_uri_template: 'https://gitlab.com/-/ide/project/repo/edit/master/-/docs/{path}'
->     ```
-
-**default**: `null`
 
 ### site_description
 
-Set the site description. This will add a meta tag to the generated HTML header.
+站点描述，会添加到 HTML 的 meta 标签中。
 
-**default**: `null`
+```yaml
+site_description: 我的项目文档
+```
 
 ### site_author
 
-Set the name of the author. This will add a meta tag to the generated HTML
-header.
+作者名称，会添加到 HTML 的 meta 标签中。
 
-**default**: `null`
+```yaml
+site_author: 作者名称
+```
 
 ### copyright
 
-Set the copyright information to be included in the documentation by the theme.
+版权信息，显示在页面底部。
 
-**default**: `null`
+```yaml
+copyright: Copyright &copy; 2026 MyName
+```
 
-### remote_branch
-
-Set the remote branch to commit to when using `gh-deploy` to deploy to GitHub
-Pages. This option can be overridden by a command line option in `gh-deploy`.
-
-**default**: `gh-pages`
-
-### remote_name
-
-Set the remote name to push to when using `gh-deploy` to deploy to GitHub Pages.
-This option can be overridden by a command line option in `gh-deploy`.
-
-**default**: `origin`
-
-## Documentation layout
+## 文档布局
 
 ### nav
 
-This setting is used to determine the format and layout of the global navigation
-for the site. A minimal navigation configuration could look like this:
+定义站点导航结构。路径相对于 `docs_dir`。
 
 ```yaml
 nav:
-  - 'index.md'
-  - 'about.md'
+  - 首页: index.md
+  - 指南:
+    - 快速开始: guide/getting-started.md
+    - 配置: guide/configuration.md
+  - API: api/reference.md
 ```
 
-All paths in the navigation configuration must be relative to the
-[`docs_dir`](#docs_dir) configuration option. See the section on [configuring
-pages and navigation] for a more detailed breakdown, including how to create
-sub-sections.
+如果未设置 `nav`，MkPandocs 会自动从 `docs_dir` 中收集所有 Markdown 文件生成导航。
 
-Navigation items may also include links to external sites. While titles are
-optional for internal links, they are required for external links. An external
-link may be a full URL or a relative URL. Any path which is not found in the
-files is assumed to be an external link. See the section about [Meta-Data] on
-how ProperDocs determines the page title of a document.
+### docs_dir
+
+文档源文件目录。
 
 ```yaml
-nav:
-  - Introduction: 'index.md'
-  - 'about.md'
-  - 'Issue Tracker': 'https://example.com/'
+docs_dir: docs
 ```
 
-In the above example, the first two items point to local files while the third
-points to an external site.
+**默认值**：`docs`
 
-However, sometimes the ProperDocs site is hosted in a subdirectory of a project's
-site and you may want to link to other parts of the same site without including
-the full domain. In that case, you may use an appropriate relative URL.
+### site_dir
+
+构建输出目录。
 
 ```yaml
-site_url: https://example.com/foo/
-
-nav:
-  - Home: '../'
-  - 'User Guide': 'user-guide.md'
-  - 'Bug Tracker': '/bugs/'
+site_dir: site
 ```
 
-In the above example, two different styles of external links are used. First,
-note that the `site_url` indicates that the ProperDocs site is hosted in the `/foo/`
-subdirectory of the domain. Therefore, the `Home` navigation item is a relative
-link that steps up one level to the server root and effectively points to
-`https://example.com/`. The `Bug Tracker` item uses an absolute path from the
-server root and effectively points to `https://example.com/bugs/`. Of course, the
-`User Guide` points to a local ProperDocs page.
-
-**default**: By default `nav` will contain an alphanumerically sorted, nested
-list of all the Markdown files found within the `docs_dir` and its
-sub-directories. Index files will always be listed first within a sub-section.
+**默认值**：`site`
 
 ### exclude_docs
 
-NEW: **New in version 1.5.**
-
-> DANGER: **Changed in version 1.6:**
->
-> This config no longer applies the "drafts" functionality for `properdocs serve`. If you have draft documents that you want available in "serve" and not "build", replace `exclude_docs` with the new [`draft_docs`](#draft_docs) config option.
-
-This config defines patterns of files (under [`docs_dir`](#docs_dir)) to not be picked up into the built site.
-
-Example:
+使用 `.gitignore` 格式的模式排除文件。
 
 ```yaml
 exclude_docs: |
-  # A file with this name anywhere.
-  api-config.json
-
-  # Top-level "docs/requirements.txt".
-  /requirements.txt
-
-  # Any file with this extension anywhere.
   *.py
-
-  # But keep this particular file.
-  !/foo/example.py
-```
-
-This follows the [.gitignore pattern format](https://git-scm.com/docs/gitignore#_pattern_format).
-
-The following defaults are always implicitly prepended - to exclude dot-files (and directories) as well as the top-level `templates` directory:
-
-```yaml
-exclude_docs: |
-  .*
-  /templates/
-```
-
-So, in order to really start this config fresh, you'd need to specify a negated version of these entries first.
-
-Otherwise you could for example opt only certain dot-files back into the site:
-
-```yaml
-exclude_docs: |
-  # Don't exclude '.assets' although all other '.*' are excluded
-  !.assets
+  drafts/
 ```
 
 ### draft_docs
 
-NEW: **New in version 1.6.**
-
-This config defines patterns of files (under [`docs_dir`](#docs_dir)) to be treated as a draft.  Draft files are available during `properdocs serve` and include a "DRAFT" mark but will not be included in the build. To prevent this effect and make "serve" behave the same as "build", you can run `properdocs serve --clean`.
-
-Example:
+标记为草稿的文件，在 `serve` 时可用但不会包含在构建中。
 
 ```yaml
 draft_docs: |
-  # A "drafts" directory anywhere.
   drafts/
-
-  # A Markdown file ending in _unpublished.md anywhere.
-  *_unpublished.md
-
-  # But keep this particular file.
-  !/foo_unpublished.md
+  *_draft.md
 ```
 
-This follows the [.gitignore pattern format](https://git-scm.com/docs/gitignore#_pattern_format).
+## Pandoc 配置
 
-### not_in_nav
-
-NEW: **New in version 1.5.**
-
-> NEW: **New in version 1.6:**
->
-> If the [`nav`](#nav) config is not specified at all, pages specified in this config will now be excluded from the inferred navigation.
-
-If you want to include some docs into the site but intentionally exclude them from the nav, normally ProperDocs warns about this.
-
-Adding such patterns of files (relative to [`docs_dir`](#docs_dir)) into the `not_in_nav` config will prevent such warnings.
-
-Example:
+所有 Pandoc 相关配置都在 `pandoc` 嵌套节点下。
 
 ```yaml
-nav:
-  - Foo: foo.md
-  - Bar: bar.md
-
-not_in_nav: |
-  /private.md
+pandoc:
+  format: markdown+raw_html+raw_attribute
+  to: html5
+  args: []
+  filters: []
+  lua_filters: []
+  keep_frontmatter: false
+  html_parser: html.parser
+  json_filters: []
 ```
 
-As the previous option, this follows the .gitignore pattern format.
+### pandoc.format
 
-NOTE: Adding a given file to [`exclude_docs`](#exclude_docs) takes precedence over and implies `not_in_nav`.
+Pandoc 的输入格式。
 
-### validation
+```yaml
+pandoc:
+  format: markdown+raw_html+raw_attribute
+```
 
-NEW: **New in version 1.5.**
+**默认值**：`markdown`
 
-Configure the strictness of ProperDocs' diagnostic messages when validating links to documents.
+常用扩展：
 
-This is a tree of configs, and for each one the value can be one of the three: `warn`, `info`, `ignore`. Which cause a logging message of the corresponding severity to be produced. The `warn` level is, of course, intended for use with `properdocs build --strict` (where it becomes an error), which you can employ in continuous testing.
+- `raw_html` — 允许内联 HTML
+- `raw_attribute` — 允许原始属性语法
+- `tex_math_dollars` — 支持 `$...$` 数学公式
+- `fenced_code_blocks` — 支持围栏代码块
+- `backtick_code_blocks` — 支持反引号代码块
 
-The config `validation.links.absolute_links` additionally has a special value `relative_to_docs`, for [validation of absolute links](#validation-of-absolute-links).
+### pandoc.to
 
->? EXAMPLE: **Defaults of this config as of ProperDocs 1.6:**
->
-> ```yaml
-> validation:
->   nav:
->     omitted_files: info
->     not_found: warn
->     absolute_links: info
->   links:
->     not_found: warn
->     anchors: info
->     absolute_links: info
->     unrecognized_links: info
-> ```
->
-> (Note: you shouldn't copy this whole example, because it only duplicates the defaults. Only individual items that differ should be set.)
+Pandoc 的输出格式。
 
-The defaults of some of the behaviors already differ from MkDocs 1.4 and below - they were ignored before.
+```yaml
+pandoc:
+  to: html5
+```
 
->? EXAMPLE: **Configure ProperDocs 1.6 to behave like MkDocs 1.4 and below (reduce strictness):**
->
-> ```yaml
-> validation:
->   absolute_links: ignore
->   unrecognized_links: ignore
->   anchors: ignore
-> ```
-<!-- -->
->! EXAMPLE: **Recommended settings for most sites (maximal strictness):**
->
-> ```yaml
-> validation:
->   omitted_files: warn
->   absolute_links: warn  # Or 'relative_to_docs' - new in ProperDocs 1.6
->   unrecognized_links: warn
->   anchors: warn  # New in ProperDocs 1.6
-> ```
+**默认值**：`html5`
 
-Note how in the above examples we omitted the 'nav' and 'links' keys. Here `absolute_links:` means setting both `nav: absolute_links:` and `links: absolute_links:`.
+### pandoc.args
 
-Full list of values and examples of log messages that they can hide or make more prominent:
+传递给 Pandoc 的额外参数。
 
-*   `validation.nav.omitted_files`
-    * > The following pages exist in the docs directory, but are not included in the "nav" configuration: ...
-*   `validation.nav.not_found`
-    * > A reference to 'foo/bar.md' is included in the 'nav' configuration, which is not found in the documentation files.
-    * > A reference to 'foo/bar.md' is included in the 'nav' configuration, but this file is excluded from the built site.
-*   `validation.nav.absolute_links`
-    * > An absolute path to '/foo/bar.html' is included in the 'nav' configuration, which presumably points to an external resource.
-<!-- -->
-*   `validation.links.not_found`
-    * > Doc file 'example.md' contains a link '../foo/bar.md', but the target is not found among documentation files.
-    * > Doc file 'example.md' contains a link to 'foo/bar.md' which is excluded from the built site.
-*   `validation.links.anchors`
-    * > Doc file 'example.md' contains a link '../foo/bar.md#some-heading', but the doc 'foo/bar.md' does not contain an anchor '#some-heading'.
-    * > Doc file 'example.md' contains a link '#some-heading', but there is no such anchor on this page.
-*   `validation.links.absolute_links`
-    * > Doc file 'example.md' contains an absolute link '/foo/bar.html', it was left as is. Did you mean 'foo/bar.md'?
-*   `validation.links.unrecognized_links`
-    * > Doc file 'example.md' contains an unrecognized relative link '../foo/bar/', it was left as is. Did you mean 'foo/bar.md'?
-    * > Doc file 'example.md' contains an unrecognized relative link 'mail\@example.com', it was left as is. Did you mean 'mailto:mail\@example.com'?
+```yaml
+pandoc:
+  args:
+    - --wrap=none
+    - --number-sections
+```
 
-#### Validation of absolute links
+### pandoc.filters
 
-NEW: **New in version 1.6.**
+Pandoc 过滤器列表（外部程序，通过 JSON 与 Pandoc 通信）。
 
-> Historically, within Markdown, ProperDocs only recognized **relative** links that lead to another physical `*.md` document (or media file). This is a good convention to follow because then the source pages are also freely browsable without ProperDocs, for example on GitHub. Whereas absolute links were left unmodified (making them often not work as expected) or, more recently, warned against. If you dislike having to always use relative links, now you can opt into absolute links and have them work correctly.
+```yaml
+pandoc:
+  filters:
+    - pandoc-crossref
+```
 
-If you set the setting `validation.links.absolute_links` to the new value `relative_to_docs`, all Markdown links starting with `/` will be understood as being relative to the `docs_dir` root. The links will then be validated for correctness according to all the other rules that were already working for relative links in prior versions of ProperDocs. For the HTML output, these links will still be turned relative so that the site still works reliably.
+### pandoc.lua_filters
 
-So, now any document (e.g. "dir1/foo.md") can link to the document "dir2/bar.md" as `[link](/dir2/bar.md)`, in addition to the previously only correct way `[link](../dir2/bar.md)`.
+Lua 过滤器列表，路径相对于当前工作目录。
 
-You have to enable the setting, though. The default is still to just skip the link.
+```yaml
+pandoc:
+  lua_filters:
+    - filters/link_class.lua
+```
 
-> EXAMPLE: **Settings to recognize absolute links and validate them:**
->
-> ```yaml
-> validation:
->   links:
->     absolute_links: relative_to_docs
->     anchors: warn
->     unrecognized_links: warn
-> ```
+### pandoc.keep_frontmatter
 
-## Build directories
+是否保留 YAML frontmatter。设为 `False` 时会剥离 frontmatter（与标准 MkDocs 行为一致）。
+
+```yaml
+pandoc:
+  keep_frontmatter: false
+```
+
+**默认值**：`false`
+
+### pandoc.html_parser
+
+BeautifulSoup 使用的 HTML 解析器。
+
+```yaml
+pandoc:
+  html_parser: html.parser
+```
+
+可选值：`html.parser`（Python 内置）、`lxml`、`html5lib`
+
+**默认值**：`html.parser`
+
+### pandoc.json_filters
+
+JSON AST 过滤器列表。每个过滤器是一个 Python 脚本，通过 stdin 接收 Pandoc JSON AST，处理后通过 stdout 输出。详见 [JSON 过滤器](json-filters.md)。
+
+```yaml
+pandoc:
+  json_filters:
+    - filters/add_target_blank.py
+```
+
+## 主题
 
 ### theme
 
-Sets the theme and theme specific configuration of your documentation site.
-May be either a string or a set of key/value pairs.
-
-If a string, it must be the string name of a known installed theme. For a list
-of available themes visit [Choosing Your Theme].
-
-An example set of key/value pairs might look something like this:
+设置文档主题。
 
 ```yaml
+# 使用内置主题
+theme: mkdocs
+
+# 使用带配置的主题
 theme:
-  name: mkdocs
-  locale: en
-  custom_dir: my_theme_customizations/
-  static_templates:
-    - sitemap.html
-  include_sidebar: false
+  name: material
+  language: zh
+  palette:
+    - scheme: default
+      primary: indigo
+  features:
+    - navigation.instant
+    - search.highlight
 ```
 
-If a set of key/value pairs, the following nested keys can be defined:
+## 插件
 
-> BLOCK:
->
-> #### name
->
-> The string name of a known installed theme. For a list of available themes
-> visit [Choosing Your Theme].
->
-> #### locale
->
-> A code representing the language of your site. See [Localizing your theme]
-> for details.
->
-> #### custom_dir
->
-> A directory containing a custom theme. This can either be a relative
-> directory, in which case it is resolved relative to the directory containing
-> your configuration file or it can be an absolute directory path from the
-> root of your local file system.
->
-> See [Customizing Your Theme][theme_dir] for details if you would like to tweak an
-> existing theme.
->
-> See the [Theme Developer Guide] if you would like to build your own theme
-> from the ground up.
->
-> #### static_templates
->
-> A list of templates to render as static pages. The templates must be located
-> in either the theme's template directory or in the `custom_dir` defined in
-> the theme configuration.
->
-> #### (theme specific keywords)
->
-> Any additional keywords supported by the theme can also be defined. See the
-> documentation for the theme you are using for details.
+### plugins
 
-**default**: `'mkdocs'`
-
-### docs_dir
-
-The directory containing the documentation source markdown files. This can
-either be a relative directory, in which case it is resolved relative to the
-directory containing your configuration file, or it can be an absolute directory
-path from the root of your local file system.
-
-**default**: `'docs'`
-
-### site_dir
-
-The directory where the output HTML and other files are created. This can either
-be a relative directory, in which case it is resolved relative to the directory
-containing your configuration file, or it can be an absolute directory path from
-the root of your local file system.
-
-**default**: `'site'`
-
-> NOTE:
-> If you are using source code control you will normally want to ensure that
-> your *build output* files are not committed into the repository, and only
-> keep the *source* files under version control. For example, if using `git`
-> you might add the following line to your `.gitignore` file:
->
-> ```text
-> site/
-> ```
->
-> If you're using another source code control tool, you'll want to check its
-> documentation on how to ignore specific directories.
-
-### extra_css
-
-Set a list of CSS files (relative to `docs_dir`) to be included by the theme, typically as `<link>` tags.
-
-Example:
+启用的插件列表。
 
 ```yaml
-extra_css:
-  - css/extra.css
-  - css/second_extra.css
+plugins:
+  - search
+  - autorefs
 ```
 
-**default**: `[]` (an empty list).
-
-### extra_javascript
-
-Set a list of JavaScript files in your `docs_dir` to be included by the theme, as `<script>` tags.
-
-> NEW: **Changed in version 1.5:**
->
-> Older versions of MkDocs supported only a plain list of strings, but now several additional config keys are available: `type`, `async`, `defer`.
-
-See the examples and what they produce:
+要禁用所有插件：
 
 ```yaml
-extra_javascript:
-  - some_plain_javascript.js       # <script src="some_plain_javascript.js"></script>
-        # New behavior in MkDocs 1.5:
-  - implicitly_as_module.mjs       # <script src="implicitly_as_module.mjs" type="module"></script>
-        # Config keys only supported since MkDocs 1.5:
-  - path: explicitly_as_module.mjs # <script src="explicitly_as_module.mjs" type="module"></script>
-    type: module
-  - path: deferred_plain.js        # <script src="deferred_plain.js" defer></script>
-    defer: true
-  - path: scripts/async_module.mjs # <script src="scripts/async_module.mjs" type="module" async></script>
-    type: module
-    async: true
+plugins: []
 ```
-
-So, each item can be either:
-
-* a plain string, or
-* a mapping that has the required `path` key and 3 optional keys `type` (string), `async` (boolean), `defer` (boolean).
-
-Only the plain string variant detects the `.mjs` extension and adds `type="module"`, otherwise `type: module` must be written out regardless of extension.
-
-**default**: `[]` (an empty list).
-
-NOTE: `*.js` and `*.css` files, just like any other type of file, are always copied from `docs_dir` into the site's deployed copy, regardless if they're linked to the pages via the above configs or not.
-
-### extra_templates
-
-Set a list of templates in your `docs_dir` to be built by ProperDocs. To see more
-about writing templates for ProperDocs read the documentation about [custom themes]
-and specifically the section about the [available variables] to
-templates. See the example in [extra_css] for usage.
-
-**default**: `[]` (an empty list).
-
-### extra
-
-A set of key-value pairs, where the values can be any valid YAML construct, that
-will be passed to the template. This allows for great flexibility when creating
-custom themes.
-
-For example, if you are using a theme that supports displaying the project
-version, you can pass it to the theme like this:
-
-```yaml
-extra:
-  version: 1.0
-```
-
-**default**: By default `extra` will be an empty key-value mapping.
-
-## Preview controls
-
-## Live Reloading
-
-### watch
-
-Determines additional directories to watch when running `properdocs serve`.
-Configuration is a YAML list.
-
-```yaml
-watch:
-  - directory_a
-  - directory_b
-```
-
-Allows a custom default to be set without the need to pass it through the `-w`/`--watch`
-option every time the `properdocs serve` command is called.
-
-> NOTE:
-> The paths provided via the configuration file are relative to the configuration file.
->
-> The paths provided via the `-w`/`--watch` CLI parameters are not.
-
-### use_directory_urls
-
-This setting controls the directory structure of the generated documentation, and thereby the URL format used for linking to pages.
-
-The following tables demonstrate how the directory structure and URLs used on the site differ when
-setting `use_directory_urls` to `true` or `false`.
-
-**`use_directory_urls: false`**
-
-This setting is needed when the documentation is hosted on systems that can't
-access the file `X/index.html` when given the URL `X`. When set to `false`,
-no additional `X` directory is created, and the file is simply stored as `X.html`.
-Links are created that point directly to the target *file* rather than a target
-*directory*.
-
-Source file      | Generated File     | URL Format
----------------- | ------------------ | -------------------
-index.md         | index.html         | /index.html
-api-guide.md     | api-guide.html     | /api-guide.html
-about/license.md | about/license.html | /about/license.html
-
-For example, this needs to be set to `false` when:
-
-* opening pages directly from the file system
-* publishing the documentation to a static S3 website.
-
-**`use_directory_urls: true`**
-
-The default style of `use_directory_urls: true` creates more user friendly URLs,
-and is usually what you'll want to use.
-
-Source file      | Generated File            | URL Format
----------------- | ------------------------- | ---------------
-index.md         | /index.html               | /
-api-guide.md     | /api-guide/index.html     | /api-guide/
-about/license.md | /about/license/index.html | /about/license/
-
-**default**: `true`
-
-### strict
-
-Determines how warnings are handled. Set to `true` to halt processing when a
-warning is raised. Set to `false` to print a warning and continue processing.
-
-This is also available as a command line flag: `--strict`.
-
-**default**: `false`
-
-### dev_addr
-
-Determines the address used when running `properdocs serve`. Must be of the format
-`IP:PORT`.
-
-Allows a custom default to be set without the need to pass it through the
-`--dev-addr` option every time the `properdocs serve` command is called.
-
-**default**: `'127.0.0.1:8000'`
-
-See also: [site_url](#site_url).
-
-## Formatting options
-
-### markdown_extensions
-
-ProperDocs uses the [Python Markdown][pymkd] library to translate Markdown files
-into HTML. Python Markdown supports a variety of [extensions][pymdk-extensions]
-that customize how pages are formatted. This setting lets you enable a list of
-extensions beyond the ones that ProperDocs uses by default (`meta`, `toc`, `tables`,
-and `fenced_code`).
-
-For example, to enable the [SmartyPants typography extension][smarty], use:
-
-```yaml
-markdown_extensions:
-  - smarty
-```
-
-Some extensions provide configuration options of their own. If you would like to
-set any configuration options, then you can nest a key/value mapping
-(`option_name: option value`) of any options that a given extension supports.
-See the documentation for the extension you are using to determine what options
-they support.
-
-For example, to enable permalinks in the (included) `toc` extension, use:
-
-```yaml
-markdown_extensions:
-  - toc:
-      permalink: true
-```
-
-Note that a colon (`:`) must follow the extension name (`toc`) and then on a new
-line the option name and value must be indented and separated by a colon. If you
-would like to define multiple options for a single extension, each option must be
-defined on a separate line:
-
-```yaml
-markdown_extensions:
-  - toc:
-      permalink: true
-      separator: "_"
-```
-
-Add an additional item to the list for each extension. If you have no
-configuration options to set for a specific extension, then simply omit options
-for that extension:
-
-```yaml
-markdown_extensions:
-  - smarty
-  - toc:
-      permalink: true
-  - sane_lists
-```
-
-> NOTE: **Dynamic config values.**
->
-> To dynamically configure the extensions, you can get the config values from [environment variables](#environment-variables) or [obtain paths](#paths-relative-to-the-current-file-or-site) of the currently rendered Markdown file or the overall ProperDocs site.
-
-In the above examples, each extension is a list item (starts with a `-`). As an
-alternative, key/value pairs can be used instead. However, in that case an empty
-value must be provided for extensions for which no options are defined.
-Therefore, the last example above could also be defined as follows:
-
-```yaml
-markdown_extensions:
-  smarty: {}
-  toc:
-    permalink: true
-  sane_lists: {}
-```
-
-This alternative syntax is required if you intend to override some options via
-[inheritance].
-
-> NOTE: **More extensions.**
->
-> The Python-Markdown documentation provides a [list of extensions][exts]
-> which are available out-of-the-box. For a list of configuration options
-> available for a given extension, see the documentation for that extension.
->
-> You may also install and use various third party extensions ([Python-Markdown wiki], [ProperDocs project catalog][catalog]). Consult
-> the documentation provided by those extensions for installation instructions
-> and available configuration options.
-
-**default**: `[]` (an empty list).
 
 ### hooks
 
-NEW: **New in version 1.4.**
-
-A list of paths to Python scripts (relative to `mkpandocs.yml`) that are loaded and used as [plugin](#plugins) instances.
-
-For example:
+Python 脚本列表，作为简易插件使用。脚本中可以定义插件事件处理函数。
 
 ```yaml
 hooks:
   - my_hooks.py
 ```
 
-Then the file `my_hooks.py` can contain any [plugin event handlers](../dev-guide/plugins.md#events) (without `self`), e.g.:
+## 其他配置
 
-```python
-def on_page_markdown(markdown, **kwargs):
-    return markdown.replace('a', 'z')
-```
+### use_directory_urls
 
->? EXAMPLE: **Advanced example:**
->
-> This produces warnings based on the Markdown content (and warnings are fatal in [strict](#strict) mode):
->
-> ```python
-> import logging, re
-> import properdocs.plugins
->
-> log = logging.getLogger('properdocs')
->
-> @properdocs.plugins.event_priority(-50)
-> def on_page_markdown(markdown, page, **kwargs):
->     path = page.file.src_uri
->     for m in re.finditer(r'\bhttp://[^) ]+', markdown):
->         log.warning(f"Documentation file '{path}' contains a non-HTTPS link: {m[0]}")
-> ```
-
-This does not enable any new abilities compared to [plugins][], it only simplifies one-off usages, as these don't need to be *installed* like plugins do.
-
-Note that for `properdocs serve` the hook module will *not* be reloaded on each build.
-
-You might have seen this feature in the [mkdocs-simple-hooks plugin](https://github.com/aklajnert/mkdocs-simple-hooks). If using standard method names, it can be directly replaced, e.g.:
-
-```diff
--plugins:
--  - mkdocs-simple-hooks:
--      hooks:
--        on_page_markdown: 'my_hooks:on_page_markdown'
-+hooks:
-+  - my_hooks.py
-```
-
-> NEW: **New in ProperDocs 1.6.**
->
-> If a hook file has a file `foo.py` adjacent to it, it can use the normal Python syntax `import foo` to access its functions.
->
-> In older versions of MkDocs, a workaround was necessary to make this work - adding the path to `sys.path`.
-
-### plugins
-
-A list of plugins (with optional configuration settings) to use when building
-the site. See the [Plugins] documentation for full details.
-
-**default**: `['search']` (the "search" plugin included with ProperDocs).
-
-If the `plugins` config setting is defined in the `mkpandocs.yml` config file, then
-any defaults (such as `search`) are ignored and you need to explicitly re-enable
-the defaults if you would like to continue using them:
+是否使用目录式 URL。
 
 ```yaml
-plugins:
-  - search
-  - your_other_plugin
+use_directory_urls: true
 ```
 
-To define options for a given plugin, use a nested set of key/value pairs:
+**默认值**：`true`
+
+### repo_url
+
+源代码仓库链接。
 
 ```yaml
-plugins:
-  - search
-  - your_other_plugin:
-      option1: value
-      option2: other value
+repo_url: https://github.com/user/repo
 ```
 
-To completely disable all plugins, including any defaults, set the `plugins`
-setting to an empty list:
+### edit_uri
+
+编辑链接的 URI 后缀。
 
 ```yaml
-plugins: []
+edit_uri: blob/main/docs/
 ```
 
-#### `enabled` option
+### strict
 
-> NEW: **New in ProperDocs 1.6.**
->
-> Each plugin has its own options keys. However ProperDocs also ensures that each plugin has the `enabled` boolean option. This can be used to conditionally enable a particular plugin, as in the following example:
->
-> ```yaml
-> plugins:
->   - search
->   - code-validator:
->       enabled: !ENV [LINT, false]
-> ```
->
-> See: [Environment variables](#environment-variables)
-
-#### Alternate syntax
-
-In the above examples, each plugin is a list item (starts with a `-`). As an
-alternative, key/value pairs can be used instead. However, in that case an empty
-value must be provided for plugins for which no options are defined. Therefore,
-the last example above could also be defined as follows:
+严格模式，遇到警告时停止构建。
 
 ```yaml
-plugins:
-  search: {}
-  your_other_plugin:
-    option1: value
-    option2: other value
+strict: false
 ```
 
-This alternative syntax is required if you intend to override some options via
-[inheritance].
+### dev_addr
 
-#### Search
-
-A search plugin is provided by default with ProperDocs which uses [lunr.js] as a
-search engine. The following config options are available to alter the behavior
-of the search plugin:
-
-##### **separator**
-
-A regular expression which matches the characters used as word separators when
-building the index. By default whitespace and the hyphen (`-`) are used. To add
-the dot (`.`) as a word separator you might do this:
+开发服务器地址。
 
 ```yaml
-plugins:
-  - search:
-      separator: '[\s\-\.]+'
+dev_addr: 127.0.0.1:8000
 ```
 
-**default**: `'[\s\-]+'`
+### extra
 
-##### **min_search_length**
-
-An integer value that defines the minimum length for a search query. By default
-searches shorter than 3 chars in length are ignored as search result quality with
-short search terms are poor. However, for some use cases (such as documentation
-about Message Queues which might generate searches for 'MQ') it may be preferable
-to set a shorter limit.
+传递给模板的额外数据。
 
 ```yaml
-plugins:
-  - search:
-      min_search_length: 2
+extra:
+  version: 1.0.0
 ```
 
-**default**: 3
+### extra_css
 
-##### **lang**
-
-A list of languages to use when building the search index as identified by their
-[ISO 639-1] language codes. With [Lunr Languages], the following languages are
-supported:
-
-* `ar`: Arabic
-* `da`: Danish
-* `nl`: Dutch
-* `en`: English
-* `fi`: Finnish
-* `fr`: French
-* `de`: German
-* `hu`: Hungarian
-* `it`: Italian
-* `ja`: Japanese
-* `no`: Norwegian
-* `pt`: Portuguese
-* `ro`: Romanian
-* `ru`: Russian
-* `es`: Spanish
-* `sv`: Swedish
-* `th`: Thai
-* `tr`: Turkish
-* `vi`: Vietnamese
-
-You may [contribute additional languages].
-
-WARNING:
-While search does support using multiple languages together, it is best not
-to add additional languages unless you really need them. Each additional
-language adds significant bandwidth requirements and uses more browser
-resources. Generally, it is best to keep each instance of ProperDocs to a single
-language.
-
-NOTE:
-Lunr Languages does not currently include support for Chinese or other Asian
-languages. However, some users have reported decent results using Japanese.
-
-**default**: The value of `theme.locale` if set, otherwise `[en]`.
-
-##### **prebuild_index**
-
-Optionally generates a pre-built index of all pages, which provides some
-performance improvements for larger sites. Before enabling, confirm that the
-theme you are using explicitly supports using a prebuilt index (the builtin
-themes do). Set to `true` to enable.
-
-WARNING:
-This option requires that [Node.js] be installed and the command `node` be
-on the system path. If the call to `node` fails for any reason, a warning
-is issued and the build continues uninterrupted. You may use the `--strict`
-flag when building to cause such a failure to raise an error instead.
-
-NOTE:
-On smaller sites, using a pre-built index is not recommended as it creates a
-significant increase is bandwidth requirements with little to no noticeable
-improvement to your users. However, for larger sites (hundreds of pages),
-the bandwidth increase is relatively small and your users will notice a
-significant improvement in search performance.
-
-**default**: `False`
-
-##### **indexing**
-
-Configures what strategy the search indexer will use when building the index
-for your pages. This property is particularly useful if your project is large
-in scale, and the index takes up an enormous amount of disk space.
+额外的 CSS 文件。
 
 ```yaml
-plugins:
-  - search:
-      indexing: 'full'
+extra_css:
+  - css/custom.css
 ```
 
-###### Options
+### extra_javascript
 
-Option | Description
------- | -----------
-`full` | Indexes the title, section headings, and full text of each page.
-`sections` | Indexes the title and section headings of each page.
-`titles` | Indexes only the title of each page.
+额外的 JavaScript 文件。
 
-**default**: `full`
+```yaml
+extra_javascript:
+  - js/custom.js
+```
 
-## Special YAML tags
+### watch
 
-### Environment variables
+`serve` 时额外监视的目录。
 
-In most cases, the value of a configuration option is set directly in the
-configuration file. However, as an option, the value of a configuration option
-may be set to the value of an environment variable using the `!ENV` tag. For
-example, to set the value of the `site_name` option to the value of the
-variable `SITE_NAME` the YAML file may contain the following:
+```yaml
+watch:
+  - properdocs
+```
+
+## 验证配置
+
+### validation
+
+配置链接验证的严格程度。每个值可以是 `warn`、`info`、`ignore`。
+
+```yaml
+validation:
+  nav:
+    omitted_files: info
+    not_found: warn
+    absolute_links: info
+  links:
+    not_found: warn
+    anchors: info
+    absolute_links: info
+    unrecognized_links: info
+```
+
+## 环境变量
+
+可以使用 `!ENV` 标签从环境变量读取配置值。
 
 ```yaml
 site_name: !ENV SITE_NAME
+site_name: !ENV [SITE_NAME, '默认站点名称']
 ```
 
-If the environment variable is not defined, then the configuration setting
-would be assigned a `null` (or `None` in Python) value. A default value can be
-defined as the last value in a list. Like this:
+## 完整配置示例
 
 ```yaml
-site_name: !ENV [SITE_NAME, 'My default site name']
-```
+site_name: 我的项目文档
+site_url: https://example.com/docs/
+site_description: 项目文档
+site_author: 开发团队
 
-Multiple fallback variables can be used as well. Note that the last value is
-not an environment variable, but must be a value to use as a default if none
-of the specified environment variables are defined.
-
-```yaml
-site_name: !ENV [SITE_NAME, OTHER_NAME, 'My default site name']
-```
-
-Simple types defined within an environment variable such as string, bool,
-integer, float, datestamp and null are parsed as if they were defined directly
-in the YAML file, which means that the value will be converted to the
-appropriate type. However, complex types such as lists and key/value pairs
-cannot be defined within a single environment variable.
-
-For more details, see the [pyyaml_env_tag](https://github.com/waylan/pyyaml-env-tag)
-project.
-
-### Paths relative to the current file or site
-
-NEW: **New in version 1.5.**
-
-Some Markdown extensions can benefit from knowing the path of the Markdown file that's currently being processed, or just the root path of the current site. For that, the special tag `!relative` can be used in most contexts within the config file, though the only known usecases are within [`markdown_extensions`](#markdown_extensions).
-
-Examples of the possible values are:
-
-```yaml
-- !relative  # Relative to the directory of the current Markdown file
-- !relative $docs_dir  # Path of the docs_dir
-- !relative $config_dir  # Path of the directory that contains the main mkpandocs.yml
-- !relative $config_dir/some/child/dir  # Some subdirectory of the root config directory
-```
-
-(Here, `$docs_dir` and `$config_dir` are currently the *only* special prefixes that are recognized.)
-
-Example:
-
-```yaml
-markdown_extensions:
-  - pymdownx.snippets:
-      base_path: !relative  # Relative to the current Markdown file
-```
-
-This allows the [pymdownx.snippets] extension to include files relative to the current Markdown file, which without this tag it would have no way of knowing.
-
-> NOTE: Even for the default case, any extension's base path is technically the *current working directory* although the assumption is that it's the *directory of mkpandocs.yml*. So even if you don't want the paths to be relative, to improve the default behavior, always prefer to use this idiom:
->
-> ```yaml
-> markdown_extensions:
->   - pymdownx.snippets:
->       base_path: !relative $config_dir  # Relative to the root directory with mkpandocs.yml
-> ```
-
-## Configuration Inheritance
-
-Generally, a single file would hold the entire configuration for a site.
-However, some organizations may maintain multiple sites which all share a common
-configuration across them. Rather than maintaining separate configurations for
-each, the common configuration options can be defined in a parent configuration
-file which each site's primary configuration file inherits.
-
-To define the parent for a configuration file, set the `INHERIT` (all caps) key
-to the path of the parent file. The path must be relative to the location of the
-primary file.
-
-For configuration options to be merged with a parent configuration, those
-options must be defined as key/value pairs. Specifically, the
-[markdown_extensions] and [plugins](#plugins) options must use the alternative syntax
-which does not use list items (lines which start with  `-`).
-
-For example, suppose the common (parent) configuration is defined in `base.yml`:
-
-```yaml
-theme:
-  name: mkdocs
-  locale: en
-  highlightjs: true
-
-markdown_extensions:
-  toc:
-    permalink: true
-  admonition: {}
-```
-
-Then, for the "foo" site, the primary configuration file would be defined at
-`foo/mkpandocs.yml`:
-
-```yml
-INHERIT: ../base.yml
-site_name: Foo Project
-site_url: https://example.com/foo
-```
-
-When running `properdocs build`, the file at `foo/mkpandocs.yml` would be passed in as
-the configuration file. ProperDocs will then parse that file, retrieve and parse the
-parent file `base.yml` and deep merge the two. This would result in ProperDocs
-receiving the following merged configuration:
-
-```yaml
-site_name: Foo Project
-site_url: https://example.com/foo
+repo_url: https://github.com/user/repo
+edit_uri: blob/main/docs/
 
 theme:
-  name: mkdocs
-  locale: en
-  highlightjs: true
+  name: material
+  language: zh
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
 
-markdown_extensions:
-  toc:
-    permalink: true
-  admonition: {}
+nav:
+  - 首页: index.md
+  - 指南:
+    - 入门: guide/getting-started.md
+    - 配置: guide/configuration.md
+
+pandoc:
+  format: markdown+raw_html+raw_attribute
+  to: html5
+  args:
+    - --wrap=none
+  html_parser: html.parser
+
+plugins:
+  - search
+  - autorefs
+
+strict: false
+use_directory_urls: true
 ```
-
-Deep merging allows you to add and/or override various values in your primary
-configuration file. For example, suppose for one site you wanted to add support
-for definition lists, use a different symbol for permalinks, and define a
-different separator. In that site's primary configuration file you could do:
-
-```yaml
-INHERIT: ../base.yml
-site_name: Bar Project
-site_url: https://example.com/bar
-
-markdown_extensions:
-  def_list: {}
-  toc:
-    permalink: 
-    separator: "_"
-```
-
-In that case, the above configuration would be deep merged with `base.yml` and
-result in the following configuration:
-
-```yaml
-site_name: Bar Project
-site_url: https://example.com/bar
-
-theme:
-  name: mkdocs
-  locale: en
-  highlightjs: true
-
-markdown_extensions:
-  def_list: {}
-  toc:
-    permalink: 
-    separator: "_"
-  admonition: {}
-```
-
-Notice that the `admonition` extension was retained from the parent
-configuration, the `def_list` extension was added, the value of
-`toc.permalink` was replaced, and the value of `toc.separator` was added.
-
-You can replace or merge the value of any key. However, any non-key is always
-replaced. Therefore, you cannot append items to a list. You must redefine the
-entire list.
-
-As the [nav] configuration is made up of nested lists, this means that you
-cannot merge navigation items. Of course, you can replace the entire `nav`
-configuration with a new one. However, it is generally expected that the entire
-navigation would be defined in the primary configuration file for a project.
-
-WARNING:
-As a reminder, all path based configuration options must be relative to the
-primary configuration file and ProperDocs does not alter the paths when merging.
-Therefore, defining paths in a parent file which is inherited by multiple
-different sites may not work as expected. It is generally best to define
-path based options in the primary configuration file only.
-
-The inheritance can also be used as a quick way to override keys on the command line - by using stdin as the config file. For example:
-
-```bash
-echo '{INHERIT: mkpandocs.yml, site_name: "Renamed site"}' | properdocs build -f -
-```
-
-[Theme Developer Guide]: ../dev-guide/themes.md
-[custom themes]: ../dev-guide/themes.md
-[available variables]: ../dev-guide/themes.md#template-variables
-[pymdk-extensions]: https://python-markdown.github.io/extensions/
-[pymkd]: https://python-markdown.github.io/
-[smarty]: https://python-markdown.github.io/extensions/smarty/
-[exts]: https://python-markdown.github.io/extensions/
-[Python-Markdown wiki]: https://github.com/Python-Markdown/markdown/wiki/Third-Party-Extensions
-[catalog]: https://github.com/properdocs/catalog
-[configuring pages and navigation]: writing-your-docs.md#configure-pages-and-navigation
-[Meta-Data]: writing-your-docs.md#meta-data
-[theme_dir]: customizing-your-theme.md#using-the-theme-custom_dir
-[choosing your theme]: choosing-your-theme.md
-[Localizing your theme]: localizing-your-theme.md
-[extra_css]: #extra_css
-[Plugins]: ../dev-guide/plugins.md
-[lunr.js]: https://lunrjs.com/
-[ISO 639-1]: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-[Lunr Languages]: https://github.com/MihaiValentin/lunr-languages#lunr-languages-----
-[contribute additional languages]: https://github.com/MihaiValentin/lunr-languages/blob/master/CONTRIBUTING.md
-[Node.js]: https://nodejs.org/
-[markdown_extensions]: #markdown_extensions
-[nav]: #nav
-[inheritance]: #configuration-inheritance
-[pymdownx.snippets]: https://facelessuser.github.io/pymdown-extensions/extensions/snippets/

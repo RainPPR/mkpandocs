@@ -1,213 +1,93 @@
-# Getting Started with ProperDocs
+# 入门教程
 
-An introductory tutorial!
+本教程将带你从零开始搭建一个 MkPandocs 文档站点。
 
----
+## 安装
 
-## Installation
-
-To install ProperDocs and a basic theme for it, run the following command from the command line:
+### 使用 uv（推荐）
 
 ```bash
-pip install properdocs properdocs-theme-mkdocs
+# 安装 uv（如果尚未安装）
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# 添加 MkPandocs 依赖
+uv add mkpandocs
+
+# 安装 Pandoc 依赖
+uv run mkpandocs install-deps
 ```
 
-For more details, see the [Installation Guide].
-
-## Creating a new project
-
-Getting started is super easy. To create a new project, run the following
-command from the command line:
+### 使用 pip
 
 ```bash
-properdocs new my-project
-cd my-project
+pip install mkpandocs
+mkpandocs install-deps
 ```
 
-Take a moment to review the initial project that has been created for you.
-
-![The initial ProperDocs layout](img/initial-layout.png)
-
-There's a single configuration file named `mkpandocs.yml`, and a folder named
-`docs` that will contain your documentation source files (`docs` is
-the default value for the [docs_dir] configuration setting). Right now the `docs`
-folder just contains a single documentation page, named `index.md`.
-
-ProperDocs comes with a built-in dev-server that lets you preview your documentation
-as you work on it. Make sure you're in the same directory as the `mkpandocs.yml`
-configuration file, and then start the server by running the `properdocs serve`
-command:
-
-```console
-$ properdocs serve
-INFO    -  Building documentation...
-INFO    -  Cleaning site directory
-INFO    -  Documentation built in 0.22 seconds
-INFO    -  [15:50:43] Watching paths for changes: 'docs', 'mkpandocs.yml'
-INFO    -  [15:50:43] Serving on http://127.0.0.1:8000/
-```
-
-Open up <http://127.0.0.1:8000/> in your browser, and you'll see the default
-home page being displayed:
-
-![The ProperDocs live server](img/screenshot.png)
-
-The dev-server also supports auto-reloading, and will rebuild your documentation
-whenever anything in the configuration file, documentation directory, or theme
-directory changes.
-
-Open the `docs/index.md` document in your text editor of choice, change the
-initial heading to `MkLorum`, and save your changes. Your browser will
-auto-reload and you should see your updated documentation immediately.
-
-Now try editing the configuration file: `mkpandocs.yml`. Change the
-[`site_name`][site_name] setting to `MkLorum` and save the file.
-
-```yaml
-site_name: MkLorum
-```
-
-Your browser should immediately reload, and you'll see your new site name take
-effect.
-
-![The site_name setting](img/site-name.png)
-
-NOTE:
-The [`site_name`][site_name] configuration
-option is the only required option in your configuration file.
-
-## Adding pages
-
-Now add a second page to your documentation:
+### 从源码安装
 
 ```bash
-curl 'https://jaspervdj.be/lorem-markdownum/markdown.txt' > docs/about.md
+git clone https://github.com/RainPPR/mkpandocs.git
+cd mkpandocs
+uv sync
+uv run mkpandocs install-deps
 ```
 
-As our documentation site will include some navigation headers, you may want to
-edit the configuration file and add some information about the order, title, and
-nesting of each page in the navigation header by adding a [`nav`][nav]
-setting:
-
-```yaml
-site_name: MkLorum
-nav:
-  - Home: index.md
-  - About: about.md
-```
-
-Save your changes and you'll now see a navigation bar with `Home` and `About`
-items on the left as well as `Search`, `Previous`, and `Next` items on the
-right.
-
-![Screenshot](img/multipage.png)
-
-Try the menu items and navigate back and forth between pages. Then click on
-`Search`. A search dialog will appear, allowing you to search for any text on
-any page. Notice that the search results include every occurrence of the search
-term on the site and links directly to the section of the page in which the
-search term appears. You get all of that with no effort or configuration on your
-part!
-
-![Screenshot](img/search.png)
-
-## Theming our documentation
-
-Now change the configuration file to alter how the documentation is displayed by
-changing the theme. Edit the `mkpandocs.yml` file and add a [`theme`][theme] setting:
-
-```yaml
-site_name: MkLorum
-nav:
-  - Home: index.md
-  - About: about.md
-theme: readthedocs
-```
-
-Save your changes, and you'll see the ReadTheDocs theme being used.
-
-![Screenshot](img/readthedocs.png)
-
-## Changing the Favicon Icon
-
-By default, ProperDocs uses the [ProperDocs favicon] icon. To use a different icon, create
-an `img` subdirectory in the `docs` directory and copy your custom `favicon.ico`
-file to that directory. ProperDocs will automatically detect and use that file as your
-favicon icon.
-
-[ProperDocs favicon]: img/favicon.ico
-
-## Building the site
-
-That's looking good. You're ready to deploy the first pass of your `MkLorum`
-documentation. First build the documentation:
+## 创建新项目
 
 ```bash
-properdocs build
+mkpandocs new my-docs
+cd my-docs
 ```
 
-This will create a new directory, named `site`. Take a look inside the
-directory:
+这将创建以下目录结构：
 
-```console
-$ ls site
-about  fonts  index.html  license  search.html
-css    img    js          properdocs   sitemap.xml
+```
+my-docs/
+├── mkpandocs.yml    # 配置文件
+└── docs/
+    └── index.md     # 文档首页
 ```
 
-Notice that your source documentation has been output as two HTML files named
-`index.html` and `about/index.html`. You also have various other media that's
-been copied into the `site` directory as part of the documentation theme. You
-even have a `sitemap.xml` file and `properdocs/search_index.json`.
+## 编写第一篇文档
 
-If you're using source code control such as `git` you probably don't want to
-check your documentation builds into the repository. Add a line containing
-`site/` to your `.gitignore` file.
+编辑 `docs/index.md`：
+
+```markdown
+# 我的项目文档
+
+欢迎使用我的项目。
+
+## 功能特性
+
+- 支持 Pandoc 渲染
+- 支持 LaTeX 数学公式：$E = mc^2$
+- 支持代码高亮
+```
+
+## 本地预览
 
 ```bash
-echo "site/" >> .gitignore
+mkpandocs serve
 ```
 
-If you're using another source code control tool you'll want to check its
-documentation on how to ignore specific directories.
+访问 [http://127.0.0.1:8000](http://127.0.0.1:8000) 查看文档。开发服务器支持自动重载——当你修改文档或配置文件时，浏览器会自动刷新。
 
-## Other Commands and Options
-
-There are various other commands and options available. For a complete list of
-commands, use the `--help` flag:
+## 构建静态站点
 
 ```bash
-properdocs --help
+mkpandocs build
 ```
 
-To view a list of options available on a given command, use the `--help` flag
-with that command. For example, to get a list of all options available for the
-`build` command run the following:
+生成的静态文件位于 `site/` 目录，可以直接部署到任何静态文件托管服务。
 
-```bash
-properdocs build --help
-```
+## 命令概览
 
-## Deploying
-
-The documentation site that you just built only uses static files so you'll be
-able to host it from pretty much anywhere. Simply upload the contents of the
-entire `site` directory to wherever you're hosting your website from and
-you're done. For specific instructions on a number of common hosts, see the
-[Deploying your Docs][deploy] page.
-
-## Getting help
-
-See the [User Guide] for more complete documentation of all of ProperDocs' features.
-
-To get help with ProperDocs, please use the [GitHub discussions] or [GitHub issues].
-
-[Installation Guide]: user-guide/installation.md
-[docs_dir]: user-guide/configuration.md#docs_dir
-[deploy]: user-guide/deploying-your-docs.md
-[nav]: user-guide/configuration.md#nav
-[GitHub discussions]: https://github.com/properdocs/properdocs/discussions
-[GitHub issues]: https://github.com/properdocs/properdocs/issues
-[site_name]: user-guide/configuration.md#site_name
-[theme]: user-guide/configuration.md#theme
-[User Guide]: user-guide/README.md
+| 命令 | 说明 |
+|------|------|
+| `mkpandocs new [dir]` | 创建新项目 |
+| `mkpandocs serve` | 启动开发服务器 |
+| `mkpandocs build` | 构建静态站点 |
+| `mkpandocs gh-deploy` | 部署到 GitHub Pages |
+| `mkpandocs install-deps` | 安装 Pandoc 依赖 |
+| `mkpandocs get-deps` | 显示所需依赖 |

@@ -411,7 +411,7 @@ class PageTests(unittest.TestCase):
 
     def test_page_render_with_pandoc_args(self):
         """Test rendering with custom pandoc arguments."""
-        cfg = load_config(docs_dir=DOCS_DIR, pandoc_args=['--wrap=none'])
+        cfg = load_config(docs_dir=DOCS_DIR, pandoc={'args': ['--wrap=none']})
         fl = File('test.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)
         pg = Page('Test', fl, cfg)
         pg.markdown = '# Test\n\nContent'
@@ -421,7 +421,7 @@ class PageTests(unittest.TestCase):
 
     def test_page_render_with_lua_filter(self):
         """Test rendering with lua filters (if available)."""
-        cfg = load_config(docs_dir=DOCS_DIR, pandoc_lua_filters=[])
+        cfg = load_config(docs_dir=DOCS_DIR, pandoc={'lua_filters': []})
         fl = File('test.md', cfg.docs_dir, cfg.site_dir, cfg.use_directory_urls)
         pg = Page('Test', fl, cfg)
         pg.markdown = '# Test\n\nContent'

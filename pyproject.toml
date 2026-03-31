@@ -48,6 +48,7 @@ dependencies = [
     "pathspec >=0.11.1",
     "platformdirs >=2.2.0",
     "colorama >=0.4; platform_system == 'Windows'",
+    "types-pyyaml>=6.0.12.20250915",
 ]
 
 [tool.uv]
@@ -64,11 +65,10 @@ i18n = [
 [dependency-groups]
 dev = [
     "ruff",
-    "mypy",
-    "types-PyYAML",
+    "mypy"
 ]
 docs = [
-    # "markdown-callouts",
+    "markdown-callouts",
     "mdx-gh-links",
     "mkdocs-autorefs",
     "mkdocs-click",
