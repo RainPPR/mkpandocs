@@ -52,6 +52,7 @@ nav:
     - 命令行: user-guide/cli.md
     - 部署: user-guide/deploying.md
     - JSON 过滤器: user-guide/json-filters.md
+    - 过滤器示例: user-guide/example-filters.md
   - 开发指南:
     - 插件开发: dev-guide/plugins.md
     - 主题开发: dev-guide/themes.md
