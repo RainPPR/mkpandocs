@@ -49,6 +49,7 @@ dependencies = [
     "platformdirs >=2.2.0",
     "colorama >=0.4; platform_system == 'Windows'",
     "types-pyyaml>=6.0.12.20250915",
+    "tenacity>=9.1.4",
 ]
 
 [tool.uv]

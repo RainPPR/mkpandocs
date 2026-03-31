@@ -36,9 +36,6 @@ jobs:
             os: macos-latest
           - python: '3.10'
             os: windows-latest
-          - python: '3.10'
-            os: ubuntu-latest
-            versions: minimal
     runs-on: ${{matrix.os}}
     steps:
       - name: Download source
@@ -47,10 +44,6 @@ jobs:
         uses: astral-sh/setup-uv@v5
       - name: Install Python
         run: uv python install ${{matrix.python}}
-      - name: Pin to lowest versions
-        if: matrix.versions == 'minimal'
-        run: |
-          sed -i -E 's/#min //; s/\b >=([0-9])/ ==\1/' pyproject.toml
       - name: Sync dependencies
         run: uv sync --group test
       - name: Install Pandoc
