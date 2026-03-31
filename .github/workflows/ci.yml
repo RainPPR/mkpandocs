@@ -24,7 +24,7 @@ jobs:
       - name: Install Python
         run: uv python install ${{matrix.python}}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Sync dependencies
         run: uv sync --group test
       - name: Install Pandoc
