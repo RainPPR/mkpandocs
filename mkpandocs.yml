@@ -1,10 +1,18 @@
 site_name: MkPandocs
 site_url: https://rainppr.github.io/mkpandocs/
 site_description: 使用 Pandoc 渲染的项目文档生成器。
-site_author: MkPandocs Team
-
+site_author: RainPPR
+repo_name: RainPPR/mkpandocs
 repo_url: https://github.com/RainPPR/mkpandocs/
 edit_uri: blob/master/docs/
+copyright: Copyright &copy; 2026 <a href="https://github.com/RainPPR">RainPPR</a>
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/RainPPR
+    - icon: fontawesome/brands/x-twitter
+      link: https://x.com/rainppr2008
 
 theme:
   name: material
@@ -58,8 +66,6 @@ plugins:
   - search
   - autorefs
   - tags
-
-copyright: Copyright &copy; 2026 <a href="https://github.com/RainPPR">RainPPR</a>
 
 watch:
   - properdocs
