@@ -12,30 +12,10 @@ jobs:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     strategy:
       fail-fast: false
+      max-parallel: 3
       matrix:
-        include:
-          - python: '3.14'
-            os: ubuntu-latest
-          - python: '3.14'
-            os: windows-latest
-          - python: '3.14'
-            os: macos-latest
-          - python: '3.13'
-            os: ubuntu-latest
-          - python: '3.13'
-            os: windows-latest
-          - python: '3.12'
-            os: macos-latest
-          - python: '3.12'
-            os: ubuntu-latest
-          - python: '3.12'
-            os: windows-latest
-          - python: '3.11'
-            os: ubuntu-latest
-          - python: '3.11'
-            os: macos-latest
-          - python: '3.10'
-            os: windows-latest
+        python: [3.14, 3.13, 3.12, 3.11, 3.10]
+        os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{matrix.os}}
     steps:
       - name: Download source
