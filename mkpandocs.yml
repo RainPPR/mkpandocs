@@ -58,9 +58,12 @@ nav:
     - 架构: dev-guide/architecture.md
 
 pandoc:
-  format: markdown+raw_html+raw_attribute
+  format: commonmark_x
   to: html5
   html_parser: html.parser
+  args:
+    - --wrap=none
+    - --syntax-highlighting=tango
 
 plugins:
   - search
