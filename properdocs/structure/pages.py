@@ -307,7 +307,7 @@ class Page(StructureItem):
                     json_data.decode('utf-8'),
                     to=pandoc_to,
                     format='json',
-                    extra_args=extra_args,
+                    extra_args=[arg for arg in extra_args if not arg.startswith('--lua-filter=')],
                 )
             else:
                 # Direct: markdown → target format
