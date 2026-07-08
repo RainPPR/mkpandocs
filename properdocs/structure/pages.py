@@ -307,7 +307,7 @@ class Page(StructureItem):
                     json_data.decode('utf-8'),
                     to=pandoc_to,
                     format='json',
-                    extra_args=['--quiet'],
+                    extra_args=extra_args,
                 )
             else:
                 # Direct: markdown → target format

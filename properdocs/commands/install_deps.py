@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 @retry(
     # 1 initial attempt + 5 retries = 6 total attempts
     stop=stop_after_attempt(6),
-    wait=wait_chain(wait_fixed(1), wait_fixed(10), wait_fixed(30), wait_fixed(30), wait_fixed(120))
+    wait=wait_chain(wait_fixed(1), wait_fixed(10), wait_fixed(30), wait_fixed(30), wait_fixed(120)),
 )
 def _download_pandoc_with_retry() -> None:
     """Download and install the pandoc executable with automatic retries."""

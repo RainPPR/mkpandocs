@@ -3,7 +3,26 @@ from __future__ import annotations
 import logging
 import os
 
-config_text = 'site_name: My Docs\n'
+config_text = """site_name: My Docs
+site_url: https://example.com/
+site_description: Project documentation with Markdown.
+
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+
+pandoc:
+  format: commonmark_x
+  to: html5
+  args:
+    - --wrap=none
+  # lua_filters:
+  #   - filters/link_class.lua
+  # json_filters:
+  #   - filters/add_target_blank.py
+"""
 index_text = """# Welcome to MkPandocs
 
 For full documentation visit [rainppr.github.io/mkpandocs](https://rainppr.github.io/mkpandocs).
