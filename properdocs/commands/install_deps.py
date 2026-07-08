@@ -7,10 +7,24 @@ from tenacity import retry, stop_after_attempt, wait_chain, wait_fixed
 log = logging.getLogger(__name__)
 
 
+def before_retry_log(retry_state):
+    log.info(f'Retrying pandoc download (attempt {retry_state.attempt_number})...')
+
+
 @retry(
-    # 1 initial attempt + 5 retries = 6 total attempts
-    stop=stop_after_attempt(6),
-    wait=wait_chain(wait_fixed(1), wait_fixed(10), wait_fixed(30), wait_fixed(30), wait_fixed(120))
+    stop=stop_after_attempt(10),
+    wait=wait_chain(
+        wait_fixed(2),
+        wait_fixed(5),
+        wait_fixed(10),
+        wait_fixed(30),
+        wait_fixed(60),
+        wait_fixed(120),
+        wait_fixed(180),
+        wait_fixed(240),
+        wait_fixed(300),
+    ),
+    before_sleep=before_retry_log,
 )
 def _download_pandoc_with_retry() -> None:
     """Download and install the pandoc executable with automatic retries."""
